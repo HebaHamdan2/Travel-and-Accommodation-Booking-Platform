@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import LoginForm from "../LoginForm/LoginForm";
-import LoginHero from "../LoginHero/LoginHero";
+import LoginHero from "../LoginHero";
+import LoginForm from "../LoginForm";
 
 const LoginLayout = () => {
   return (

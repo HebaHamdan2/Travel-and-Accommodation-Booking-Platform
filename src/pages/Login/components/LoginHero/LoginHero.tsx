@@ -3,7 +3,7 @@ const LoginHero = () => {
   return (
     <Box
       sx={{
-        backgroundImage: `url('/LoginImg.svg')`,
+        backgroundImage: `url('/LoginImg.webp')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         width: "100%",

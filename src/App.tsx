@@ -1,11 +1,15 @@
 import "./App.css";
+import { ThemeContextProvider } from "./contexts/ThemeContext";
 import Login from "./pages/Login";
 
 function App() {
 
   return (
     <>
-    <Login/>
+    <ThemeContextProvider>
+      <Login/>
+    </ThemeContextProvider>
+    
     </>
   );
 }

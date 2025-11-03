@@ -29,14 +29,13 @@ const LoginForm: React.FC = () => {
         sx={{
           width: 200,
           height: "auto",
-          mb: 3,
           mx: "auto",
         }}
       />
-      <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+      <Typography variant="h3" sx={{ fontWeight: 700,fontSize:"5.5rem" }}>
         Welcome
       </Typography>
-      <Typography variant="subtitle1" sx={{ mb: 4, color: "text.secondary" }}>
+      <Typography variant="subtitle1" sx={{ mb: 2, color: "text.secondary",fontSize:"1.5rem" }}>
         Login with username
       </Typography>
       <Stack spacing={3}>
@@ -73,10 +72,11 @@ const LoginForm: React.FC = () => {
           sx={{
             bgcolor: "primary.main",
             fontSize: "1rem",
-            color: "white",
+            color: "text.primary",
             py: 1.5,
             borderRadius: 2,
             fontWeight: 600,
+            textTransform:"capitalize",
             "&:hover": { bgcolor: "primary.dark" },
           }}
         >

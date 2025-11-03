@@ -1,9 +1,11 @@
+import LoginLayout from "./components/LoginLayout/LoginLayout";
+
 const Login = () => {
-    return (
-        <div className=''>
-            
-        </div>
-    );
-}
+  return (
+    <>
+      <LoginLayout />
+    </>
+  );
+};
 
 export default Login;

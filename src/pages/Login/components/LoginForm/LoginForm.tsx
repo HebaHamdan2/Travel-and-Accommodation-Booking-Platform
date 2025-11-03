@@ -15,10 +15,10 @@ const LoginForm: React.FC = () => {
       component="form"
       sx={{
         width: "100%",
-        maxWidth: 500,
+        maxWidth: 600,
         mx: "auto",
         textAlign: "center",
-        py: { xs: 4, sm: 6 },
+        py: { xs: 4, sm: 6, md: 8 },
         px: { xs: 3, sm: 5 },
       }}
     >
@@ -27,18 +27,33 @@ const LoginForm: React.FC = () => {
         src="/Logo.svg"
         alt="Travel Logo"
         sx={{
-          width: 200,
+          width: { xs: 120, sm: 160, md: 200 },
           height: "auto",
+          mb: { xs: 2, sm: 3 },
           mx: "auto",
         }}
       />
-      <Typography variant="h3" sx={{ fontWeight: 700,fontSize:"5.5rem" }}>
+      <Typography
+        variant="h3"
+        sx={{
+          fontWeight: 700,
+          fontSize: { xs: "2rem", sm: "2.8rem", md: "3.2rem" },
+          mb: 1,
+        }}
+      >
         Welcome
       </Typography>
-      <Typography variant="subtitle1" sx={{ mb: 2, color: "text.secondary",fontSize:"1.5rem" }}>
+      <Typography
+        variant="subtitle1"
+        sx={{
+          mb: { xs: 3, sm: 4 },
+          color: "text.secondary",
+          fontSize: { xs: "1rem", sm: "1.1rem" },
+        }}
+      >
         Login with username
       </Typography>
-      <Stack spacing={3}>
+      <Stack spacing={{ xs: 2.5, sm: 3 }}>
         <TextField
           name="username"
           label="Username"
@@ -70,13 +85,13 @@ const LoginForm: React.FC = () => {
           variant="contained"
           fullWidth
           sx={{
-            bgcolor: "primary.main",
-            fontSize: "1rem",
-            color: "text.primary",
-            py: 1.5,
+            py: { xs: 1.2, sm: 1.5 },
+            fontSize: { xs: "0.9rem", sm: "1rem" },
             borderRadius: 2,
             fontWeight: 600,
-            textTransform:"capitalize",
+            textTransform: "capitalize",
+            bgcolor: "primary.main",
+            color: "text.primary",
             "&:hover": { bgcolor: "primary.dark" },
           }}
         >

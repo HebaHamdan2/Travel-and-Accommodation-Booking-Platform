@@ -5,11 +5,42 @@ import {
   Typography,
   InputAdornment,
   Button,
+  Alert,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { AccountCircle, Lock } from "@mui/icons-material";
-
+import { useFormik } from "formik";
+import { useAuth } from "../../hooks/useAuth";
+import { LoginValues } from "../../types";
+import { loginValidationSchema } from "../../validation";
 const LoginForm: React.FC = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async (values: LoginValues) => {
+    setErrorMessage(null);
+    setLoading(true);
+    const { login } = useAuth(values);
+    try {
+      const data = await login();
+      console.log("Logged in successfully:", data);
+    } catch (error: any) {
+      if (error.response?.data?.title) {
+        setErrorMessage(error.response.data.title);
+      } else {
+        setErrorMessage("Login failed! check your username and password.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  const formik = useFormik({
+    initialValues: {
+      userName: "",
+      password: "",
+    },
+    validationSchema: loginValidationSchema,
+    onSubmit: handleSubmit,
+  });
   return (
     <Box
       component="form"
@@ -21,6 +52,7 @@ const LoginForm: React.FC = () => {
         py: { xs: 4, sm: 6, md: 8 },
         px: { xs: 3, sm: 5 },
       }}
+      onSubmit={formik.handleSubmit}
     >
       <Box
         component="img"
@@ -55,10 +87,15 @@ const LoginForm: React.FC = () => {
       </Typography>
       <Stack spacing={{ xs: 2.5, sm: 3 }}>
         <TextField
-          name="username"
+          name="userName"
           label="Username"
           variant="outlined"
           fullWidth
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.userName}
+          error={formik.touched.userName && Boolean(formik.errors.userName)}
+          helperText={formik.touched.userName && formik.errors.userName}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -71,6 +108,11 @@ const LoginForm: React.FC = () => {
           name="password"
           label="Password"
           type="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.password}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.userName && formik.errors.password}
           fullWidth
           InputProps={{
             startAdornment: (
@@ -80,10 +122,16 @@ const LoginForm: React.FC = () => {
             ),
           }}
         />
+        {errorMessage && (
+          <Alert severity="error" sx={{ textAlign: "left" }}>
+            {errorMessage}
+          </Alert>
+        )}
         <Button
           type="submit"
           variant="contained"
           fullWidth
+          disabled={loading}
           sx={{
             py: { xs: 1.2, sm: 1.5 },
             fontSize: { xs: "0.9rem", sm: "1rem" },
@@ -95,7 +143,7 @@ const LoginForm: React.FC = () => {
             "&:hover": { bgcolor: "primary.dark" },
           }}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </Stack>
     </Box>

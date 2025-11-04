@@ -7,12 +7,8 @@ import {
 import React, { createContext, useMemo, useState } from "react";
 import { getDesignTokens } from "../Theme/theme";
 import { ThemeContextType,ThemeProps } from "../types";
-const initialVlaue: ThemeContextType = {
-  mode: "light",
-  toggleMode: () => {},
-};
-
-export const ThemeContext = createContext<ThemeContextType>(initialVlaue);
+import { initialThemeVlaue } from "../constants";
+export const ThemeContext = createContext<ThemeContextType>(initialThemeVlaue);
 
 export const ThemeContextProvider: React.FC<ThemeProps> = ({ children }) => {
   const [mode, setMode] = useState<PaletteMode>("light");

@@ -10,27 +10,30 @@ import {
 import React, { useState } from "react";
 import { AccountCircle, Lock } from "@mui/icons-material";
 import { useFormik } from "formik";
-import { useAuth } from "../../hooks/useAuth";
-import { LoginValues } from "../../types";
 import { loginValidationSchema } from "../../validation";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { loginUser } from "../../../../features/auth/authSlice";
+import { LoginValues } from "../../../../types";
 const LoginForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.auth);
+
   const handleSubmit = async (values: LoginValues) => {
     setErrorMessage(null);
-    setLoading(true);
-    const { login } = useAuth(values);
     try {
-      const data = await login();
-      console.log("Logged in successfully:", data);
-    } catch (error: any) {
-      if (error.response?.data?.title) {
-        setErrorMessage(error.response.data.title);
-      } else {
-        setErrorMessage("Login failed! check your username and password.");
+      const resAction = await dispatch(loginUser(values));
+
+      if (loginUser.fulfilled.match(resAction)) {
+        console.log("Logged in successfully:", resAction.payload);
+      } else if (loginUser.rejected.match(resAction)) {
+        const payload = resAction.payload as any;
+        setErrorMessage(
+          payload?.title || "Login failed! Check your username and password."
+        );
       }
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      setErrorMessage("Something went wrong. Please try again later.");
     }
   };
   const formik = useFormik({
@@ -112,7 +115,7 @@ const LoginForm: React.FC = () => {
           onBlur={formik.handleBlur}
           value={formik.values.password}
           error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.userName && formik.errors.password}
+          helperText={formik.touched.password && formik.errors.password}
           fullWidth
           InputProps={{
             startAdornment: (

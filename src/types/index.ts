@@ -8,3 +8,7 @@ export interface ThemeContextType {
 export interface ThemeProps {
   children: ReactNode;
 }
+export interface LoginValues {
+  userName: string;
+  password: string;
+}

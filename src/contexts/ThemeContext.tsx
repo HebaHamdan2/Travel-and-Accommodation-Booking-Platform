@@ -5,9 +5,9 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import React, { createContext, useMemo, useState } from "react";
-import { getDesignTokens } from "../Theme/theme";
 import { ThemeContextType,ThemeProps } from "../types";
 import { initialThemeVlaue } from "../constants";
+import { getDesignTokens } from "../theme";
 export const ThemeContext = createContext<ThemeContextType>(initialThemeVlaue);
 
 export const ThemeContextProvider: React.FC<ThemeProps> = ({ children }) => {

@@ -6,7 +6,7 @@ const Home = () => {
   if (userType === "Admin") {
     return <Navigate to="/admin" replace />;
   }
-  return <>home</>;
+  return <>Featured Deals</>;
 };
 
 export default Home;

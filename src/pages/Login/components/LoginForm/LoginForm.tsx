@@ -21,19 +21,16 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = async (values: LoginValues) => {
     setErrorMessage(null);
-    try {
-      const resAction = await dispatch(loginUser(values));
 
-      if (loginUser.fulfilled.match(resAction)) {
-        console.log("Logged in successfully:", resAction.payload);
-      } else if (loginUser.rejected.match(resAction)) {
-        const payload = resAction.payload as any;
-        setErrorMessage(
-          payload?.title || "Login failed! Check your username and password."
-        );
-      }
-    } catch (err) {
-      setErrorMessage("Something went wrong. Please try again later.");
+    const resAction = await dispatch(loginUser(values));
+
+    if (loginUser.fulfilled.match(resAction)) {
+      console.log("Logged in successfully:", resAction.payload);
+    } else if (loginUser.rejected.match(resAction)) {
+      const payload = resAction.payload as { title?: string };
+      setErrorMessage(
+        payload?.title || "Login failed! Check username and password."
+      );
     }
   };
   const formik = useFormik({
@@ -134,7 +131,7 @@ const LoginForm: React.FC = () => {
           type="submit"
           variant="contained"
           fullWidth
-          disabled={loading}
+          disabled={loading || !formik.isValid || !formik.dirty}
           sx={{
             py: { xs: 1.2, sm: 1.5 },
             fontSize: { xs: "0.9rem", sm: "1rem" },
@@ -144,6 +141,10 @@ const LoginForm: React.FC = () => {
             bgcolor: "primary.main",
             color: "text.primary",
             "&:hover": { bgcolor: "primary.dark" },
+            "&.Mui-disabled": {
+              bgcolor: "primary.main",
+              color: "text.primary",
+            },
           }}
         >
           {loading ? "Logging in..." : "Login"}

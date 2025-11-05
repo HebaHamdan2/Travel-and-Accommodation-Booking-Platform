@@ -15,9 +15,11 @@ export const loginUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data || error.message);
+        return rejectWithValue(
+          error.response?.data || { title: error.message }
+        );
       }
-      return rejectWithValue("Unexpected error occurred");
+      return rejectWithValue({ title: "Unexpected error occurred" });
     }
   }
 );

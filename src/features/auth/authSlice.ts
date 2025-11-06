@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { baseURL } from "../../constants";
 import { initialAuth } from "../constants";
 import { LoginValues } from "../../types";
+import { baseURL } from "../../utils/constans";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",

@@ -7,7 +7,7 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
       ? {
           primary: { main: "#E4A0B7" },
           secondary: { main: "#7DCFB6" },
-          background: { default: "#FDFDFD", paper: "#FFFFFF" },
+          background: { default: "#FDFDFD", paper: "#FDFDFD" },
           text: { primary: "#2E2E2E", secondary: "#6F6F6F" },
           divider: "#E5E5E5",
         }
@@ -25,9 +25,9 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
     h2: { fontFamily: `'Poppins', sans-serif`, fontWeight: 700 },
     h3: { fontFamily: `'Poppins', sans-serif`, fontWeight: 700 },
     h4: { fontFamily: `'Poppins', sans-serif`, fontWeight: 600 },
-    h5: { fontFamily: `'Poppins', sans-serif`, fontWeight: 600 },
+    h5:{ fontFamily: `'Nunito', 'Inter', sans-serif`, fontWeight: 600 },
     h6: { fontFamily: `'Poppins', sans-serif`, fontWeight: 600 },
-    body1: { fontFamily: `'Nunito', 'Inter', sans-serif`, fontWeight: 400 },
+    body1: { fontFamily: `'Nunito', 'Inter', sans-serif`, fontWeight: 600 },
     body2: { fontFamily: `'Nunito', 'Inter', sans-serif`, fontWeight: 400 },
   },
 });

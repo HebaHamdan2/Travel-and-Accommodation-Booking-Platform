@@ -1,8 +1,13 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import CustomCard from "../../../../components/CustomCard";
 import Wrapper from "../Wrapper";
+import { useGetFeaturedDealsQuery } from "../../../../services/home.ts";
 
 const FeaturedDeals = () => {
+  const { data: deals, isLoading, isError, error } = useGetFeaturedDealsQuery();
+  if (isLoading) return <CircularProgress />;
+  if (isError) return <Typography color="error">{String(error)}</Typography>;
+
   return (
     <Wrapper id="featured">
       <Box
@@ -10,7 +15,6 @@ const FeaturedDeals = () => {
           textAlign: "center",
           px: { xs: 2, sm: 4, md: 6 },
         }}
-      
       >
         <Typography
           variant="h2"
@@ -32,15 +36,12 @@ const FeaturedDeals = () => {
           }}
         >
           <Grid container spacing={3} justifyContent="center">
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-              <CustomCard />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-              <CustomCard />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-              <CustomCard />
-            </Grid>
+            {deals?.map((deal) => (
+              <Grid key={deal.hotelId} size={{ xs: 12, md: 6, lg: 4 }}>
+                {/* <CustomCard {...deal} /> */}
+                <CustomCard />
+              </Grid>
+            ))}
           </Grid>
         </Box>
       </Box>

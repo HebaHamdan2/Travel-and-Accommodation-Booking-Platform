@@ -2,22 +2,27 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
-
-const rootReducer = combineReducers({
-  auth: authReducer,
-});
+import { homeApi } from "../services/home.ts";
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["auth"],
 };
+const rootReducer = combineReducers({
+  auth: authReducer,
+  [homeApi.reducerPath]: homeApi.reducer,
+});
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
+  // Adding the api middleware enables caching, invalidation, polling,
+  // and other useful features of `rtk-query`
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+      serializableCheck: false, // needed for redux-persist
+    }).concat(homeApi.middleware),
 });
 export const persistor = persistStore(store);
 

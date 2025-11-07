@@ -1,8 +1,23 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import CustomCard from "../../../../components/CustomCard";
 import Wrapper from "../Wrapper";
+import { useGetRecentlyVisitedQuery } from "../../../../services/home.ts";
+import { getDecodedToken } from "../../../../utils/getDecodedToken";
 
 const RecentlyVisted = () => {
+  const decoded = getDecodedToken();
+  const userId = decoded?.user_id ?? null;
+  const {
+    data: recentVisited,
+    isLoading,
+    isError,
+    error,
+  } = useGetRecentlyVisitedQuery(userId as string, {
+    skip: !userId, // prevents the API call until a valid userId exists
+  });
+  if (isLoading) return <CircularProgress />;
+  if (isError) return <Typography color="error">{String(error)}</Typography>;
+
   return (
     <Wrapper id="recent">
       <Box
@@ -31,12 +46,12 @@ const RecentlyVisted = () => {
           }}
         >
           <Grid container spacing={3} justifyContent="center">
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-              <CustomCard />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-              <CustomCard />
-            </Grid>
+            {recentVisited?.map((hotel) => (
+              <Grid key={hotel.hotelId} size={{ xs: 12, md: 6, lg: 4 }}>
+                {/* <CustomCard {...deal} /> */}
+                <CustomCard />
+              </Grid>
+            ))}
             <Grid size={{ xs: 12, md: 6, lg: 4 }}>
               <CustomCard />
             </Grid>

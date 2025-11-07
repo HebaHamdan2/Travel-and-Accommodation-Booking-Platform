@@ -1,8 +1,12 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import CustomCard from "../../../../components/CustomCard";
 import Wrapper from "../Wrapper";
+import { useGetTrendingDestQuery } from "../../../../services/home";
 
 const TrendingDest = () => {
+  const { data: trends, isLoading, isError, error } = useGetTrendingDestQuery();
+  if (isLoading) return <CircularProgress />;
+  if (isError) return <Typography color="error">{String(error)}</Typography>;
   return (
     <Wrapper id="trending">
       <Box
@@ -31,18 +35,11 @@ const TrendingDest = () => {
           }}
         >
           <Grid container spacing={3} justifyContent="center">
-            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-              <CustomCard />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-              <CustomCard />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-              <CustomCard />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
-              <CustomCard />
-            </Grid>
+            {trends?.map((trend) => (
+              <Grid key={trend.cityId} size={{ xs: 12, md: 6, lg: 3 }}>
+                <CustomCard />
+              </Grid>
+            ))}
           </Grid>
         </Box>
       </Box>

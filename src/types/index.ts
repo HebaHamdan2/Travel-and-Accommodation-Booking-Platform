@@ -20,3 +20,12 @@ export interface CustomDatePickerProps {
   minDate?: Dayjs;
   disablePast?: boolean;
 }
+export interface DecodedToken {
+  user_id: string;
+  given_name: string;
+  family_name: string;
+  userType: string;
+  nbf: number;
+  exp: number;
+  iss: string;
+}

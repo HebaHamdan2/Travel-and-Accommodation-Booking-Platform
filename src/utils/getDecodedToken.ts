@@ -1,12 +1,9 @@
 import { jwtDecode } from "jwt-decode";
 import { DecodedToken } from "../types";
-import { useAppSelector } from "../app/hooks";
 
-export const getDecodedToken = (): DecodedToken | null => {
-  const { authentication } = useAppSelector((state) => state?.auth);
-  if (!authentication) return null;
+export const getDecodedToken = (token: string): DecodedToken | null => {
   try {
-    return jwtDecode<DecodedToken>(authentication);
+    return jwtDecode<DecodedToken>(token);
   } catch (error) {
     return null;
   }

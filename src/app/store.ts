@@ -3,6 +3,7 @@ import authReducer from "../features/auth/authSlice";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { homeApi } from "../services/home.ts";
+import { checkTokenExpMiddleware } from "../middlewares/checkTokenExpMiddleware.ts";
 const persistConfig = {
   key: "root",
   storage,
@@ -22,7 +23,9 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // needed for redux-persist
-    }).concat(homeApi.middleware),
+    })
+      .concat(homeApi.middleware) //ensures API calls are safe.
+      .concat(checkTokenExpMiddleware), //ensures the app doesn’t try to use expired tokens anywhere.
 });
 export const persistor = persistStore(store);
 

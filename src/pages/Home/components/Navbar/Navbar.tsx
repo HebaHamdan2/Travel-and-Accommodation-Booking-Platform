@@ -23,6 +23,7 @@ import { useAppDispatch } from "../../../../app/hooks";
 import { logout } from "../../../../features/auth/authSlice";
 import { sections } from "../../constants";
 import { useNavigate } from "react-router-dom";
+import { homeApi } from "../../../../services/home";
 
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -38,7 +39,7 @@ const Navbar: React.FC = () => {
   };
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("persist:root");
+     dispatch(homeApi.util.resetApiState());// clears all cached API data
     navigate("/login");
   };
 

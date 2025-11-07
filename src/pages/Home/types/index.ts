@@ -33,9 +33,21 @@ export interface TrendDes {
   description: string;
   thumbnailUrl: string;
 }
-export interface UseGetDealsResult {
-  deals: Deal[];
-  loading: boolean;
-  error: string | null;
-  fetchDeals: () => Promise<void>;
+type amenitie = {
+  id: 0;
+  name: string;
+  description: string;
+};
+export interface SearchRes {
+  hotelId: number;
+  hotelName: string;
+  starRating: number;
+  latitude: number;
+  longitude: number;
+  roomPrice: string;
+  roomType: string;
+  cityName: string;
+  roomPhotoUrl: string;
+  discount: number;
+  amenities: amenitie[];
 }

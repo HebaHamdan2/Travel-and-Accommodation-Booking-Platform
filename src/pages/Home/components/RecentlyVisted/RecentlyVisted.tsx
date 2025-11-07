@@ -3,10 +3,11 @@ import CustomCard from "../../../../components/CustomCard";
 import Wrapper from "../Wrapper";
 import { useGetRecentlyVisitedQuery } from "../../../../services/home.ts";
 import { getDecodedToken } from "../../../../utils/getDecodedToken";
+import { useAppSelector } from "../../../../app/hooks.ts";
 
 const RecentlyVisted = () => {
-  const decoded = getDecodedToken();
-  const userId = decoded?.user_id ?? null;
+  const { authentication } = useAppSelector((state) => state.auth);
+  const userId = getDecodedToken(authentication || "")?.user_id ?? null;
   const {
     data: recentVisited,
     isLoading,

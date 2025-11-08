@@ -1,9 +1,9 @@
-const SearchResultLayout = () => {
-    return (
-      <>
-      sss
-      </>
-    );
-}
+import React from "react";
+const SearchResultLayout: React.FC = () => {
+ return(
+    <>
+    </>
+ )
+};
 
 export default SearchResultLayout;

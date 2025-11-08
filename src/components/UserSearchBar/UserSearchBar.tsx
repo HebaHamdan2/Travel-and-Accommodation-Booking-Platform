@@ -9,7 +9,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -25,7 +25,7 @@ const UserSearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { location, checkIn, checkOut, adults, children, rooms } =
+  const { city, checkInDate, checkOutDate, adults, children, numberOfRooms } =
     useAppSelector((state) => state.search);
 
   const handleSearch = () => {
@@ -36,16 +36,21 @@ const UserSearchBar: React.FC = () => {
     dispatch(setSearchData({ [field]: value }));
   };
   const handleCheckInChange = (date: Dayjs | null) => {
-    updateSearch("checkIn", date);
-    if (date && (!checkOut || date.isAfter(checkOut))) {
-      updateSearch("checkOut", date.add(1, "day"));
+    if (!date) return;
+    updateSearch("checkInDate", date.format("YYYY/MM/DD"));
+    if (date && (!checkOutDate || date.isAfter(checkOutDate))) {
+      updateSearch("checkOutDate", date.add(1, "day").format("YYYY/MM/DD"));
     }
   };
 
   const handleCheckOutChange = (date: Dayjs | null) => {
-    if (checkIn && date && date.isBefore(checkIn)) {
-      updateSearch("checkOut", checkIn.add(1, "day"));
-    } else updateSearch("checkOut", date);
+    if (!date) return;
+    if (checkInDate && date && date.isBefore(checkInDate)) {
+      updateSearch(
+        "checkOutDate",
+        dayjs(checkInDate).add(1, "day").format("YYYY/MM/DD")
+      );
+    } else updateSearch("checkOutDate", date.format("YYYY/MM/DD"));
   };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -63,8 +68,8 @@ const UserSearchBar: React.FC = () => {
       >
         <TextField
           placeholder="Search hotels, cities..."
-          value={location}
-          onChange={(e) => updateSearch("location", e.target.value)}
+          value={city}
+          onChange={(e) => updateSearch("city", e.target.value)}
           size="small"
           variant="outlined"
           InputProps={{
@@ -82,15 +87,15 @@ const UserSearchBar: React.FC = () => {
         />
         <CustomDatePicker
           label="Check in"
-          value={checkIn}
+          value={dayjs(checkInDate)}
           onChange={handleCheckInChange}
           disablePast
         />
         <CustomDatePicker
           label="Check out"
-          value={checkOut}
+          value={dayjs(checkOutDate)}
           onChange={handleCheckOutChange}
-          minDate={checkIn?.add(1, "day")}
+          minDate={dayjs(checkInDate)?.add(1, "day")}
         />
         <Box sx={{ display: "flex", gap: 1, minWidth: 240, flex: 1 }}>
           <FormControl size="small" fullWidth>
@@ -124,8 +129,8 @@ const UserSearchBar: React.FC = () => {
           <FormControl size="small" fullWidth>
             <InputLabel>Rooms</InputLabel>
             <Select
-              value={rooms}
-              onChange={(e) => updateSearch("rooms", e.target.value)}
+              value={numberOfRooms}
+              onChange={(e) => updateSearch("numberOfRooms", e.target.value)}
               label="Rooms"
             >
               {roomsOptions.map((n) => (

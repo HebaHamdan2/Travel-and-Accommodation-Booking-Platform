@@ -1,5 +1,3 @@
-import { Dayjs } from "dayjs";
-
 export interface AuthState {
   userType: string | null;
   authentication: string | null;
@@ -7,10 +5,11 @@ export interface AuthState {
   error?: { title: string } | null;
 }
 export interface SearchState {
-  location: string;
-  checkIn: Dayjs | null;
-  checkOut: Dayjs | null;
-  adults: number;
-  children: number;
-  rooms: number;
+  city?: string;          
+  checkInDate: string;     
+  checkOutDate: string;     
+  starRate?: number;       
+  numberOfRooms: number;  
+  adults: number;          
+  children: number;       
 }

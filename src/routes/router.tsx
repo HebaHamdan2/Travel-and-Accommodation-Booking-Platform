@@ -5,6 +5,7 @@ import ProtectedLayout from "./ProtectedLayout";
 import Home from "../pages/Home";
 import AdminAuthLayout from "./AdminAuthLayout";
 import AdminDashboard from "../pages/AdminDashboard";
+import SearchResults from "../pages/SearchResults";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
           {
             path: "home",
             element: <Home />,
+          },
+            {
+            path: "search-results",
+            element: <SearchResults />,
           },
           {
             element: <AdminAuthLayout />,

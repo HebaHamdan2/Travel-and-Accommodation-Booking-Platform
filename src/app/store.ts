@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
+import searchReducer from "../features/search/searchSlice";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { homeApi } from "../services/home.ts";
@@ -12,6 +13,7 @@ const persistConfig = {
 };
 const rootReducer = combineReducers({
   auth: authReducer,
+  search: searchReducer,
   [homeApi.reducerPath]: homeApi.reducer,
 });
 

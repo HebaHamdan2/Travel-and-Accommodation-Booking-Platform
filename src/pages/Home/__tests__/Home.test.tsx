@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import HomeLayout from "../components/HomeLayout";
 import renderWithProviders from "../../../tests/utils/renderWithProviders";
-import { homeHandlers } from "../mocks/homehandlers";
+import { homeHandlers } from "../mocks/homeHandlers";
 
 const server = setupServer(...homeHandlers);
 

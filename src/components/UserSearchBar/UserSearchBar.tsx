@@ -1,4 +1,3 @@
-import { useState, useMemo } from "react";
 import {
   Box,
   TextField,
@@ -10,7 +9,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -19,32 +18,35 @@ import {
   childrenOptions,
   roomsOptions,
 } from "../../utils/constans";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useNavigate } from "react-router-dom";
+import { setSearchData } from "../../features/search/searchSlice";
 const UserSearchBar: React.FC = () => {
-  const today = useMemo(() => dayjs().startOf("day"), []);
-  const tomorrow = useMemo(() => dayjs().add(1, "day").startOf("day"), []);
-  const [location, setLocation] = useState("");
-  const [checkIn, setCheckIn] = useState<Dayjs | null>(today);
-  const [checkOut, setCheckOut] = useState<Dayjs | null>(tomorrow);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
-  const [rooms, setRooms] = useState(1);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
+  const { location, checkIn, checkOut, adults, children, rooms } =
+    useAppSelector((state) => state.search);
+
+  const handleSearch = () => {
+    navigate("/search-results");
+  };
+
+  const updateSearch = (field: string, value: any) => {
+    dispatch(setSearchData({ [field]: value }));
+  };
   const handleCheckInChange = (date: Dayjs | null) => {
-    setCheckIn(date);
-    if (date && (!checkOut || date.isAfter(checkOut)))
-      setCheckOut(date.add(1, "day"));
+    updateSearch("checkIn", date);
+    if (date && (!checkOut || date.isAfter(checkOut))) {
+      updateSearch("checkOut", date.add(1, "day"));
+    }
   };
 
   const handleCheckOutChange = (date: Dayjs | null) => {
-    if (checkIn && date && date.isBefore(checkIn))
-      setCheckOut(checkIn.add(1, "day"));
-    else setCheckOut(date);
+    if (checkIn && date && date.isBefore(checkIn)) {
+      updateSearch("checkOut", checkIn.add(1, "day"));
+    } else updateSearch("checkOut", date);
   };
-
-  const handleSearch = () => {
-    console.log({ location, checkIn, checkOut, adults, children, rooms });
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box
@@ -62,7 +64,7 @@ const UserSearchBar: React.FC = () => {
         <TextField
           placeholder="Search hotels, cities..."
           value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          onChange={(e) => updateSearch("location", e.target.value)}
           size="small"
           variant="outlined"
           InputProps={{
@@ -95,7 +97,7 @@ const UserSearchBar: React.FC = () => {
             <InputLabel>Adults</InputLabel>
             <Select
               value={adults}
-              onChange={(e) => setAdults(Number(e.target.value))}
+              onChange={(e) => updateSearch("adults", e.target.value)}
               label="Adults"
             >
               {adultsOptions.map((n) => (
@@ -109,7 +111,7 @@ const UserSearchBar: React.FC = () => {
             <InputLabel>Children</InputLabel>
             <Select
               value={children}
-              onChange={(e) => setChildren(Number(e.target.value))}
+              onChange={(e) => updateSearch("children", e.target.value)}
               label="Children"
             >
               {childrenOptions.map((n) => (
@@ -123,7 +125,7 @@ const UserSearchBar: React.FC = () => {
             <InputLabel>Rooms</InputLabel>
             <Select
               value={rooms}
-              onChange={(e) => setRooms(Number(e.target.value))}
+              onChange={(e) => updateSearch("rooms", e.target.value)}
               label="Rooms"
             >
               {roomsOptions.map((n) => (

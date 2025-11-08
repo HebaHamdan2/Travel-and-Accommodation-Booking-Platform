@@ -3,6 +3,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import { ThemeContextProvider } from "../../contexts/ThemeContext";
 import { store } from "../../app/store";
+import { MemoryRouter } from "react-router-dom";
 
 const renderWithProviders = (
   Component: React.ReactElement,
@@ -10,9 +11,11 @@ const renderWithProviders = (
 ) => {
   function Wrapper({ children }: { children: React.ReactNode }) {
     return (
-      <Provider store={store}>
-        <ThemeContextProvider>{children}</ThemeContextProvider>
-      </Provider>
+      <MemoryRouter>
+        <Provider store={store}>
+          <ThemeContextProvider>{children}</ThemeContextProvider>
+        </Provider>
+      </MemoryRouter>
     );
   }
   return render(Component, { wrapper: Wrapper, ...options });

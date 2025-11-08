@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import CustomCard from "../../../../components/CustomCard";
 import Wrapper from "../Wrapper";
 import { useGetTrendingDestQuery } from "../../../../services/home";
+import InofCard from "../../../../components/InfoCard";
 
 const TrendingDest = () => {
   const { data: trends, isLoading, isError, error } = useGetTrendingDestQuery();
@@ -35,9 +35,13 @@ const TrendingDest = () => {
           }}
         >
           <Grid container spacing={3} justifyContent="center">
-            {trends?.map((trend) => (
+            {trends?.slice(0, 4).map((trend) => (
               <Grid key={trend.cityId} size={{ xs: 12, md: 6, lg: 3 }}>
-                <CustomCard />
+                <InofCard
+                  variant="destination"
+                  data={trend}
+                  onActionClick={() => alert("trending Dest")}
+                />
               </Grid>
             ))}
           </Grid>

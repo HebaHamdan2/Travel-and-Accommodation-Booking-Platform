@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import CustomCard from "../../../../components/CustomCard";
 import Wrapper from "../Wrapper";
 import { useGetFeaturedDealsQuery } from "../../../../services/home.ts";
+import InofCard from "../../../../components/InfoCard/InfoCard.tsx";
 
 const FeaturedDeals = () => {
   const { data: deals, isLoading, isError, error } = useGetFeaturedDealsQuery();
@@ -36,10 +36,13 @@ const FeaturedDeals = () => {
           }}
         >
           <Grid container spacing={3} justifyContent="center">
-            {deals?.map((deal) => (
+            {deals?.slice(0, 3).map((deal) => (
               <Grid key={deal.hotelId} size={{ xs: 12, md: 6, lg: 4 }}>
-                {/* <CustomCard {...deal} /> */}
-                <CustomCard />
+                <InofCard
+                  variant="featuredDeals"
+                  data={deal}
+                  onActionClick={() => alert("Deal")}
+                />
               </Grid>
             ))}
           </Grid>

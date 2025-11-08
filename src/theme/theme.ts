@@ -26,7 +26,7 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
     h3: { fontFamily: `'Poppins', sans-serif`, fontWeight: 700 },
     h4: { fontFamily: `'Poppins', sans-serif`, fontWeight: 600 },
     h5:{ fontFamily: `'Nunito', 'Inter', sans-serif`, fontWeight: 600 },
-    h6: { fontFamily: `'Poppins', sans-serif`, fontWeight: 600 },
+    h6: { fontFamily: `'Nunito', 'Inter', sans-serif`, fontWeight: 600 },
     body1: { fontFamily: `'Nunito', 'Inter', sans-serif`, fontWeight: 600 },
     body2: { fontFamily: `'Nunito', 'Inter', sans-serif`, fontWeight: 400 },
   },

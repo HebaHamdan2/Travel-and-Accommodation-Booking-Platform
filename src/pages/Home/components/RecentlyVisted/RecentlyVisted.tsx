@@ -1,9 +1,9 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import CustomCard from "../../../../components/CustomCard";
 import Wrapper from "../Wrapper";
 import { useGetRecentlyVisitedQuery } from "../../../../services/home.ts";
 import { getDecodedToken } from "../../../../utils/getDecodedToken";
 import { useAppSelector } from "../../../../app/hooks.ts";
+import InofCard from "../../../../components/InfoCard/index.ts";
 
 const RecentlyVisted = () => {
   const { authentication } = useAppSelector((state) => state.auth);
@@ -47,15 +47,15 @@ const RecentlyVisted = () => {
           }}
         >
           <Grid container spacing={3} justifyContent="center">
-            {recentVisited?.map((hotel) => (
+            {recentVisited?.slice(0, 3).map((hotel) => (
               <Grid key={hotel.hotelId} size={{ xs: 12, md: 6, lg: 4 }}>
-                {/* <CustomCard {...deal} /> */}
-                <CustomCard />
+                <InofCard
+                  variant="recentVisited"
+                  data={hotel}
+                  onActionClick={() => alert("recent visited")}
+                />
               </Grid>
             ))}
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-              <CustomCard />
-            </Grid>
           </Grid>
         </Box>
       </Box>

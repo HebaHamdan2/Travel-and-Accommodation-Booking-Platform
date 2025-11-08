@@ -28,7 +28,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: initialAuth,
   reducers: {
-     setAuth: (state, action: PayloadAction<string>) => {
+    setAuth: (state, action: PayloadAction<string>) => {
       state.authentication = action.payload;
     },
     logout: (state) => {
@@ -46,10 +46,13 @@ const authSlice = createSlice({
         state.userType = action.payload.userType;
         state.authentication = action.payload.authentication;
       })
-      .addCase(loginUser.rejected, (state) => {
+      .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
+        state.error = (action.payload as { title: string }) || {
+          title: "Unknown error",
+        };
       });
   },
 });
-export const { logout ,setAuth} = authSlice.actions;
+export const { logout, setAuth } = authSlice.actions;
 export default authSlice.reducer;

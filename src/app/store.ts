@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { homeApi } from "../services/home.ts";
 import { checkTokenExpMiddleware } from "../middlewares/checkTokenExpMiddleware.ts";
+import { PERSIST_ACTIONS } from "../utils/constans.ts";
 const persistConfig = {
   key: "root",
   storage,
@@ -22,14 +23,15 @@ export const store = configureStore({
   // and other useful features of `rtk-query`
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // needed for redux-persist
-    })
-      .concat(homeApi.middleware) //ensures API calls are safe.
-      .concat(checkTokenExpMiddleware), //ensures the app doesn’t try to use expired tokens anywhere.
+      serializableCheck: {
+        // Ignore redux-persist actions that are known to be non-serializable
+        ignoredActions: PERSIST_ACTIONS,
+      },
+    }).concat(homeApi.middleware, checkTokenExpMiddleware),
 });
 export const persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

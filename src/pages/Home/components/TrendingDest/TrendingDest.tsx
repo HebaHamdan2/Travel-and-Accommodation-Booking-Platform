@@ -1,11 +1,12 @@
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../Wrapper";
 import { useGetTrendingDestQuery } from "../../../../services/home";
 import InofCard from "../../../../components/InfoCard";
+import TrendingDestSkeleton from "../../skeletons/TrendingDestSkeleton";
 
 const TrendingDest = () => {
   const { data: trends, isLoading, isError, error } = useGetTrendingDestQuery();
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <TrendingDestSkeleton />;
   if (isError) return <Typography color="error">{String(error)}</Typography>;
   return (
     <Wrapper id="trending">
@@ -37,11 +38,7 @@ const TrendingDest = () => {
           <Grid container spacing={3} justifyContent="center">
             {trends?.slice(0, 4).map((trend) => (
               <Grid key={trend.cityId} size={{ xs: 12, md: 6, lg: 3 }}>
-                <InofCard
-                  variant="destination"
-                  data={trend}
-                  onActionClick={() => alert("trending Dest")}
-                />
+                <InofCard variant="destination" data={trend} />
               </Grid>
             ))}
           </Grid>

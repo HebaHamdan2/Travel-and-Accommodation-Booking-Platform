@@ -1,11 +1,12 @@
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../Wrapper";
 import { useGetFeaturedDealsQuery } from "../../../../services/home.ts";
 import InofCard from "../../../../components/InfoCard/InfoCard.tsx";
+import HotelCardsSkeleton from "../../skeletons/FeaturedDealsSkeleton/HotelCardsSkeleton.tsx";
 
 const FeaturedDeals = () => {
   const { data: deals, isLoading, isError, error } = useGetFeaturedDealsQuery();
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <HotelCardsSkeleton />;
   if (isError) return <Typography color="error">{String(error)}</Typography>;
 
   return (
@@ -38,11 +39,7 @@ const FeaturedDeals = () => {
           <Grid container spacing={3} justifyContent="center">
             {deals?.slice(0, 3).map((deal) => (
               <Grid key={deal.hotelId} size={{ xs: 12, md: 6, lg: 4 }}>
-                <InofCard
-                  variant="featuredDeals"
-                  data={deal}
-                  onActionClick={() => alert("Deal")}
-                />
+                <InofCard variant="featuredDeals" data={deal} />
               </Grid>
             ))}
           </Grid>

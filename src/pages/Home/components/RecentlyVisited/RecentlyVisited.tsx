@@ -1,11 +1,12 @@
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import Wrapper from "../Wrapper";
+import { Box, Grid, Typography } from "@mui/material";
+import Wrapper from "../Wrapper/index.ts";
 import { useGetRecentlyVisitedQuery } from "../../../../services/home.ts";
-import { getDecodedToken } from "../../../../utils/getDecodedToken";
+import { getDecodedToken } from "../../../../utils/getDecodedToken.ts";
 import { useAppSelector } from "../../../../app/hooks.ts";
 import InofCard from "../../../../components/InfoCard/index.ts";
+import HotelCardsSkeleton from "../../skeletons/FeaturedDealsSkeleton/HotelCardsSkeleton.tsx";
 
-const RecentlyVisted = () => {
+const RecentlyVisited = () => {
   const { authentication } = useAppSelector((state) => state.auth);
   const userId = getDecodedToken(authentication || "")?.user_id ?? null;
   const {
@@ -16,7 +17,7 @@ const RecentlyVisted = () => {
   } = useGetRecentlyVisitedQuery(userId as string, {
     skip: !userId, // prevents the API call until a valid userId exists
   });
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <HotelCardsSkeleton />;
   if (isError) return <Typography color="error">{String(error)}</Typography>;
 
   return (
@@ -49,11 +50,7 @@ const RecentlyVisted = () => {
           <Grid container spacing={3} justifyContent="center">
             {recentVisited?.slice(0, 3).map((hotel) => (
               <Grid key={hotel.hotelId} size={{ xs: 12, md: 6, lg: 4 }}>
-                <InofCard
-                  variant="recentVisited"
-                  data={hotel}
-                  onActionClick={() => alert("recent visited")}
-                />
+                <InofCard variant="recentVisited" data={hotel} />
               </Grid>
             ))}
           </Grid>
@@ -63,4 +60,4 @@ const RecentlyVisted = () => {
   );
 };
 
-export default RecentlyVisted;
+export default RecentlyVisited;

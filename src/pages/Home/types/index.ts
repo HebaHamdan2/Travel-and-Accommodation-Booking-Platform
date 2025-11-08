@@ -60,22 +60,4 @@ export interface SearchRes {
 //   roomAmenities: string[];
 //   isInCart: boolean;
 // }
-type FeaturedDealCard = {
-  variant: "featuredDeals";
-  data: Deal;
-  onActionClick?: (hotelName: string) => void;
-};
 
-type RecentVisitedCard = {
-  variant: "recentVisited";
-  data: RecentHotels;
-  onActionClick?: (hotelName: string) => void;
-};
-
-type DestinationCard = {
-  variant: "destination";
-  data: TrendDes;
-  onActionClick?: (cityName: string) => void;
-};
-
-export type InfoCardProps = FeaturedDealCard | RecentVisitedCard | DestinationCard;

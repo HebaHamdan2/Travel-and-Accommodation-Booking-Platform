@@ -1,6 +1,6 @@
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { CustomDatePickerProps } from "../../types";
 import { PickerTextField } from "./PickerTextField";
+import { CustomDatePickerProps } from "./types";
 
 const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   label,

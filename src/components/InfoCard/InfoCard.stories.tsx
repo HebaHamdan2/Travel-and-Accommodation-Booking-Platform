@@ -4,32 +4,31 @@ import { Deal, RecentHotels, TrendDes } from "../../pages/Home/types";
 import InofCard from "./InfoCard";
 import { ThemeContextProvider } from "../../contexts/ThemeContext";
 import { Box } from "@mui/material";
+import { MemoryRouter } from "react-router-dom";
 const meta: Meta<typeof InofCard> = {
   title: "Components/InfoCard",
   component: InofCard,
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <ThemeContextProvider>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            p: 4,
-            backgroundColor: "background.default",
-            minHeight: "100vh",
-          }}
-        >
-          {" "}
-          <Story />
-        </Box>
-      </ThemeContextProvider>
+      <MemoryRouter>
+        <ThemeContextProvider>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 4,
+              backgroundColor: "background.default",
+              minHeight: "100vh",
+            }}
+          >
+            <Story />
+          </Box>
+        </ThemeContextProvider>
+      </MemoryRouter>
     ),
   ],
-  argTypes: {
-    onActionClick: { action: "clicked" },
-  },
 };
 export default meta;
 type Story = StoryObj<typeof InofCard>;

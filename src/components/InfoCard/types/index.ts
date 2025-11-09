@@ -1,5 +1,10 @@
-import { Deal, RecentHotels, TrendDes } from "../../../pages/Home/types";
- 
+import {
+  Deal,
+  RecentHotels,
+  SearchRes,
+  TrendDes,
+} from "../../../pages/Home/types";
+
 export interface BaseCardProps<T> {
   data: T;
 }
@@ -15,8 +20,11 @@ export interface RecentVisitedCardProps extends BaseCardProps<RecentHotels> {
 export interface DestinationCardProps extends BaseCardProps<TrendDes> {
   variant: "destination";
 }
-
+export interface SearchResultCardProps extends BaseCardProps<SearchRes> {
+  variant: "searchResult";
+}
 export type InfoCardProps =
   | FeaturedDealCardProps
   | RecentVisitedCardProps
-  | DestinationCardProps;
+  | DestinationCardProps
+  | SearchResultCardProps;

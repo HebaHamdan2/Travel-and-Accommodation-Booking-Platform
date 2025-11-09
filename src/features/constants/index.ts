@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { AuthState, SearchState } from "../types";
+import { AuthState, SearchState,SearchSliceState } from "../types";
 
 export const initialAuth: AuthState = {
   userType: null,
@@ -7,8 +7,8 @@ export const initialAuth: AuthState = {
   loading: false,
   error: null,
 };
-const today = dayjs().startOf("day").format("YYYY/MM/DD");
-const tomorrow = dayjs().add(1, "day").startOf("day").format("YYYY/MM/DD");
+const today = dayjs().startOf("day").format("YYYY-MM-DD");
+const tomorrow = dayjs().add(1, "day").startOf("day").format("YYYY-MM-DD");
 
 export const initialSearch: SearchState = {
   city: "",
@@ -18,4 +18,10 @@ export const initialSearch: SearchState = {
   numberOfRooms: 1,
   adults: 2,
   children: 0,
+};
+export const initialSearchState: SearchSliceState = {
+  ...initialSearch,
+  results: [],
+  loading: false,
+  error: null,
 };

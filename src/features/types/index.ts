@@ -13,3 +13,8 @@ export interface SearchState {
   adults: number;          
   children: number;       
 }
+export interface SearchSliceState extends SearchState {
+  results: any[];
+  loading: boolean;
+  error: string | null;
+}

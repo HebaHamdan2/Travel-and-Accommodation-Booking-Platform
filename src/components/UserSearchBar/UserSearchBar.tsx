@@ -19,38 +19,64 @@ import {
   roomsOptions,
 } from "../../utils/constans";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { useNavigate } from "react-router-dom";
-import { setSearchData } from "../../features/search/searchSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  setSearchData,
+  fetchSearchStart,
+  fetchSearchSuccess,
+  fetchSearchFailure,
+} from "../../features/search/searchSlice";
+import { useLazyGetSearchQuery } from "../../services/home";
 const UserSearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [triggerSearch, { isLoading }] = useLazyGetSearchQuery();
 
   const { city, checkInDate, checkOutDate, adults, children, numberOfRooms } =
     useAppSelector((state) => state.search);
-
-  const handleSearch = () => {
-    navigate("/search-results");
-  };
-
   const updateSearch = (field: string, value: any) => {
     dispatch(setSearchData({ [field]: value }));
   };
   const handleCheckInChange = (date: Dayjs | null) => {
     if (!date) return;
-    updateSearch("checkInDate", date.format("YYYY/MM/DD"));
+    updateSearch("checkInDate", date.format("YYYY-MM-DD"));
     if (date && (!checkOutDate || date.isAfter(checkOutDate))) {
-      updateSearch("checkOutDate", date.add(1, "day").format("YYYY/MM/DD"));
+      updateSearch("checkOutDate", date.add(1, "day").format("YYYY-MM-DD"));
     }
   };
-
   const handleCheckOutChange = (date: Dayjs | null) => {
     if (!date) return;
-    if (checkInDate && date && date.isBefore(checkInDate)) {
+    if (checkInDate && date.isBefore(checkInDate)) {
       updateSearch(
         "checkOutDate",
-        dayjs(checkInDate).add(1, "day").format("YYYY/MM/DD")
+        dayjs(checkInDate).add(1, "day").format("YYYY-MM-DD")
       );
-    } else updateSearch("checkOutDate", date.format("YYYY/MM/DD"));
+    } else updateSearch("checkOutDate", date.format("YYYY-MM-DD"));
+  };
+  const handleSearch = async () => {
+    try {
+      dispatch(fetchSearchStart());
+      const params = {
+        city,
+        checkInDate,
+        checkOutDate,
+        adults,
+        children,
+        numberOfRooms,
+      };
+      const result = await triggerSearch(params, true);
+      if (result?.data) {
+        dispatch(fetchSearchSuccess(result.data));
+        if (location.pathname !== "/search-results") {
+          navigate("/search-results");
+        }
+      } else {
+        dispatch(fetchSearchFailure("No data returned"));
+      }
+    } catch (error: any) {
+      dispatch(fetchSearchFailure(error?.message || "Search failed"));
+    }
   };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -58,16 +84,16 @@ const UserSearchBar: React.FC = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          gap: 1.5,
+          gap: 0.5,
           justifyContent: "center",
           alignItems: "center",
           alignSelf: "flex-start",
-          width: "75%",
+          width: "95%",
           mx: "auto",
         }}
       >
         <TextField
-          placeholder="Search hotels, cities..."
+          placeholder="Search cities..."
           value={city}
           onChange={(e) => updateSearch("city", e.target.value)}
           size="small"
@@ -154,7 +180,7 @@ const UserSearchBar: React.FC = () => {
             "&:hover": { opacity: 0.8 },
           }}
         >
-          Search
+          {isLoading ? "Searching..." : "Search"}{" "}
         </Button>
       </Box>
     </LocalizationProvider>

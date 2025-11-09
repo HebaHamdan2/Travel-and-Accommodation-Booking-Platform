@@ -1,16 +1,37 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { initialSearch } from "../constants";
-import { SearchState } from "../types";
+import { initialSearchState } from "../constants";
+import { SearchSliceState } from "../types";
 
 const searchSlice = createSlice({
   name: "search",
-  initialState: initialSearch,
+  initialState: initialSearchState,
   reducers: {
-    setSearchData: (state, action: PayloadAction<Partial<SearchState>>) => {
+    setSearchData: (
+      state,
+      action: PayloadAction<Partial<SearchSliceState>>
+    ) => {
       return { ...state, ...action.payload };
     },
-    resetSearch: () => initialSearch,
+    fetchSearchStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchSearchSuccess: (state, action: PayloadAction<any[]>) => {
+      state.loading = false;
+      state.results = action.payload;
+    },
+    fetchSearchFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    resetSearch: () => initialSearchState,
   },
 });
-export const { setSearchData, resetSearch } = searchSlice.actions;
+export const {
+  setSearchData,
+  fetchSearchStart,
+  fetchSearchSuccess,
+  fetchSearchFailure,
+  resetSearch,
+} = searchSlice.actions;
 export default searchSlice.reducer;

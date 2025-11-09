@@ -4,26 +4,26 @@ import {
   Box,
   Button,
   Container,
-  IconButton,
-  Toolbar,
-  Typography,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../../../hooks/useThemeContext";
 import { useAppDispatch } from "../../../../app/hooks";
 import { logout } from "../../../../features/auth/authSlice";
-import { sections } from "../../constants";
-import { useNavigate } from "react-router-dom";
 import { homeApi } from "../../../../services/home";
+import { sections } from "../../constants";
 
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -31,15 +31,15 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handleScroll = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
     setDrawerOpen(false);
   };
   const handleLogout = () => {
     dispatch(logout());
-     dispatch(homeApi.util.resetApiState());// clears all cached API data
+    dispatch(homeApi.util.resetApiState()); // clear cached API data
     navigate("/login");
   };
 
@@ -53,16 +53,23 @@ const Navbar: React.FC = () => {
       }}
     >
       <Container maxWidth="xl">
-        <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Toolbar
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            px: { xs: 1, md: 0 },
+          }}
+        >
           <Box
             component="img"
             src="/Logo.svg"
-            alt="Travel Logo"
+            alt="App Logo"
             sx={{
               width: { xs: 120, md: 140 },
               height: "auto",
               cursor: "pointer",
             }}
+            onClick={() => navigate("/home")}
           />
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 5 }}>
             {sections.map(({ label, id }) => (
@@ -73,8 +80,8 @@ const Navbar: React.FC = () => {
                 sx={{
                   cursor: "pointer",
                   fontWeight: 400,
-                  "&:hover": { color: "primary.main" },
                   transition: "color 0.3s",
+                  "&:hover": { color: "primary.main" },
                 }}
               >
                 {label}
@@ -87,26 +94,24 @@ const Navbar: React.FC = () => {
               alignItems: "center",
               gap: 1.5,
               border: "1px solid",
-              borderColor: "background.paper",
+              borderColor: "divider",
               borderRadius: "50px",
               px: 2,
               py: 0.5,
-              backgroundColor: "transparent",
-              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.25)",
+              backgroundColor: "background.paper",
+              boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
             }}
           >
-            <IconButton onClick={toggleMode}>
+            <IconButton onClick={toggleMode} color="inherit">
               {mode === "dark" ? (
                 <LightModeOutlinedIcon fontSize="small" />
               ) : (
                 <DarkModeOutlinedIcon fontSize="small" />
               )}
             </IconButton>
-
-            <IconButton>
+            <IconButton color="inherit">
               <ShoppingCartOutlinedIcon fontSize="small" />
             </IconButton>
-
             <Button
               variant="text"
               onClick={handleLogout}
@@ -118,15 +123,13 @@ const Navbar: React.FC = () => {
                 fontSize: "0.95rem",
                 "&:hover": {
                   backgroundColor: "transparent",
-                  opacity: 0.6,
+                  opacity: 0.7,
                 },
               }}
             >
               Logout
             </Button>
           </Box>
-
-          {/* Hamburger for Mobile */}
           <IconButton
             sx={{ display: { xs: "flex", md: "none" } }}
             onClick={() => setDrawerOpen(true)}

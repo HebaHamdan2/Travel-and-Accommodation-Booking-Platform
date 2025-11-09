@@ -49,4 +49,5 @@ export const {
   useGetRecentlyVisitedQuery,
   useGetTrendingDestQuery,
   useGetSearchQuery,
+  useLazyGetSearchQuery,
 } = homeApi;

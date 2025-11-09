@@ -1,4 +1,4 @@
-import SearchResultLayout from "./SearchResultLayout";
+import SearchResultLayout from "./components/SearchResultLayout";
 
 const SearchResults = () => {
   return (

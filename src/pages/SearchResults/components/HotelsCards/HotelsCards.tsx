@@ -1,10 +1,11 @@
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import { useAppSelector } from "../../../../app/hooks";
 import UserSearchBar from "../../../../components/UserSearchBar";
 import { useGetSearchQuery } from "../../../../services/home";
 import { selectFilteredHotels } from "../../../../features/filters/selectFilteredHotels";
 import FiltersSidebar from "../FiltersSidebar";
 import InfoCard from "../../../../components/InfoCard";
+import HotelCardsSkeleton from "../../skeletons/HotelCardsSkeleton";
 
 const HotelsCards = () => {
   const { city, checkInDate, checkOutDate, adults, children, numberOfRooms } =
@@ -19,8 +20,6 @@ const HotelsCards = () => {
   });
   const filteredHotels = useAppSelector(selectFilteredHotels);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error fetching results</p>;
   return (
     <>
       <Container maxWidth="xl" sx={{ mt: "4rem" }}>
@@ -33,11 +32,40 @@ const HotelsCards = () => {
               <UserSearchBar />
             </Box>
             <Grid container spacing={3} justifyContent="center">
-              {filteredHotels?.map((hotel) => (
-                <Grid key={hotel.hotelId} size={{ xs: 12, sm: 10, md: 6 }}>
-                  <InfoCard variant="searchResult" data={hotel} />
-                </Grid>
-              ))}
+              {isLoading ? (
+                <HotelCardsSkeleton />
+              ) : isError ? (
+                <Typography
+                  variant="h6"
+                  color="error"
+                  textAlign="center"
+                  sx={{ mt: 4 }}
+                >
+                  Something went wrong while fetching results. Please try again.
+                </Typography>
+              ) : !filteredHotels?.length ? (
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    mt: 8,
+                    color: "text.secondary",
+                  }}
+                >
+                  <Typography variant="h5" fontWeight={500}>
+                    No hotels found
+                  </Typography>
+                  <Typography variant="body1" sx={{ mt: 1 }}>
+                    Oops! We couldn’t find any hotels. Try changing your filters
+                    or search to see more options!
+                  </Typography>
+                </Box>
+              ) : (
+                filteredHotels?.map((hotel) => (
+                  <Grid key={hotel.hotelId} size={{ xs: 12, sm: 10, md: 6 }}>
+                    <InfoCard variant="searchResult" data={hotel} />
+                  </Grid>
+                ))
+              )}
             </Grid>
           </Grid>
         </Grid>

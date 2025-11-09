@@ -11,7 +11,7 @@ import { searchResultsApi } from "../services/searchResults.ts";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "search", "filters"],
+  whitelist: ["auth", "search"],
 };
 const rootReducer = combineReducers({
   auth: authReducer,

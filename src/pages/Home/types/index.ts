@@ -21,7 +21,7 @@ export interface TrendDes {
   description: string;
   thumbnailUrl: string;
 }
-type amenitie = {
+export type amenity = {
   id: 0;
   name: string;
   description: string;
@@ -49,7 +49,7 @@ export interface SearchRes {
   cityName: string;
   roomPhotoUrl: string;
   discount: number;
-  amenities: amenitie[];
+  amenities: amenity[];
 }
 // interface RoomData {
 //   id: string;

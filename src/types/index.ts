@@ -21,3 +21,7 @@ export interface DecodedToken {
   exp: number;
   iss: string;
 }
+export interface Amenity {
+  name: string;
+  description: string;
+}

@@ -1,20 +1,21 @@
 import { Box, Chip, Rating, Slider, Stack, Typography } from "@mui/material";
-import { useState } from "react";
 import { useGetAmenitiesQuery } from "../../../../services/searchResults";
-import { useAppSelector } from "../../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { getRoomTypes } from "../../utils/roomTypes";
 import FilterItem from "./FilterItem";
+import {
+  setPriceRange,
+  setRating,
+  toggleAmenity,
+  toggleRoomType,
+} from "../../../../features/filters/filtersSlice";
 
 const FiltersList = () => {
-  const [price, setPrice] = useState<number[]>([0, 1000]);
-  const { data: amenities } = useGetAmenitiesQuery();
-  const [rating, setRating] = useState<number | null>(2);
+  const dispatch = useAppDispatch();
+  const filters = useAppSelector((state) => state.filters);
+  const { data: amenities, isLoading } = useGetAmenitiesQuery();
   const searchResults = useAppSelector((state) => state.search.results);
   const roomTypes = getRoomTypes(searchResults);
-  const handlePriceChange = (_event: Event, newValue: number | number[]) => {
-    const value = newValue as number[];
-    setPrice(value);
-  };
   return (
     <Box
       sx={{
@@ -37,44 +38,63 @@ const FiltersList = () => {
       </Typography>
       <FilterItem title="Price Range">
         <Slider
-          value={price}
-          onChange={handlePriceChange}
+          value={filters.priceRange}
+          onChange={(_, newValue) =>
+            dispatch(setPriceRange(newValue as number[]))
+          }
           valueLabelDisplay="auto"
           min={0}
-          max={1000}
+          max={800}
           sx={{
             color: "secondary.main",
           }}
         />
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>${price[0]}</Typography>
-          <Typography>${price[1]}</Typography>
+          <Typography>${filters.priceRange[0]}</Typography>
+          <Typography>${filters.priceRange[1]}</Typography>
         </Box>
       </FilterItem>
       <FilterItem title="Star Rating">
         <Rating
           name="rating"
-          value={rating}
-          onChange={(_, newValue) => setRating(newValue)}
-          sx={{ mt: 1 ,color:"star"}}
+          value={filters.rating}
+          onChange={(_, newValue) => dispatch(setRating(newValue))}
+          sx={{ mt: 1, color: "star" }}
         />
       </FilterItem>
       <FilterItem title="Amenities">
-        <Stack direction="row" flexWrap="wrap" gap={1} mt={1}>
-          {amenities?.map((item) => (
-            <Chip
-              key={item.name}
-              label={item.name}
-              variant="outlined"
-              clickable
-            />
-          ))}
-        </Stack>
+        {isLoading ? (
+          <Typography>Loading amenities...</Typography>
+        ) : (
+          <Stack direction="row" flexWrap="wrap" gap={1} mt={1}>
+            {amenities?.map((item) => (
+              <Chip
+                key={item.name}
+                label={item.name}
+                variant={
+                  filters.amenities.includes(item.name) ? "filled" : "outlined"
+                }
+                color={
+                  filters.amenities.includes(item.name)
+                    ? "secondary"
+                    : "default"
+                }
+                onClick={() => dispatch(toggleAmenity(item.name))}
+              />
+            ))}
+          </Stack>
+        )}
       </FilterItem>
       <FilterItem title="Room Type">
         <Stack direction="row" flexWrap="wrap" gap={1} mt={1}>
           {roomTypes?.map((type) => (
-            <Chip key={type} label={type} variant="outlined" clickable />
+            <Chip
+              key={type}
+              label={type}
+              variant={filters.roomTypes.includes(type) ? "filled" : "outlined"}
+              color={filters.roomTypes.includes(type) ? "secondary" : "default"}
+              onClick={() => dispatch(toggleRoomType(type))}
+            />
           ))}
         </Stack>
       </FilterItem>

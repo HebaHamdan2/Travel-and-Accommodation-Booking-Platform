@@ -1,14 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { baseURL } from "../utils/constans";
-export interface Amenitie {
-  name: string;
-  description: string;
-}
+import { Amenity } from "../types";
 export const searchResultsApi = createApi({
   reducerPath: "searchResultsApi",
   baseQuery: fetchBaseQuery({ baseUrl: `${baseURL}/api/search-results` }),
   endpoints: (builder) => ({
-    getAmenities: builder.query<Amenitie[], void>({
+    getAmenities: builder.query<Amenity[], void>({
       query: () => "amenities",
     }),
   }),

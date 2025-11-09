@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import searchReducer from "../features/search/searchSlice";
+import filtersReducer from "../features/filters/filtersSlice.ts";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { homeApi } from "../services/home.ts";
@@ -10,11 +11,12 @@ import { searchResultsApi } from "../services/searchResults.ts";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"],
+  whitelist: ["auth", "search", "filters"],
 };
 const rootReducer = combineReducers({
   auth: authReducer,
   search: searchReducer,
+  filters: filtersReducer,
   [homeApi.reducerPath]: homeApi.reducer,
   [searchResultsApi.reducerPath]: searchResultsApi.reducer,
 });
@@ -31,7 +33,11 @@ export const store = configureStore({
         // Ignore redux-persist actions that are known to be non-serializable
         ignoredActions: PERSIST_ACTIONS,
       },
-    }).concat(homeApi.middleware, checkTokenExpMiddleware,searchResultsApi.middleware),
+    }).concat(
+      homeApi.middleware,
+      checkTokenExpMiddleware,
+      searchResultsApi.middleware
+    ),
 });
 export const persistor = persistStore(store);
 

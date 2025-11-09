@@ -18,3 +18,16 @@ export interface SearchSliceState extends SearchState {
   loading: boolean;
   error: string | null;
 }
+export interface FiltersState {
+  priceRange: number[];    
+  rating: number | null;
+  amenities: string[];
+  roomTypes: string[];
+}
+
+export const initialFilterState: FiltersState = {
+  priceRange: [0, 800],
+  rating: null,
+  amenities: [],
+  roomTypes: [],
+};

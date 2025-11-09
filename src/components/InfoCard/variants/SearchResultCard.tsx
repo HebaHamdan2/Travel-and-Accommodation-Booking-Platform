@@ -17,10 +17,7 @@ import { BaseCardProps } from "../types";
 import { SearchRes } from "../../../pages/Home/types";
 import { useNavigate } from "react-router-dom";
 import { baseCardStyles } from "../styles/baseCardStyles";
-import { useGetAmenitiesQuery } from "../../../services/searchResults";
-
 const SearchResultCard: React.FC<BaseCardProps<SearchRes>> = ({ data }) => {
-  const { data: amenities } = useGetAmenitiesQuery();
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate(`/hotels/${data.hotelId}`);
@@ -35,8 +32,6 @@ const SearchResultCard: React.FC<BaseCardProps<SearchRes>> = ({ data }) => {
             alt={data.hotelName}
             sx={{ height: 320, objectFit: "cover" }}
           />
-
-          {/* Rating Badge */}
           {data.starRating && (
             <Stack
               direction="row"
@@ -79,7 +74,7 @@ const SearchResultCard: React.FC<BaseCardProps<SearchRes>> = ({ data }) => {
             {data.hotelName}
           </Typography>
           <Stack direction="row" flexWrap="wrap" gap={1} mt={1}>
-            {amenities?.map((item) => (
+            {data.amenities?.map((item) => (
               <Chip
                 key={item.name}
                 label={item.name}

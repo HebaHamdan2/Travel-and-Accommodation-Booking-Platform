@@ -8,6 +8,7 @@ import { homeApi } from "../services/home.ts";
 import { checkTokenExpMiddleware } from "../middlewares/checkTokenExpMiddleware.ts";
 import { PERSIST_ACTIONS } from "../utils/constans.ts";
 import { searchResultsApi } from "../services/searchResults.ts";
+import { hotelsApi } from "../services/hotels.ts";
 const persistConfig = {
   key: "root",
   storage,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   filters: filtersReducer,
   [homeApi.reducerPath]: homeApi.reducer,
   [searchResultsApi.reducerPath]: searchResultsApi.reducer,
+  [hotelsApi.reducerPath]: hotelsApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -36,7 +38,8 @@ export const store = configureStore({
     }).concat(
       homeApi.middleware,
       checkTokenExpMiddleware,
-      searchResultsApi.middleware
+      searchResultsApi.middleware,
+      hotelsApi.middleware
     ),
 });
 export const persistor = persistStore(store);

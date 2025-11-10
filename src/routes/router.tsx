@@ -6,6 +6,7 @@ import Home from "../pages/Home";
 import AdminAuthLayout from "./AdminAuthLayout";
 import AdminDashboard from "../pages/AdminDashboard";
 import SearchResults from "../pages/SearchResults";
+import Hotel from "../pages/Hotel";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
             {
             path: "search-results",
             element: <SearchResults />,
+          },
+              {
+            path: "hotels/:hotelId",
+            element: <Hotel/>,
           },
           {
             element: <AdminAuthLayout />,

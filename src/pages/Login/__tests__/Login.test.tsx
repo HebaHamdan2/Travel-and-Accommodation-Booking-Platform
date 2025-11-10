@@ -77,24 +77,4 @@ describe("Login Page", () => {
     );
     expect(error).toBeInTheDocument();
   });
-  // it("should display success message for normal user login", async () => {
-  //   renderWithProviders(<Login />);
-  //   await mockedLogin(mockedUser);
-
-  //   await waitFor(() => {
-  //     const alert = screen.getByRole("alert");
-  //     expect(alert).toBeInTheDocument();
-  //     expect(alert).toHaveTextContent(/User Login successful/i);
-  //   });
-  // });
-  //  it("should display success message for admin user login", async () => {
-  //   renderWithProviders(<Login />);
-  //   await mockedLogin(mockedAdmin);
-
-  //   await waitFor(() => {
-  //     const alert = screen.getByRole("alert");
-  //     expect(alert).toBeInTheDocument();
-  //     expect(alert).toHaveTextContent(/Admin login successful/i);
-  //   });
-  // });
 });

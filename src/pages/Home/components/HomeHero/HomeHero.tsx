@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import UserSearchBar from "../../../../components/UserSearchBar";
-import Wrapper from "../Wrapper";
+import Wrapper from "../../../../components/Wrapper";
 
 const HomeHero = () => {
   return (

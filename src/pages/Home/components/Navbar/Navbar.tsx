@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
         >
           <Box
             component="img"
-            src="/Logo.svg"
+            src="/Home/Logo.svg"
             alt="App Logo"
             sx={{
               width: { xs: 120, md: 140 },

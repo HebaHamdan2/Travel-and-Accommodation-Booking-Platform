@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Container } from "@mui/material";
-import { WrapperProps } from "../../types";
+import { WrapperProps } from "../../pages/Home/types";
 
-const Wrapper: React.FC<WrapperProps> = ({ children,id }) => {
+const Wrapper: React.FC<WrapperProps> = ({ children, id }) => {
   return (
     <Box
       sx={{
@@ -15,11 +15,9 @@ const Wrapper: React.FC<WrapperProps> = ({ children,id }) => {
         borderBottom: "1px solid",
         borderColor: "divider",
       }}
-    id={id}
+      id={id}
     >
-      <Container maxWidth="xl">
-        {children}
-      </Container>
+      <Container maxWidth="xl">{children}</Container>
     </Box>
   );
 };

@@ -1,5 +1,5 @@
 import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material";
-import Wrapper from "../../components/Wrapper";
+import Wrapper from "../../../../components/Wrapper";
 
 const HotelCardsSkeleton = () => {
   return (

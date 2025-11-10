@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import Wrapper from "../Wrapper";
+import Wrapper from "../../../../components/Wrapper";
 import { useGetTrendingDestQuery } from "../../../../services/home";
 import InofCard from "../../../../components/InfoCard";
 import TrendingDestSkeleton from "../../skeletons/TrendingDestSkeleton";

@@ -51,7 +51,7 @@ const Navbar = () => {
           <Box sx={{ flex: { xs: "0 0 auto", md: 1 } }} />
           <Box
             component="img"
-            src="/Logo.svg"
+            src="/Home/Logo.svg"
             alt="App Logo"
             onClick={() => navigate("/home")}
             sx={{

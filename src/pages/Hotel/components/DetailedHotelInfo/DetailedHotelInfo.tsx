@@ -1,0 +1,40 @@
+import { Grid, Stack } from "@mui/material";
+import VisualGallery from "../VisualGallery";
+import HotelInteractiveMap from "../HotelInteractiveMap";
+import HotelDesc from "../HotelDesc";
+import Wrapper from "../../../../components/Wrapper";
+import { useParams } from "react-router-dom";
+import { useGetHotelDetailsQuery } from "../../../../services/hotels";
+const DetailedHotelInfo = () => {
+  const { hotelId } = useParams();
+  const { data: hotel } = useGetHotelDetailsQuery(Number(hotelId));
+  return (
+    <>
+      <Wrapper>
+        <Grid
+          container
+          spacing={4}
+          alignContent="center"
+          justifyContent="center"
+        >
+          <Grid sx={{ xs: 12, md: 6 }}>
+            <Stack spacing={3} maxWidth="38rem">
+              <HotelDesc hotel={hotel} />
+              {hotel && (
+                <HotelInteractiveMap
+                  latitude={hotel.latitude}
+                  longitude={hotel.longitude}
+                />
+              )}
+            </Stack>
+          </Grid>
+          <Grid sx={{ xs: 12, md: 6, mt: "4rem" }}>
+            <VisualGallery />
+          </Grid>
+        </Grid>
+      </Wrapper>
+    </>
+  );
+};
+
+export default DetailedHotelInfo;

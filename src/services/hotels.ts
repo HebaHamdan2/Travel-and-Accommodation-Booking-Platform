@@ -11,18 +11,24 @@ export const hotelsApi = createApi({
   reducerPath: "hotelsApi",
   baseQuery: fetchBaseQuery({ baseUrl: `${baseURL}/api/hotels` }),
   endpoints: (builder) => ({
-    getHoetlDetails: builder.query<Hotel[], string>({
+    getHotelDetails: builder.query<Hotel, number>({
       query: (hoteldId) => `/${hoteldId}`,
     }),
-    getHotelGallery: builder.query<Gallery[], string>({
+    getHotelGallery: builder.query<Gallery[], number>({
       query: (hotelId) => `/${hotelId}/gallery`,
     }),
     getAvailableRooms: builder.query<AvailbleRoom[], AvailbleRoomQuery>({
       query: ({ hotelId, checkInDate, CheckOutDate }) =>
         `/${hotelId}/available-rooms?checkInDate=${checkInDate}&CheckOutDate=${CheckOutDate}`,
     }),
-    getHotelReviews: builder.query<Review[], string>({
+    getHotelReviews: builder.query<Review[], number>({
       query: (hotelId) => `${hotelId}/reviews`,
     }),
   }),
 });
+export const {
+  useGetHotelDetailsQuery,
+  useGetHotelGalleryQuery,
+  useGetAvailableRoomsQuery,
+  useGetHotelReviewsQuery,
+} = hotelsApi;

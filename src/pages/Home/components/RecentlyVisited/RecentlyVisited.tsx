@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import Wrapper from "../Wrapper/index.ts";
+import Wrapper from "../../../../components/Wrapper/index.ts";
 import { useGetRecentlyVisitedQuery } from "../../../../services/home.ts";
 import { getDecodedToken } from "../../../../utils/getDecodedToken.ts";
 import { useAppSelector } from "../../../../app/hooks.ts";

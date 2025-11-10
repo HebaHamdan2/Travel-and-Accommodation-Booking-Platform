@@ -74,7 +74,7 @@ const LoginForm: React.FC = () => {
     >
       <Box
         component="img"
-        src="/Logo.svg"
+        src="/Home/Logo.svg"
         alt="Travel Logo"
         sx={{
           width: { xs: 120, sm: 160, md: 200 },

@@ -1,10 +1,11 @@
 import React from "react";
 import { HotelProps } from "../../types";
 import Wrapper from "../../../../components/Wrapper";
-import { Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useAppSelector } from "../../../../app/hooks";
 import { useGetAvailableRoomsQuery } from "../../../../services/hotels";
 import InfoCard from "../../../../components/InfoCard";
+import AvailableRoomsSkeleton from "../../skeletons/AvailableRoomsSkeleton";
 
 const AvailableRooms: React.FC<HotelProps> = ({ hotelId }) => {
   const { checkInDate, checkOutDate } = useAppSelector((state) => state.search);
@@ -17,7 +18,7 @@ const AvailableRooms: React.FC<HotelProps> = ({ hotelId }) => {
     checkInDate,
     CheckOutDate: checkOutDate,
   });
-  if (isLoading) return <Typography>Loading Available Rooms...</Typography>;
+  if (isLoading) return <AvailableRoomsSkeleton />;
   if (isError)
     return <Typography color="error">Failed to load Rooms.</Typography>;
 
@@ -33,13 +34,30 @@ const AvailableRooms: React.FC<HotelProps> = ({ hotelId }) => {
         >
           Available Rooms
         </Typography>
-        <Grid container spacing={3} justifyContent="center">
-          {rooms?.map((room) => (
-            <Grid key={room.roomId}>
-              <InfoCard key={room.roomId} variant="roomCard" data={room} />
-            </Grid>
-          ))}
-        </Grid>
+        {!rooms || rooms.length === 0 ? (
+          <Box
+            sx={{
+              textAlign: "center",
+              py: 8,
+              color: "text.secondary",
+            }}
+          >
+            <Typography variant="h6" fontWeight={500}>
+              No rooms available for your selected dates.
+            </Typography>
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              Try changing your dates or room preferences to see more options.
+            </Typography>
+          </Box>
+        ) : (
+          <Grid container spacing={3} justifyContent="center">
+            {rooms?.map((room) => (
+              <Grid key={room.roomId}>
+                <InfoCard key={room.roomId} variant="roomCard" data={room} />
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Wrapper>
     </>
   );

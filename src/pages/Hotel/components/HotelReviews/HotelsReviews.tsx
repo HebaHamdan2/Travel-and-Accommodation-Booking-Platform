@@ -4,12 +4,17 @@ import { useGetHotelReviewsQuery } from "../../../../services/hotels";
 import React, { useState } from "react";
 import { HotelProps } from "../../types";
 import HotelReviewCard from "../HotelReviewCard";
-
+import GuestReviewsSkeleton from "../../skeletons/GuestReviewsSkeleton";
+import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 const HotelsReviews: React.FC<HotelProps> = ({ hotelId }) => {
-   const { data: reviews = [], isLoading, isError } = useGetHotelReviewsQuery(Number(hotelId));
+  const {
+    data: reviews = [],
+    isLoading,
+    isError,
+  } = useGetHotelReviewsQuery(Number(hotelId));
   const [visibleCount, setVisibleCount] = useState(4);
 
-  if (isLoading) return <Typography>Loading reviews...</Typography>;
+  if (isLoading) return <GuestReviewsSkeleton />;
   if (isError)
     return <Typography color="error">Failed to load reviews.</Typography>;
 
@@ -17,7 +22,8 @@ const HotelsReviews: React.FC<HotelProps> = ({ hotelId }) => {
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 4);
-  };  return (
+  };
+  return (
     <>
       <Wrapper>
         <Typography
@@ -29,35 +35,59 @@ const HotelsReviews: React.FC<HotelProps> = ({ hotelId }) => {
         >
           Guest Reviews
         </Typography>
-        <Grid container spacing={2} justifyContent="center">
-          {visibleReviews?.map((review) => (
-            <Grid
-              key={review.reviewId}
-              container
-              sx={{ xs: 12, sm: 6, md: 4 }}
-            >
-              <HotelReviewCard key={review.reviewId} review={review} />
-            </Grid>
-          ))}
-        </Grid>
-          {visibleCount < reviews.length && (
-        <Box textAlign="center" mt={4} alignSelf="center">
-          <Button
-            variant="outlined"
-         
-            onClick={handleLoadMore}
+        {!reviews || reviews.length === 0 ? (
+          <Box
             sx={{
-              borderRadius: 2,
-              textTransform: "none",
-              px: 4,
-              py: 1,   color:"primary.main",
-              fontWeight: 600,
+              textAlign: "center",
+              py: 8,
+              color: "text.secondary",
             }}
           >
-            Load More
-          </Button>
-        </Box>
-      )}
+            <RateReviewOutlinedIcon
+              sx={{
+                fontSize: 60,
+                mb: 2,
+                color: "secondary.main",
+                opacity: 0.7,
+              }}
+            />
+            <Typography variant="h6" fontWeight={500}>
+              No reviews yet.
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            <Grid container spacing={2} justifyContent="center">
+              {visibleReviews?.map((review) => (
+                <Grid
+                  key={review.reviewId}
+                  container
+                  sx={{ xs: 12, sm: 6, md: 4 }}
+                >
+                  <HotelReviewCard key={review.reviewId} review={review} />
+                </Grid>
+              ))}
+            </Grid>
+            {visibleCount < reviews.length && (
+              <Box textAlign="center" mt={4} alignSelf="center">
+                <Button
+                  variant="outlined"
+                  onClick={handleLoadMore}
+                  sx={{
+                    borderRadius: 2,
+                    textTransform: "none",
+                    px: 4,
+                    py: 1,
+                    color: "primary.main",
+                    fontWeight: 600,
+                  }}
+                >
+                  Load More
+                </Button>
+              </Box>
+            )}
+          </>
+        )}
       </Wrapper>
     </>
   );

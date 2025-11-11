@@ -6,8 +6,9 @@ import "yet-another-react-lightbox/styles.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import { useGetHotelGalleryQuery } from "../../../../services/hotels";
 import { GALLERY } from "../../constant";
-import { VisualGalleryProps } from "../../types";
-const VisualGallery:React.FC<VisualGalleryProps> = ({hotelId}) => {
+import { HotelProps } from "../../types";
+import VisualGallerySkeleton from "../../skeletons/VisualGallerySkeleton";
+const VisualGallery:React.FC<HotelProps> = ({hotelId}) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const {
@@ -15,7 +16,7 @@ const VisualGallery:React.FC<VisualGalleryProps> = ({hotelId}) => {
     isError,
     isLoading,
   } = useGetHotelGalleryQuery(hotelId);
-  if (isLoading) return <p>Loading gallery...</p>;
+  if (isLoading) return <VisualGallerySkeleton/>
   let hotelImgs = gallery ?? GALLERY; 
   if (isError) {
     hotelImgs = GALLERY;

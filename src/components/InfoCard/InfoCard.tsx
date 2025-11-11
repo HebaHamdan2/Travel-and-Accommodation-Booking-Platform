@@ -4,6 +4,7 @@ import RecentVisitedCard from "./variants/RecentVisitedCard";
 import DestinationCard from "./variants/DestinationCard ";
 import { InfoCardProps } from "./types";
 import SearchResultCard from "./variants/SearchResultCard";
+import RoomCard from "./variants/RoomCard";
 
 const InfoCard: React.FC<InfoCardProps> = ({ variant, data }) => {
   switch (variant) {
@@ -15,6 +16,8 @@ const InfoCard: React.FC<InfoCardProps> = ({ variant, data }) => {
       return <DestinationCard data={data} />;
     case "searchResult":
       return <SearchResultCard data={data} />;
+    case "roomCard":
+      return <RoomCard data={data} />;
   }
 };
 

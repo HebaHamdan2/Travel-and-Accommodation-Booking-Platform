@@ -3,11 +3,11 @@ import VisualGallery from "../VisualGallery";
 import HotelInteractiveMap from "../HotelInteractiveMap";
 import HotelDesc from "../HotelDesc";
 import Wrapper from "../../../../components/Wrapper";
-import { useParams } from "react-router-dom";
 import { useGetHotelDetailsQuery } from "../../../../services/hotels";
-const DetailedHotelInfo = () => {
-  const { hotelId } = useParams();
-  const { data: hotel } = useGetHotelDetailsQuery(Number(hotelId));
+import React from "react";
+import { HotelProps } from "../../types";
+const DetailedHotelInfo: React.FC<HotelProps> = ({ hotelId }) => {
+  const { data: hotel } = useGetHotelDetailsQuery(hotelId);
   return (
     <>
       <Wrapper>
@@ -29,7 +29,7 @@ const DetailedHotelInfo = () => {
             </Stack>
           </Grid>
           <Grid sx={{ xs: 12, md: 6, mt: "4rem" }}>
-            <VisualGallery />
+            <VisualGallery hotelId={hotelId} />
           </Grid>
         </Grid>
       </Wrapper>

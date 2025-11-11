@@ -1,21 +1,20 @@
 import { Box } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/styles.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import { useGetHotelGalleryQuery } from "../../../../services/hotels";
-import { useParams } from "react-router-dom";
 import { GALLERY } from "../../constant";
-const VisualGallery = () => {
+import { VisualGalleryProps } from "../../types";
+const VisualGallery:React.FC<VisualGalleryProps> = ({hotelId}) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { hotelId } = useParams();
   const {
     data: gallery,
     isError,
     isLoading,
-  } = useGetHotelGalleryQuery(Number(hotelId));
+  } = useGetHotelGalleryQuery(hotelId);
   if (isLoading) return <p>Loading gallery...</p>;
   let hotelImgs = gallery ?? GALLERY; 
   if (isError) {

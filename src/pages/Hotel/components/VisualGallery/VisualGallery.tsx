@@ -8,19 +8,12 @@ import { useGetHotelGalleryQuery } from "../../../../services/hotels";
 import { GALLERY } from "../../constant";
 import { HotelProps } from "../../types";
 import VisualGallerySkeleton from "../../skeletons/VisualGallerySkeleton";
-const VisualGallery:React.FC<HotelProps> = ({hotelId}) => {
+const VisualGallery: React.FC<HotelProps> = ({ hotelId }) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const {
-    data: gallery,
-    isError,
-    isLoading,
-  } = useGetHotelGalleryQuery(hotelId);
-  if (isLoading) return <VisualGallerySkeleton/>
-  let hotelImgs = gallery ?? GALLERY; 
-  if (isError) {
-    hotelImgs = GALLERY;
-  }
+  const { data, isError, isLoading } = useGetHotelGalleryQuery(hotelId);
+  if (isLoading) return <VisualGallerySkeleton />;
+  const hotelImgs = isError || !data || data?.length === 0 ? GALLERY : data;
   const handleOpen = (index: number) => {
     setCurrentIndex(index);
     setOpen(true);

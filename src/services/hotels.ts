@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseURL } from "../utils/constans";
 import {
   AvailbleRoom,
@@ -7,9 +7,11 @@ import {
   Hotel,
   Review,
 } from "../types";
+import { createBaseQueryWithErrorHandler } from "./baseQueryWithErrorHandler";
+const baseQuery = createBaseQueryWithErrorHandler(`${baseURL}/api/hotels`);
 export const hotelsApi = createApi({
   reducerPath: "hotelsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `${baseURL}/api/hotels` }),
+  baseQuery,
   endpoints: (builder) => ({
     getHotelDetails: builder.query<Hotel, number>({
       query: (hoteldId) => `/${hoteldId}`,

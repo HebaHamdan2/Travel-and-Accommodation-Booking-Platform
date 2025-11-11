@@ -41,7 +41,7 @@ const SearchResultCard: React.FC<BaseCardProps<SearchRes>> = ({ data }) => {
                 position: "absolute",
                 top: 12,
                 right: 12,
-                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                backgroundColor: "background.default",
                 px: 1.2,
                 py: 0.4,
                 borderRadius: "1rem",

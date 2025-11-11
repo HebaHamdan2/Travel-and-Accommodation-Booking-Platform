@@ -13,6 +13,7 @@ import { MemoryRouter } from "react-router-dom";
 import { persistor, store } from "../../app/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { AvailbleRoom } from "../../types";
 const meta: Meta<typeof InofCard> = {
   title: "Components/InfoCard",
   component: InofCard,
@@ -105,21 +106,45 @@ const mockResult: SearchRes = {
   ],
 };
 
-export const FeaturedDeals: Story = {
+const mockRoomCard: AvailbleRoom = {
+  roomId: 1,
+  roomNumber: 101,
+  roomPhotoUrl:
+    "https://cf.bstatic.com/xdata/images/hotel/max1280x900/33143786.jpg?k=4d0bca9d9795b80beb2cd9786946e043b23d1372eb633d5855d3aba6343d68d4&o=&hp=1",
+  roomType: "Standard",
+  capacityOfAdults: 2,
+  capacityOfChildren: 1,
+  roomAmenities: [
+    {
+      name: "Free Wi-Fi",
+      description: "High-speed internet available in all rooms.",
+    },
+    {
+      name: "TV",
+      description: "Flat-screen TV with cable channels.",
+    },
+    {
+      name: "Air Conditioning",
+      description: "Individually controlled air conditioning.",
+    },
+  ],
+  price: 150,
+  availability: true,
+};
+export const FeaturedDealCard: Story = {
   args: {
     variant: "featuredDeals",
     data: mockDeal,
   },
 };
 
-export const RecentlyVisitedHotels: Story = {
+export const RecentlyVisitedHotelCard: Story = {
   args: {
     variant: "recentVisited",
     data: mockRecent,
   },
 };
-
-export const TrendingDestination: Story = {
+export const TrendingDestinationCard: Story = {
   args: {
     variant: "destination",
     data: mockDestination,
@@ -129,5 +154,11 @@ export const SearchResultCard: Story = {
   args: {
     variant: "searchResult",
     data: mockResult,
+  },
+};
+export const RoomCard: Story = {
+  args: {
+    variant: "roomCard",
+    data: mockRoomCard,
   },
 };

@@ -23,7 +23,7 @@ export const handleApiError = (
     ERROR_MESSAGES[status as keyof typeof ERROR_MESSAGES] ||
     ERROR_MESSAGES.default;
 
-  const messageToShow = backendMessage || fallbackMessage; // return backend error if it string
+  const messageToShow = backendMessage || fallbackMessage; // return backend message if it string and good to display
   if (status === 401) {
     console.log(messageToShow); //toast
     api.dispatch(logout());

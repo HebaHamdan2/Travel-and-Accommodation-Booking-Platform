@@ -15,11 +15,9 @@ export const ThemeContextProvider: React.FC<ThemeProps> = ({ children }) => {
     (localStorage.getItem("themeMode") as PaletteMode) || "light"
   );
   const toggleMode = () => {
-    setMode((prev) => {
-      const newMode = prev === "light" ? "dark" : "light";
-      localStorage.setItem("themeMode", newMode);
-      return newMode;
-    });
+    const newMode = mode === "light" ? "dark" : "light";
+    setMode(newMode);
+    localStorage.setItem("themeMode", newMode);
   };
 
   const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);

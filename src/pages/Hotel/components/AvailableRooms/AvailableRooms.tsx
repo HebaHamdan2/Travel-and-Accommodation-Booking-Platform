@@ -1,5 +1,5 @@
 import React from "react";
-import { HotelProps } from "../../types";
+import { AvailableRoomsProps } from "../../types";
 import Wrapper from "../../../../components/Wrapper";
 import { Box, Grid, Typography } from "@mui/material";
 import { useAppSelector } from "../../../../app/hooks";
@@ -7,7 +7,10 @@ import { useGetAvailableRoomsQuery } from "../../../../services/hotels";
 import InfoCard from "../../../../components/InfoCard";
 import AvailableRoomsSkeleton from "../../skeletons/AvailableRoomsSkeleton";
 
-const AvailableRooms: React.FC<HotelProps> = ({ hotelId }) => {
+const AvailableRooms: React.FC<AvailableRoomsProps> = ({
+  hotelName,
+  hotelId,
+}) => {
   const { checkInDate, checkOutDate } = useAppSelector((state) => state.search);
   const {
     data: rooms,
@@ -53,7 +56,16 @@ const AvailableRooms: React.FC<HotelProps> = ({ hotelId }) => {
           <Grid container spacing={3} justifyContent="center">
             {rooms?.map((room) => (
               <Grid key={room.roomId}>
-                <InfoCard key={room.roomId} variant="roomCard" data={room} />
+                <InfoCard
+                  key={room.roomId}
+                  variant="roomCard"
+                  data={{
+                    ...room,
+                    hotelName,
+                    checkInDate,
+                    checkOutDate,
+                  }}
+                />
               </Grid>
             ))}
           </Grid>

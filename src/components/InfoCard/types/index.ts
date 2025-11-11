@@ -5,7 +5,11 @@ import {
   TrendDes,
 } from "../../../pages/Home/types";
 import { AvailbleRoom } from "../../../types";
-
+export interface RoomCardInfo extends AvailbleRoom {
+  hotelName: string;
+  checkInDate: string;
+  checkOutDate: string;
+}
 export interface BaseCardProps<T> {
   data: T;
 }
@@ -24,7 +28,7 @@ export interface DestinationCardProps extends BaseCardProps<TrendDes> {
 export interface SearchResultCardProps extends BaseCardProps<SearchRes> {
   variant: "searchResult";
 }
-export interface RoomCardProps extends BaseCardProps<AvailbleRoom> {
+export interface RoomCardProps extends BaseCardProps<RoomCardInfo> {
   variant: "roomCard";
 }
 export type InfoCardProps =

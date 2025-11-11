@@ -1,3 +1,5 @@
+import { AvailbleRoom } from "../../types";
+
 export interface AuthState {
   userType: string | null;
   authentication: string | null;
@@ -5,13 +7,13 @@ export interface AuthState {
   error?: { title: string } | null;
 }
 export interface SearchState {
-  city?: string;          
-  checkInDate: string;     
-  checkOutDate: string;     
-  starRate?: number;       
-  numberOfRooms: number;  
-  adults: number;          
-  children: number;       
+  city?: string;
+  checkInDate: string;
+  checkOutDate: string;
+  starRate?: number;
+  numberOfRooms: number;
+  adults: number;
+  children: number;
 }
 export interface SearchSliceState extends SearchState {
   results: any[];
@@ -19,7 +21,7 @@ export interface SearchSliceState extends SearchState {
   error: string | null;
 }
 export interface FiltersState {
-  priceRange: number[];    
+  priceRange: number[];
   rating: number | null;
   amenities: string[];
   roomTypes: string[];
@@ -31,3 +33,17 @@ export const initialFilterState: FiltersState = {
   amenities: [],
   roomTypes: [],
 };
+export type CartRoomItem = Pick<
+  AvailbleRoom,
+  "roomId" | "roomNumber" | "roomType" | "roomPhotoUrl" | "price"
+>;
+export interface CartItem {
+  hotelName: string;
+  checkInDate: string;
+  checkOutDate: string;
+  rooms: CartRoomItem[];
+  totalPrice: number;
+}
+export interface CartState {
+  items: CartItem[];
+}

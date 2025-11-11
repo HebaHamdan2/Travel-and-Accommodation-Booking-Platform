@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { AuthState, SearchState,SearchSliceState } from "../types";
+import { AuthState, SearchState,SearchSliceState, CartState } from "../types";
 
 export const initialAuth: AuthState = {
   userType: null,
@@ -25,3 +25,6 @@ export const initialSearchState: SearchSliceState = {
   loading: false,
   error: null,
 };
+export const initialCartState:CartState={
+    items:[],
+}

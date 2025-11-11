@@ -1,6 +1,5 @@
 import React from "react";
-import { BaseCardProps } from "../types";
-import { AvailbleRoom } from "../../../types";
+import { BaseCardProps, RoomCardInfo } from "../types";
 import {
   Box,
   Button,
@@ -16,8 +15,58 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import ChildCareIcon from "@mui/icons-material/ChildCare";
 import { baseCardStyles } from "../styles/baseCardStyles";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  addRoomToCart,
+  removeFromCart,
+} from "../../../features/cart/cartSlice";
 
-const RoomCard: React.FC<BaseCardProps<AvailbleRoom>> = ({ data }) => {
+const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
+  const {
+    hotelName,
+    checkInDate,
+    checkOutDate,
+    roomId,
+    roomNumber,
+    roomType,
+    roomPhotoUrl,
+    price,
+    capacityOfAdults,
+    capacityOfChildren,
+    roomAmenities,
+  } = data;
+
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
+
+  // Check if the room is already in the cart
+  const isInCart = cartItems.some(
+    (hotel) =>
+      hotel.hotelName === hotelName &&
+      hotel.rooms.some((room) => room.roomId === roomId)
+  );
+
+  const handleToggleCart = () => {
+    if (isInCart) {
+      dispatch(removeFromCart({ hotelName, roomNumber: roomNumber }));
+    } else {
+      dispatch(
+        addRoomToCart({
+          hotelName,
+          checkInDate,
+          checkOutDate,
+          room: {
+            roomId,
+            roomNumber,
+            roomType,
+            roomPhotoUrl,
+            price,
+          },
+        })
+      );
+    }
+  };
+
   return (
     <Card
       sx={{
@@ -93,19 +142,17 @@ const RoomCard: React.FC<BaseCardProps<AvailbleRoom>> = ({ data }) => {
           >
             <Stack direction="row" alignItems="center" spacing={0.5}>
               <PersonIcon fontSize="small" />
-              <Typography variant="body2">
-                {data.capacityOfAdults} Adults
-              </Typography>
+              <Typography variant="body2">{capacityOfAdults} Adults</Typography>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={0.5}>
               <ChildCareIcon fontSize="small" />
               <Typography variant="body2">
-                {data.capacityOfChildren} Children
+                {capacityOfChildren} Children
               </Typography>
             </Stack>
           </Stack>
           <Stack direction="row" flexWrap="wrap" gap={1}>
-            {data.roomAmenities?.map((item) => (
+            {roomAmenities?.map((item) => (
               <Chip
                 key={item.name}
                 label={item.name}
@@ -124,23 +171,20 @@ const RoomCard: React.FC<BaseCardProps<AvailbleRoom>> = ({ data }) => {
       <CardActions sx={{ justifyContent: "center", pb: 2 }}>
         <Button
           size="medium"
-          variant="contained"
+          variant={isInCart ? "outlined" : "contained"}
+          color={isInCart ? "secondary" : "primary"}
           sx={{
             textTransform: "none",
             fontWeight: 700,
             fontSize: "1rem",
             borderRadius: "1rem",
             px: 4,
-            backgroundColor: "main.main",
-            color: "background.paper",
-            "&:hover": {
-              opacity: 0.9,
-              transform: "scale(1.03)",
-            },
+            "&:hover": { opacity: 0.9, transform: "scale(1.03)" },
             transition: "all 0.2s ease-in-out",
           }}
+          onClick={handleToggleCart}
         >
-          Add To Cart
+          {isInCart ? "Remove from Cart" : "Add to Cart"}
         </Button>
       </CardActions>
     </Card>

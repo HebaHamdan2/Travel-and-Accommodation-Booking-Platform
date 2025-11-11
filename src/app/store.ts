@@ -2,22 +2,23 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import searchReducer from "../features/search/searchSlice";
 import filtersReducer from "../features/filters/filtersSlice.ts";
+import cartReducer from "../features/cart/cartSlice.ts"
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { homeApi } from "../services/home.ts";
 import { checkTokenExpMiddleware } from "../middlewares/checkTokenExpMiddleware.ts";
-import { PERSIST_ACTIONS } from "../utils/constans.ts";
 import { searchResultsApi } from "../services/searchResults.ts";
 import { hotelsApi } from "../services/hotels.ts";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "search"],
+  whitelist: ["auth", "search","cart"],
 };
 const rootReducer = combineReducers({
   auth: authReducer,
   search: searchReducer,
   filters: filtersReducer,
+  cart:cartReducer,
   [homeApi.reducerPath]: homeApi.reducer,
   [searchResultsApi.reducerPath]: searchResultsApi.reducer,
   [hotelsApi.reducerPath]: hotelsApi.reducer,
@@ -31,10 +32,7 @@ export const store = configureStore({
   // and other useful features of `rtk-query`
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore redux-persist actions that are known to be non-serializable
-        ignoredActions: PERSIST_ACTIONS,
-      },
+      serializableCheck:false
     }).concat(
       homeApi.middleware,
       checkTokenExpMiddleware,

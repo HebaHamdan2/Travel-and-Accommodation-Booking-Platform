@@ -7,10 +7,17 @@ import { useGetHotelDetailsQuery } from "../../../../services/hotels";
 import React from "react";
 import { HotelProps } from "../../types";
 import DetailedHotelSkeleton from "../../skeletons/DetailedHotelSkeleton/DetailedHotelSkeleton";
-const DetailedHotelInfo: React.FC<HotelProps> = ({ hotelId }) => {
-  const { data: hotel,isLoading,isError } = useGetHotelDetailsQuery(hotelId);
-   if (isLoading) return <DetailedHotelSkeleton />;
-  if (isError) return <p style={{ color: "red" }}>Failed to load hotel details.</p>;
+import HotelsReviews from "../HotelReviews";
+import AvailableRooms from "../AvailableRooms";
+import { useParams } from "react-router-dom";
+const DetailedHotelInfo: React.FC<HotelProps> = () => {
+  let params = useParams();
+  const hotelId = Number(params.hotelId);
+  const { data: hotel, isLoading, isError } = useGetHotelDetailsQuery(hotelId);
+
+  if (isLoading) return <DetailedHotelSkeleton />;
+  if (isError)
+    return <p style={{ color: "red" }}>Failed to load hotel details.</p>;
 
   return (
     <>
@@ -37,6 +44,8 @@ const DetailedHotelInfo: React.FC<HotelProps> = ({ hotelId }) => {
           </Grid>
         </Grid>
       </Wrapper>
+      <HotelsReviews hotelId={hotelId} />
+      <AvailableRooms hotelName={hotel?.hotelName || ""} hotelId={hotelId} />
     </>
   );
 };

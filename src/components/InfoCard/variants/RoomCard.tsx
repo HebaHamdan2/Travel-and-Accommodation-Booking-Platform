@@ -45,7 +45,6 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
       hotel.hotelName === hotelName &&
       hotel.rooms.some((room) => room.roomId === roomId)
   );
-
   const handleToggleCart = () => {
     if (isInCart) {
       dispatch(removeFromCart({ hotelName, roomNumber: roomNumber }));
@@ -82,8 +81,8 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
         <Box sx={{ position: "relative" }}>
           <CardMedia
             component="img"
-            image={data.roomPhotoUrl}
-            alt={`room-${data.roomId}`}
+            image={roomPhotoUrl}
+            alt={`room-${roomId}`}
             sx={{ height: 250, objectFit: "cover" }}
           />
         </Box>
@@ -104,7 +103,7 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
                 mb: 1,
               }}
             >
-              {data.roomType}
+              {roomType}
             </Typography>
             <Stack
               direction="row"

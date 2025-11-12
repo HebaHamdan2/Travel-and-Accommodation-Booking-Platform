@@ -109,7 +109,7 @@ const Navbar: React.FC = () => {
                 <DarkModeOutlinedIcon fontSize="small" />
               )}
             </IconButton>
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={() => navigate("/checkout")}>
               <ShoppingCartOutlinedIcon fontSize="small" />
             </IconButton>
             <Button

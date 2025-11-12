@@ -5,6 +5,7 @@ import DestinationCard from "./variants/DestinationCard ";
 import { InfoCardProps } from "./types";
 import SearchResultCard from "./variants/SearchResultCard";
 import RoomCard from "./variants/RoomCard";
+import CartItemCard from "./variants/CartItemCard";
 
 const InfoCard: React.FC<InfoCardProps> = ({ variant, data }) => {
   switch (variant) {
@@ -18,6 +19,9 @@ const InfoCard: React.FC<InfoCardProps> = ({ variant, data }) => {
       return <SearchResultCard data={data} />;
     case "roomCard":
       return <RoomCard data={data} />;
+    case "cartItem":
+      return <CartItemCard data={data}/>
+    
   }
 };
 

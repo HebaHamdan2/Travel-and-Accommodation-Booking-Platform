@@ -7,7 +7,7 @@ import AdminAuthLayout from "./AdminAuthLayout";
 import AdminDashboard from "../pages/AdminDashboard";
 import SearchResults from "../pages/SearchResults";
 import Hotel from "../pages/Hotel";
-
+import Checkout from "../pages/Checkout/Checkout";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -25,13 +25,17 @@ export const router = createBrowserRouter([
             path: "home",
             element: <Home />,
           },
-            {
+          {
             path: "search-results",
             element: <SearchResults />,
           },
-              {
+          {
             path: "hotels/:hotelId",
-            element: <Hotel/>,
+            element: <Hotel />,
+          },
+          {
+            path: "checkout",
+            element: <Checkout />,
           },
           {
             element: <AdminAuthLayout />,

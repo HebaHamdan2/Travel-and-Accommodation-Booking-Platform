@@ -1,3 +1,4 @@
+import { CartRoomItem } from "../../../features/types";
 import {
   Deal,
   RecentHotels,
@@ -9,6 +10,9 @@ export interface RoomCardInfo extends AvailbleRoom {
   hotelName: string;
   checkInDate: string;
   checkOutDate: string;
+}
+export interface CartRoomItemCardIfo extends CartRoomItem{
+hotelName: string;
 }
 export interface BaseCardProps<T> {
   data: T;
@@ -31,9 +35,13 @@ export interface SearchResultCardProps extends BaseCardProps<SearchRes> {
 export interface RoomCardProps extends BaseCardProps<RoomCardInfo> {
   variant: "roomCard";
 }
+export interface CartItemProps extends BaseCardProps<CartRoomItemCardIfo> {
+  variant: "cartItem";
+}
 export type InfoCardProps =
   | FeaturedDealCardProps
   | RecentVisitedCardProps
   | DestinationCardProps
   | SearchResultCardProps
-  | RoomCardProps;
+  | RoomCardProps
+  | CartItemProps;

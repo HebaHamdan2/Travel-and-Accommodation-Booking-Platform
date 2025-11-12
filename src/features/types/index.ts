@@ -1,3 +1,4 @@
+import { UserDetailsFormValues } from "../../pages/Checkout/types";
 import { AvailbleRoom } from "../../types";
 
 export interface AuthState {
@@ -27,23 +28,48 @@ export interface FiltersState {
   roomTypes: string[];
 }
 
-export const initialFilterState: FiltersState = {
-  priceRange: [0, 800],
-  rating: null,
-  amenities: [],
-  roomTypes: [],
-};
 export type CartRoomItem = Pick<
   AvailbleRoom,
   "roomId" | "roomNumber" | "roomType" | "roomPhotoUrl" | "price"
->;
-export interface CartItem {
+>;export interface CartItem {
   hotelName: string;
   checkInDate: string;
   checkOutDate: string;
   rooms: CartRoomItem[];
   totalPrice: number;
 }
+
 export interface CartState {
   items: CartItem[];
+}
+
+export interface BookingState {
+  userDetails: UserDetailsFormValues;
+  cartItems: CartItem[];
+  status: "idle" | "loading" | "success" | "error";
+  error?: string;
+  confirmationNumber?: string;
+}
+
+export interface BookingRequest {
+  roomNumber: string;
+  customerName: string;
+  hotelName: string;
+  roomType: string;
+  totalCost: number;
+  paymentMethod: string;
+  bookingDateTime: string;
+  id?: string; 
+}
+
+export interface BookingResponse {
+  customerName: string;
+  hotelName: string;
+  roomNumber: string;
+  roomType: string;
+  bookingDateTime: string;
+  totalCost: number;
+  paymentMethod: string;
+  bookingStatus: string;
+  confirmationNumber: string; 
 }

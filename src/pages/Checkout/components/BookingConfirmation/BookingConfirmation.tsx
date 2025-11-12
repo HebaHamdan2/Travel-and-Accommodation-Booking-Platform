@@ -1,150 +1,145 @@
-import React from "react";
+import React, { useRef } from "react";
+import { Box, Typography, Button, Grid, Paper, Divider } from "@mui/material";
+import { useReactToPrint } from "react-to-print";
 import { BookingConfirmationProps } from "../../types";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Stack,
-  Typography,
-  Grid,
-} from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
-import { selectTotalCost } from "../../../../features/cart/selectTotalCost";
-import { clearCart } from "../../../../features/cart/cartSlice";
+import { LOGO_URL } from "../../../../utils/constans";
+import { getStatusColor } from "../../utils";
 
 const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   customerDetails,
-  items,
+  bookings,
   onReset,
 }) => {
-  const dispatch = useAppDispatch();
-  const totalCost = useAppSelector(selectTotalCost);
-  const bookingDate = new Date().toLocaleString();
-  const confirmationNumber = Math.random()
-    .toString(36)
-    .substring(2, 10)
-    .toUpperCase();
+  const componentRef = useRef<HTMLDivElement>(null);
 
-  const handleFinish = () => {
-    dispatch(clearCart());
-    onReset();
-  };
-
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
+    documentTitle: `Booking-${new Date().toISOString()}`,
+  });
   return (
-    <Card
-      sx={{
-        p: 4,
-        borderRadius: 3,
-        maxWidth: 800,
-        margin: "auto",
-        boxShadow: 3,
-      }}
-    >
-      <CardContent>
-        <Stack spacing={2} alignItems="center" mb={3}>
-          <Typography variant="h6" fontSize="2rem">
-            Booking Confirmed!
+    <Box sx={{ maxWidth: 1000, mx: "auto", py: 4, px: { xs: 2, sm: 4 } }}>
+      <Paper
+        elevation={4}
+        sx={{
+          p: { xs: 2, sm: 4 },
+          borderRadius: 3,
+          overflow: "hidden",
+        }}
+      >
+        <Box textAlign="center" mb={3}>
+          <img
+            src={LOGO_URL}
+            alt="Logo"
+            style={{ width: 70, marginBottom: 16 }}
+          />
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            gutterBottom
+            sx={{ fontSize: { xs: "1.5rem", sm: "2rem" } }}
+          >
+            Thank you, {customerDetails.fullName}!
           </Typography>
-        </Stack>
-        <Stack  spacing={1}>
-          <Typography variant="body1">
-            <strong>Customer Name:</strong> {customerDetails.fullName}
+          <Typography variant="subtitle1" color="text.secondary">
+            Your {bookings.length}{" "}
+            {bookings.length > 1 ? "rooms have" : "room has"} been successfully
+            booked.
           </Typography>
-          <Typography variant="body1">
-            <strong>Customer Email:</strong> {customerDetails.email}
-          </Typography>
-          <Typography variant="body1">
-            <strong>Payment Method:</strong> {customerDetails.paymentMethod}
-          </Typography>
-          {customerDetails.specialRequests && (
-            <Typography variant="body1">
-              <strong>Special Requests:</strong>{" "}
-              {customerDetails.specialRequests}
-            </Typography>
-          )}
-        </Stack>
-        <Stack spacing={2} mb={3}>
-          {items?.map((hotel) => (
-            <Box
-              key={hotel.hotelName}
-              sx={{ mb: 2, p: 2, border: "1px solid", borderColor:"divider", borderRadius: 2 }}
-            >
-              <Typography
-                variant="subtitle1"
-                textAlign="left"
-                fontWeight={600}
-                mb={1}
-              >
-                {hotel.hotelName}
-              </Typography>
-              {hotel.rooms.map((room) => (
-                <Grid container key={room.roomId} spacing={1}>
-                  <Grid sx={{ xs: 6 }}>
-                    Room {room.roomNumber} – {room.roomType}
-                  </Grid>
-                  <Grid sx={{ xs: 6 }} textAlign="right">
-                    ${room.price}/night
-                  </Grid>
-                </Grid>
-              ))}
-              <Typography variant="body2" textAlign="left" mt={1}>
-                <strong>Check-in:</strong> {hotel.checkInDate} |{" "}
-                <strong>Check-out:</strong> {hotel.checkOutDate}
-              </Typography>
-              <Typography variant="body2" textAlign="left" fontWeight={600}>
-                Total for hotel: ${hotel.totalPrice.toFixed(2)}
-              </Typography>
-            </Box>
-          ))}
-        </Stack>
-        <Typography
-          variant="subtitle1"
-          fontSize="1rem"
-          fontWeight={500}
-          color="text.secondary"
-        >
-          Confirmation Number: <strong>{confirmationNumber}</strong>
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Booking Date: {bookingDate}
-        </Typography>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={3}
-        >
-          <Typography variant="h6" fontWeight={700}>
-            Total Cost:
-          </Typography>
-          <Typography variant="h6" color="primary" fontWeight={700}>
-            ${totalCost.toFixed(2)}
-          </Typography>
-        </Stack>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
-          justifyContent="center"
+        </Box>
+
+        <Divider sx={{ mb: 3 }} />
+        <div ref={componentRef}>
+          <Grid container spacing={3}>
+            {bookings.map((b, index) => (
+              <Grid sx={{ xs: 12, sm: 6 }} key={index}>
+                <Paper
+                  sx={{
+                    p: { xs: 2, sm: 3 },
+                    borderRadius: 2,
+                    boxShadow: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1.5,
+                    height: "100%",
+                    backgroundColor: "background.default",
+                  }}
+                >
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {b.hotelName}
+                  </Typography>
+                  <Typography variant="body2">
+                    Room #: {b.roomNumber}
+                  </Typography>
+                  <Typography variant="body2">Type: {b.roomType}</Typography>
+                  <Typography variant="body2">Total: ${b.totalCost}</Typography>
+                  <Typography variant="body2">
+                    Payment: {b.paymentMethod}
+                  </Typography>
+                  <Typography variant="body2">
+                    Status:
+                    <Box
+                      component="span"
+                      sx={{
+                        color: getStatusColor(b.bookingStatus),
+                        fontWeight: "medium",
+                      }}
+                    >
+                      {b.bookingStatus}
+                    </Box>
+                  </Typography>
+                  {b.confirmationNumber && (
+                    <Typography variant="body2" fontWeight="medium">
+                      Confirmation #: {b.confirmationNumber}
+                    </Typography>
+                  )}
+                  <Typography variant="caption" color="text.secondary">
+                    Booked on: {new Date(b.bookingDateTime).toLocaleString()}
+                  </Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </div>
+        <Box
+          sx={{
+            mt: 4,
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "center",
+            gap: 2,
+          }}
         >
           <Button
             variant="contained"
-            sx={{ textTransform: "none", fontWeight: 600 }}
-            color="secondary"
+            onClick={handlePrint}
+            color="primary"
+            sx={{
+              textTransform: "none",
+              fontWeight: 700,
+              borderRadius: "1rem",
+              minWidth: { xs: "100%", sm: 160 },
+              fontSize: { xs: "0.9rem", sm: "1rem" },
+            }}
           >
             Download PDF
           </Button>
           <Button
-            variant="contained"
-            sx={{ textTransform: "none", fontWeight: 600 }}
-            color="primary"
-            onClick={handleFinish}
+            variant="outlined"
+            onClick={onReset}
+            sx={{
+              minWidth: { xs: "100%", sm: 160 },
+              fontSize: { xs: "0.9rem", sm: "1rem" },
+              color: "secondary",
+              textTransform: "none",
+              fontWeight: 700,
+              borderRadius: "1rem",
+            }}
           >
-            Finish & Clear
+            Book Another
           </Button>
-        </Stack>
-      </CardContent>
-    </Card>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 

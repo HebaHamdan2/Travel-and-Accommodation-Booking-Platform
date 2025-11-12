@@ -2,26 +2,30 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import searchReducer from "../features/search/searchSlice";
 import filtersReducer from "../features/filters/filtersSlice.ts";
-import cartReducer from "../features/cart/cartSlice.ts"
+import cartReducer from "../features/cart/cartSlice.ts";
+import bookingReducer from "../features/booking/bookingSlice.ts";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { homeApi } from "../services/home.ts";
 import { checkTokenExpMiddleware } from "../middlewares/checkTokenExpMiddleware.ts";
 import { searchResultsApi } from "../services/searchResults.ts";
 import { hotelsApi } from "../services/hotels.ts";
+import { bookingApi } from "../services/booking.ts";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "search","cart"],
+  whitelist: ["auth", "search", "cart"],
 };
 const rootReducer = combineReducers({
   auth: authReducer,
   search: searchReducer,
   filters: filtersReducer,
-  cart:cartReducer,
+  cart: cartReducer,
+  booking: bookingReducer,
   [homeApi.reducerPath]: homeApi.reducer,
   [searchResultsApi.reducerPath]: searchResultsApi.reducer,
   [hotelsApi.reducerPath]: hotelsApi.reducer,
+  [bookingApi.reducerPath]: bookingApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -32,12 +36,13 @@ export const store = configureStore({
   // and other useful features of `rtk-query`
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck:false
+      serializableCheck: false,
     }).concat(
       homeApi.middleware,
       checkTokenExpMiddleware,
       searchResultsApi.middleware,
-      hotelsApi.middleware
+      hotelsApi.middleware,
+      bookingApi.middleware
     ),
 });
 export const persistor = persistStore(store);

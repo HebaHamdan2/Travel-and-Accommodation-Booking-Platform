@@ -15,6 +15,7 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { LOGO_URL } from "../../utils/constans";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const Navbar = () => {
           <Box sx={{ flex: { xs: "0 0 auto", md: 1 } }} />
           <Box
             component="img"
-            src="/Home/Logo.svg"
+            src={LOGO_URL}
             alt="App Logo"
             onClick={() => navigate("/home")}
             sx={{

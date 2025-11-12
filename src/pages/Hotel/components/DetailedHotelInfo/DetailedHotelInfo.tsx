@@ -5,12 +5,11 @@ import HotelDesc from "../HotelDesc";
 import Wrapper from "../../../../components/Wrapper";
 import { useGetHotelDetailsQuery } from "../../../../services/hotels";
 import React from "react";
-import { HotelProps } from "../../types";
 import DetailedHotelSkeleton from "../../skeletons/DetailedHotelSkeleton/DetailedHotelSkeleton";
 import HotelsReviews from "../HotelReviews";
 import AvailableRooms from "../AvailableRooms";
 import { useParams } from "react-router-dom";
-const DetailedHotelInfo: React.FC<HotelProps> = () => {
+const DetailedHotelInfo: React.FC = () => {
   let params = useParams();
   const hotelId = Number(params.hotelId);
   const { data: hotel, isLoading, isError } = useGetHotelDetailsQuery(hotelId);

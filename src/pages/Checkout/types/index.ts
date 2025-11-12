@@ -1,4 +1,4 @@
-import { CartItem } from "../../../features/types";
+import { BookingResponse } from "../../../features/types";
 
 export interface UserDetailsFormValues {
   fullName: string;
@@ -9,17 +9,16 @@ export interface UserDetailsFormValues {
   cardCvv?: string;
   specialRequests?: string;
 }
-
+export interface UserDetailsFormHandle {
+  submitForm: () => void;
+}
 export interface UserDetailsFormProps {
   onValidSubmit: (values: UserDetailsFormValues) => void;
+  initialValues?: UserDetailsFormValues;
 }
+
 export interface BookingConfirmationProps {
-  customerDetails: {
-    fullName: string;
-    email: string;
-    paymentMethod: string;
-    specialRequests?: string;
-  };
-  items:CartItem[];
+  customerDetails: UserDetailsFormValues;
+  bookings: BookingResponse[];
   onReset: () => void;
 }

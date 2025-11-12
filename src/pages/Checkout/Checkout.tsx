@@ -1,9 +1,9 @@
-import CartLayout from "./components/CheckoutLayout";
+import CheckoutLayout from "./components/CheckoutLayout";
 
 const Cart = () => {
   return (
     <>
-      <CartLayout />
+      <CheckoutLayout />
     </>
   );
 };

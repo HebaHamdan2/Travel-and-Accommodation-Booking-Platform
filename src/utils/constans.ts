@@ -1,6 +1,6 @@
 import { ThemeContextType } from "../types";
 export const baseURL = "https://hotel.foothilltech.net";
-
+export const LOGO_URL ="/Home/Logo.svg";
 export const initialThemeVlaue: ThemeContextType = {
   mode: "light",
   toggleMode: () => {},

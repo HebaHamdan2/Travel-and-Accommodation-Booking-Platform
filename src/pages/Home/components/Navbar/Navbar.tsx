@@ -24,6 +24,7 @@ import { useAppDispatch } from "../../../../app/hooks";
 import { logout } from "../../../../features/auth/authSlice";
 import { homeApi } from "../../../../services/home";
 import { sections } from "../../constants";
+import { LOGO_URL } from "../../../../utils/constans";
 
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -62,7 +63,7 @@ const Navbar: React.FC = () => {
         >
           <Box
             component="img"
-            src="/Home/Logo.svg"
+            src={LOGO_URL}
             alt="App Logo"
             sx={{
               width: { xs: 120, md: 140 },

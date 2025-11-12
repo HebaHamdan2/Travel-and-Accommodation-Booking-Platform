@@ -13,7 +13,7 @@ import { MemoryRouter } from "react-router-dom";
 import { persistor, store } from "../../app/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { AvailbleRoom } from "../../types";
+import { CartRoomItemCardIfo, RoomCardInfo } from "./types";
 const meta: Meta<typeof InofCard> = {
   title: "Components/InfoCard",
   component: InofCard,
@@ -71,7 +71,6 @@ const mockRecent: RecentHotels = {
   thumbnailUrl:
     "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80",
 };
-
 const mockDestination: TrendDes = {
   cityId: 2,
   cityName: "Phuket",
@@ -105,8 +104,7 @@ const mockResult: SearchRes = {
     },
   ],
 };
-
-const mockRoomCard: AvailbleRoom = {
+const mockRoomCard: RoomCardInfo = {
   roomId: 1,
   roomNumber: 101,
   roomPhotoUrl:
@@ -130,6 +128,18 @@ const mockRoomCard: AvailbleRoom = {
   ],
   price: 150,
   availability: true,
+  hotelName: "Plaza",
+  checkInDate: "2025-12-23",
+  checkOutDate: "2025-12-25",
+};
+const mockedCartItem: CartRoomItemCardIfo = {
+  hotelName: "Plaza",
+  roomId: 1,
+  roomNumber: 101,
+  roomPhotoUrl:
+    "https://cf.bstatic.com/xdata/images/hotel/max1280x900/33143786.jpg?k=4d0bca9d9795b80beb2cd9786946e043b23d1372eb633d5855d3aba6343d68d4&o=&hp=1",
+  roomType: "Standard",
+  price: 150,
 };
 export const FeaturedDealCard: Story = {
   args: {
@@ -160,5 +170,11 @@ export const RoomCard: Story = {
   args: {
     variant: "roomCard",
     data: mockRoomCard,
+  },
+};
+export const CartItemCard: Story = {
+  args: {
+    variant: "cartItem",
+    data: mockedCartItem,
   },
 };

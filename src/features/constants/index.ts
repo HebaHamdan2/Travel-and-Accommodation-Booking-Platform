@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { AuthState, SearchState,SearchSliceState, CartState } from "../types";
+import { AuthState, SearchState,SearchSliceState, CartState, BookingState, FiltersState } from "../types";
 
 export const initialAuth: AuthState = {
   userType: null,
@@ -25,6 +25,23 @@ export const initialSearchState: SearchSliceState = {
   loading: false,
   error: null,
 };
+export const initialFilterState: FiltersState = {
+  priceRange: [0, 800],
+  rating: null,
+  amenities: [],
+  roomTypes: [],
+};
 export const initialCartState:CartState={
     items:[],
 }
+export const BookingInitialState: BookingState = {
+  userDetails: {
+    fullName: "",
+    email: "",
+    paymentMethod: "credit_card",
+  },
+  cartItems: [],
+  status: "idle",
+  error: undefined,
+  confirmationNumber: undefined,
+};

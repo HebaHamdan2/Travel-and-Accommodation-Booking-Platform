@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { initialFilterState } from "../types";
+import { initialFilterState } from "../constants";
 
 const filtersSlice = createSlice({
   name: "filters",

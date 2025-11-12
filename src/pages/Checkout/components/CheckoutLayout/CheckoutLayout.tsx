@@ -1,13 +1,13 @@
 import Navbar from "../../../../components/Navbar";
-import CartStepper from "../CheckoutStepper";
+import CheckoutStepper from "../CheckoutStepper";
 
-const CartLayout = () => {
+const CheckoutLayout = () => {
   return (
     <>
       <Navbar />
-      <CartStepper/>
+      <CheckoutStepper/>
     </>
   );
 };
 
-export default CartLayout;
+export default CheckoutLayout;

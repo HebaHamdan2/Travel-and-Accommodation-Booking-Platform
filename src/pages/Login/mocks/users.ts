@@ -9,6 +9,6 @@ export const mockedAdmin = {
 };
 
 export const mockedFaildUser = {
-  userName: "FailUser",
-  password: "fail123",
+  userName: "mock3",
+  password: "mock3",
 };

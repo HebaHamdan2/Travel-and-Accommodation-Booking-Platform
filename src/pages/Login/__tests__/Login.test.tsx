@@ -1,7 +1,7 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import userEvent from "@testing-library/user-event";
-import { mockedAdmin, mockedFaildUser, mockedUser } from "../mocks/users";
+import { mockedFaildUser, mockedUser } from "../mocks/users";
 import Login from "../Login";
 import { handlers } from "../mocks/loginHandlers";
 import renderWithProviders from "../../../tests/utils/renderWithProviders";

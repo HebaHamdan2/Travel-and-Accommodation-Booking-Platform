@@ -5,33 +5,44 @@ import {
   Typography,
   InputAdornment,
   Button,
-  Alert,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { AccountCircle, Lock } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { loginValidationSchema } from "../../validation";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { loginUser } from "../../../../features/auth/authSlice";
 import { LoginValues } from "../../../../types";
+import CustomSnackbar from "../../../../components/CustomSnackbar";
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state) => state.auth);
-  const [error, setError] = React.useState<string | null>(null);
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity?: "success" | "error";
+  }>({ open: false, message: "" });
 
   const formik = useFormik({
     initialValues: { userName: "", password: "" },
     validationSchema: loginValidationSchema,
     onSubmit: async (values: LoginValues) => {
-      setError(null);
-      const resAction = await dispatch(loginUser(values));
-      if (loginUser.fulfilled.match(resAction)) {
-        console.log("Logged in:", resAction.payload);
-      } else if (loginUser.rejected.match(resAction)) {
-        setError(
-          (resAction.payload as { title?: string })?.title ||
-            "Login failed! Check credentials."
-        );
+      const res = await dispatch(loginUser(values));
+
+      if (loginUser.fulfilled.match(res)) {
+        setSnackbar({
+          open: true,
+          message: "Logged in successfully!",
+          severity: "success",
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message:
+            (res.payload as { title?: string })?.title ||
+            "Login failed! Check credentials.",
+          severity: "error",
+        });
       }
     },
   });
@@ -105,11 +116,6 @@ const LoginForm: React.FC = () => {
       <Stack spacing={{ xs: 2.5, sm: 3 }}>
         {renderTextField("userName", "Username", "text", <AccountCircle />)}
         {renderTextField("password", "Password", "password", <Lock />)}
-        {error && (
-          <Alert severity="error" sx={{ textAlign: "left" }}>
-            {error}
-          </Alert>
-        )}
         <Button
           type="submit"
           variant="contained"
@@ -133,6 +139,12 @@ const LoginForm: React.FC = () => {
           {loading ? "Logging in..." : "Login"}
         </Button>
       </Stack>
+      <CustomSnackbar
+        open={snackbar.open}
+        severity={snackbar.severity}
+        message={snackbar.message}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      />
     </Box>
   );
 };

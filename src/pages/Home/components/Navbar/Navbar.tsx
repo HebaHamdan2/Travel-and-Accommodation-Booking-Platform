@@ -28,19 +28,23 @@ import { LOGO_URL } from "../../../../utils/constans";
 
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>(sections[0].id);
   const { mode, toggleMode } = useThemeContext();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const handleScroll = (id: string) => {
     const target = document.getElementById(id);
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
+      setActiveSection(id);
     }
     setDrawerOpen(false);
   };
+
   const handleLogout = () => {
     dispatch(logout());
-    dispatch(homeApi.util.resetApiState()); // clear cached API data
+    dispatch(homeApi.util.resetApiState());
     navigate("/login");
   };
 
@@ -65,23 +69,19 @@ const Navbar: React.FC = () => {
             component="img"
             src={LOGO_URL}
             alt="App Logo"
-            sx={{
-              width: { xs: 120, md: 140 },
-              height: "auto",
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/home")}
+            sx={{ width: { xs: 120, md: 140 }, cursor: "pointer" }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           />
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 5 }}>
             {sections.map(({ label, id }) => (
               <Typography
                 key={id}
-                variant="body1"
                 onClick={() => handleScroll(id)}
                 sx={{
                   cursor: "pointer",
-                  fontWeight: 400,
-                  transition: "color 0.3s",
+                  fontWeight: activeSection === id ? 700 : 400,
+                  color: activeSection === id ? "primary.main" : "text.primary",
+                  transition: "color 0.3s, font-weight 0.3s",
                   "&:hover": { color: "primary.main" },
                 }}
               >
@@ -103,14 +103,14 @@ const Navbar: React.FC = () => {
               boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
             }}
           >
-            <IconButton onClick={toggleMode} color="inherit">
+            <IconButton onClick={toggleMode}>
               {mode === "dark" ? (
                 <LightModeOutlinedIcon fontSize="small" />
               ) : (
                 <DarkModeOutlinedIcon fontSize="small" />
               )}
             </IconButton>
-            <IconButton color="inherit" onClick={() => navigate("/checkout")}>
+            <IconButton onClick={() => navigate("/checkout")}>
               <ShoppingCartOutlinedIcon fontSize="small" />
             </IconButton>
             <Button
@@ -122,15 +122,14 @@ const Navbar: React.FC = () => {
                 color: "primary.main",
                 fontWeight: 500,
                 fontSize: "0.95rem",
-                "&:hover": {
-                  backgroundColor: "transparent",
-                  opacity: 0.7,
-                },
+                "&:hover": { backgroundColor: "transparent", opacity: 0.7 },
               }}
             >
               Logout
             </Button>
           </Box>
+
+          {/* Mobile Menu */}
           <IconButton
             sx={{ display: { xs: "flex", md: "none" } }}
             onClick={() => setDrawerOpen(true)}
@@ -144,10 +143,7 @@ const Navbar: React.FC = () => {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         PaperProps={{
-          sx: {
-            backgroundColor: "background.default",
-            width: 240,
-          },
+          sx: { backgroundColor: "background.default", width: 240 },
         }}
       >
         <List>
@@ -157,9 +153,10 @@ const Navbar: React.FC = () => {
                 <ListItemText
                   primary={label}
                   sx={{
-                    color: "text.primary",
+                    color:
+                      activeSection === id ? "primary.main" : "text.primary",
+                    fontWeight: activeSection === id ? 700 : 400,
                     textAlign: "center",
-                    "&:hover": { color: "primary.main" },
                   }}
                 />
               </ListItemButton>

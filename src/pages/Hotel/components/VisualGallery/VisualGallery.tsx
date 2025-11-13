@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/styles.css";
@@ -8,27 +8,20 @@ import { useGetHotelGalleryQuery } from "../../../../services/hotels";
 import { GALLERY } from "../../constant";
 import { HotelProps } from "../../types";
 import VisualGallerySkeleton from "../../skeletons/VisualGallerySkeleton";
-import CustomSnackbar from "../../../../components/CustomSnackbar";
 const VisualGallery: React.FC<HotelProps> = ({ hotelId }) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { data, isError, isLoading } = useGetHotelGalleryQuery(hotelId);
-  const [alertOpen, setAlertOpen] = useState(false);
   if (isLoading) return <VisualGallerySkeleton />;
 
   const hotelImgs = data && data.length > 0 ? data : GALLERY;
   const hasError = !data || data.length === 0 || isError;
-
-  useEffect(() => {
-    if (hasError) {
-      console.clear();
-      setAlertOpen(true);
-    }
-  }, [hasError]);
-
+  if (hasError) {
+    console.clear();
+  }
   const handleOpen = (index: number) => {
     setCurrentIndex(index);
-    setOpen(true);
+     setOpen(true); 
   };
   const mainImage = hotelImgs[0];
   const thumbnails = hotelImgs.slice(1, 4);
@@ -102,12 +95,6 @@ const VisualGallery: React.FC<HotelProps> = ({ hotelId }) => {
         styles={{
           container: { backgroundColor: "rgba(0, 0, 0, 0.9)" },
         }}
-      />
-      <CustomSnackbar
-        open={alertOpen}
-        severity="warning"
-        message="Unable to load the hotel gallery. Displaying local images instead."
-        onClose={() => setAlertOpen(false)}
       />
     </Box>
   );

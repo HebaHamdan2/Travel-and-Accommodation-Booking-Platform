@@ -44,7 +44,7 @@ const FiltersList = () => {
           }
           valueLabelDisplay="auto"
           min={0}
-          max={800}
+          max={500}
           sx={{
             color: "secondary.main",
           }}

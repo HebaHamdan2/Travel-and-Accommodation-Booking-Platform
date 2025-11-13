@@ -19,7 +19,7 @@ const meta: Meta<typeof CustomSnackbar> = {
             <ThemeContextProvider>
               <Box
                 sx={{
-                    p:5,
+                  p: 5,
                   backgroundColor: "background.default",
                 }}
               >

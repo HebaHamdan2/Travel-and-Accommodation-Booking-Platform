@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import Snackbar, { SnackbarCloseReason, SnackbarOrigin } from '@mui/material/Snackbar';
 import Alert, { AlertColor } from '@mui/material/Alert';
 
 interface CustomSnackbarProps {
@@ -8,6 +8,7 @@ interface CustomSnackbarProps {
   severity?: AlertColor; // "error" | "warning" | "info" | "success"
   autoHideDuration?: number;
   onClose: () => void;
+  anchorOrigin?: SnackbarOrigin;
 }
 
 const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
@@ -16,6 +17,7 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
   severity = "info",
   autoHideDuration = 4000,
   onClose,
+  anchorOrigin 
 }) => {
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
@@ -30,7 +32,8 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
       open={open}
       autoHideDuration={autoHideDuration}
       onClose={handleClose}
-      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      anchorOrigin={anchorOrigin}
+      
     >
       <Alert
         onClose={handleClose}

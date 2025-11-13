@@ -26,7 +26,7 @@ export const initialSearchState: SearchSliceState = {
   error: null,
 };
 export const initialFilterState: FiltersState = {
-  priceRange: [0, 800],
+  priceRange: [0, 500],
   rating: null,
   amenities: [],
   roomTypes: [],

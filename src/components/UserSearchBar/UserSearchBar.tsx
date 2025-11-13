@@ -84,7 +84,7 @@ const UserSearchBar: React.FC = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          gap: 0.5,
+          gap: 0.3,
           justifyContent: "center",
           alignItems: "center",
           alignSelf: "flex-start",

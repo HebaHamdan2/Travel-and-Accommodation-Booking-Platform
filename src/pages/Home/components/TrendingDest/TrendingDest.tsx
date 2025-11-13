@@ -1,8 +1,8 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper";
-import { useGetTrendingDestQuery } from "../../../../services/home";
 import InofCard from "../../../../components/InfoCard";
 import TrendingDestSkeleton from "../../skeletons/TrendingDestSkeleton";
+import { useGetTrendingDestQuery } from "../../../../services/user/home";
 
 const TrendingDest = () => {
   const { data: trends, isLoading, isError, error } = useGetTrendingDestQuery();

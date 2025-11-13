@@ -11,7 +11,7 @@ import { AccountCircle, Lock } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { loginValidationSchema } from "../../validation";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
-import { loginUser } from "../../../../features/auth/authSlice";
+import { login } from "../../../../features/auth/authSlice";
 import { LoginValues } from "../../../../types";
 import CustomSnackbar from "../../../../components/CustomSnackbar";
 const LoginForm: React.FC = () => {
@@ -27,9 +27,8 @@ const LoginForm: React.FC = () => {
     initialValues: { userName: "", password: "" },
     validationSchema: loginValidationSchema,
     onSubmit: async (values: LoginValues) => {
-      const res = await dispatch(loginUser(values));
-
-      if (loginUser.fulfilled.match(res)) {
+      const res = await dispatch(login(values));
+        if (login.fulfilled.match(res)) {
         setSnackbar({
           open: true,
           message: "Logged in successfully!",

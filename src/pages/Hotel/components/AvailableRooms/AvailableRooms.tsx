@@ -3,7 +3,7 @@ import { AvailableRoomsProps } from "../../types";
 import Wrapper from "../../../../components/Wrapper";
 import { Box, Grid, Typography } from "@mui/material";
 import { useAppSelector } from "../../../../app/hooks";
-import { useGetAvailableRoomsQuery } from "../../../../services/hotels";
+import { useGetAvailableRoomsQuery } from "../../../../services/user/hotels";
 import InfoCard from "../../../../components/InfoCard";
 import AvailableRoomsSkeleton from "../../skeletons/AvailableRoomsSkeleton";
 

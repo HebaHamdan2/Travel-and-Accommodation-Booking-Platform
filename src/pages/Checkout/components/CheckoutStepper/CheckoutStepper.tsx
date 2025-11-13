@@ -22,7 +22,7 @@ import BookingConfirmation from "../BookingConfirmation/BookingConfirmation";
 import YourSelections from "../YourSelections";
 import { CartItem } from "../../../../features/types";
 import { clearCart } from "../../../../features/cart/cartSlice";
-import { useCreateBookingMutation } from "../../../../services/booking";
+import { useCreateBookingMutation } from "../../../../services/user/booking";
 
 const CheckoutStepper = () => {
   const [activeStep, setActiveStep] = useState(0);

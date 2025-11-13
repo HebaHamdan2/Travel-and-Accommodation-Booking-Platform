@@ -1,8 +1,8 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper/index.ts";
-import { useGetFeaturedDealsQuery } from "../../../../services/home.ts";
 import InofCard from "../../../../components/InfoCard/InfoCard.tsx";
 import HotelCardsSkeleton from "../../skeletons/FeaturedDealsSkeleton/HotelCardsSkeleton.tsx";
+import { useGetFeaturedDealsQuery } from "../../../../services/user/home.ts";
 
 const FeaturedDeals = () => {
   const { data: deals, isLoading, isError, error } = useGetFeaturedDealsQuery();

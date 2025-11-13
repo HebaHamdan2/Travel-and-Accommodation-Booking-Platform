@@ -6,11 +6,12 @@ import cartReducer from "../features/cart/cartSlice.ts";
 import bookingReducer from "../features/booking/bookingSlice.ts";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
-import { homeApi } from "../services/home.ts";
 import { checkTokenExpMiddleware } from "../middlewares/checkTokenExpMiddleware.ts";
-import { searchResultsApi } from "../services/searchResults.ts";
-import { hotelsApi } from "../services/hotels.ts";
-import { bookingApi } from "../services/booking.ts";
+import { searchResultsApi } from "../services/user/searchResults.ts";
+import { homeApi } from "../services/user/home.ts";
+import { hotelsApi } from "../services/user/hotels.ts";
+import { bookingApi } from "../services/user/booking.ts";
+
 const persistConfig = {
   key: "root",
   storage,

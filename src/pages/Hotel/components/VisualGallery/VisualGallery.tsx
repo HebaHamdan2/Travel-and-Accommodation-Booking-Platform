@@ -4,7 +4,7 @@ import Lightbox from "yet-another-react-lightbox";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/styles.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import { useGetHotelGalleryQuery } from "../../../../services/hotels";
+import { useGetHotelGalleryQuery } from "../../../../services/user/hotels";
 import { GALLERY } from "../../constant";
 import { HotelProps } from "../../types";
 import VisualGallerySkeleton from "../../skeletons/VisualGallerySkeleton";

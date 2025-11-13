@@ -21,10 +21,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../../../hooks/useThemeContext";
 import { useAppDispatch } from "../../../../app/hooks";
-import { logout } from "../../../../features/auth/authSlice";
-import { homeApi } from "../../../../services/home";
 import { sections } from "../../constants";
 import { LOGO_URL } from "../../../../utils/constans";
+import { performLogout } from "../../../../features/auth/logoutHelper";
 
 const Navbar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -42,9 +41,8 @@ const Navbar: React.FC = () => {
     setDrawerOpen(false);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(homeApi.util.resetApiState());
+  const handleLogout = async() => {
+    dispatch(performLogout());
     navigate("/login");
   };
 

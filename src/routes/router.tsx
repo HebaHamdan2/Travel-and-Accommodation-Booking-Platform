@@ -11,7 +11,7 @@ import Checkout from "../pages/Checkout/Checkout";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
+    element: <RootLayout  />,
     children: [
       {
         index: true,
@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
       },
       { path: "login", element: <Login /> },
       {
-        element: <ProtectedLayout />,
+        element: <ProtectedLayout  allowedRoles={["User"]} />,
         children: [
           {
             path: "home",
@@ -37,11 +37,11 @@ export const router = createBrowserRouter([
             path: "checkout",
             element: <Checkout />,
           },
-          {
-            element: <AdminAuthLayout />,
-            children: [{ path: "admin", element: <AdminDashboard /> }],
-          },
         ],
+      },
+      {
+        element: <AdminAuthLayout  allowedRoles={["Admin"]}/>,
+        children: [{ path: "admin", element: <AdminDashboard /> }],
       },
     ],
   },

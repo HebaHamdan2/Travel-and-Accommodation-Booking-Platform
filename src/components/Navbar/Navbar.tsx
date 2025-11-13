@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../hooks/useThemeContext";
 import { useAppDispatch } from "../../app/hooks";
-import { logout } from "../../features/auth/authSlice";
-import { homeApi } from "../../services/home";
 import {
   AppBar,
   Box,
@@ -16,15 +14,15 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { LOGO_URL } from "../../utils/constans";
+import { performLogout } from "../../features/auth/logoutHelper";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { mode, toggleMode } = useThemeContext();
 
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(homeApi.util.resetApiState());
+  const handleLogout = async () => {
+    dispatch(performLogout());
     navigate("/login");
   };
 

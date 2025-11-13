@@ -1,6 +1,6 @@
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { logout } from "../features/auth/authSlice";
 import { ERROR_MESSAGES } from "./errorMessages";
+import { performLogout } from "../features/auth/logoutHelper";
 
 export const handleApiError = (
   error: FetchBaseQueryError,
@@ -26,7 +26,7 @@ export const handleApiError = (
   const messageToShow = backendMessage || fallbackMessage; // return backend message if it string and good to display
   if (status === 401) {
     console.log(messageToShow); //toast
-    api.dispatch(logout());
+    api.dispatch(performLogout());
     return;
   }
 

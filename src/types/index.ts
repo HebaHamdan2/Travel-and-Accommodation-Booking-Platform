@@ -1,6 +1,10 @@
 import { PaletteMode } from "@mui/material";
 import { ReactNode } from "react";
+export type UserRole = "User" | "Admin" | null;
 
+export interface LayoutProps {
+  allowedRoles: UserRole[];
+}
 export interface ThemeContextType {
   mode: PaletteMode;
   toggleMode: () => void;

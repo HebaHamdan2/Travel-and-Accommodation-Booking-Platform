@@ -4,8 +4,8 @@ import { initialAuth } from "../constants";
 import { LoginValues } from "../../types";
 import { baseURL } from "../../utils/constans";
 
-export const loginUser = createAsyncThunk(
-  "auth/loginUser",
+export const login = createAsyncThunk(
+  "auth/login",
   async (values: LoginValues, { rejectWithValue }) => {
     try {
       const response = await axios.post(
@@ -32,21 +32,23 @@ const authSlice = createSlice({
       state.authentication = action.payload;
     },
     logout: (state) => {
-      state.userType = null;
       state.authentication = null;
+      state.userType = null;
+      state.loading = false;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => {
+      .addCase(login.pending, (state) => {
         state.loading = true;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.userType = action.payload.userType;
         state.authentication = action.payload.authentication;
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = (action.payload as { title: string }) || {
           title: "Unknown error",

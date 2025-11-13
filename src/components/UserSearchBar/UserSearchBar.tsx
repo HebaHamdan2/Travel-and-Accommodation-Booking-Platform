@@ -26,7 +26,7 @@ import {
   fetchSearchSuccess,
   fetchSearchFailure,
 } from "../../features/search/searchSlice";
-import { useLazyGetSearchQuery } from "../../services/home";
+import { useLazyGetSearchQuery } from "../../services/user/home";
 const UserSearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper";
-import { useGetHotelReviewsQuery } from "../../../../services/hotels";
+import { useGetHotelReviewsQuery } from "../../../../services/user/hotels";
 import React, { useState } from "react";
 import { HotelProps } from "../../types";
 import HotelReviewCard from "../HotelReviewCard";

@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseURL } from "../utils/constans";
-import { Amenity } from "../types";
-import { createBaseQueryWithErrorHandler } from "./baseQueryWithErrorHandler";
+import { createBaseQueryWithErrorHandler } from "../baseQueryWithErrorHandler";
+import { Amenity } from "../../types";
+import { baseURL } from "../../utils/constans";
 const baseQuery = createBaseQueryWithErrorHandler(
   `${baseURL}/api/search-results`
 );

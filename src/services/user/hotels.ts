@@ -1,13 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseURL } from "../utils/constans";
 import {
   AvailbleRoom,
   AvailbleRoomQuery,
   Gallery,
   Hotel,
   Review,
-} from "../types";
-import { createBaseQueryWithErrorHandler } from "./baseQueryWithErrorHandler";
+} from "../../types";
+import { createBaseQueryWithErrorHandler } from "../baseQueryWithErrorHandler";
+import { baseURL } from "../../utils/constans";
 const baseQuery = createBaseQueryWithErrorHandler(`${baseURL}/api/hotels`);
 export const hotelsApi = createApi({
   reducerPath: "hotelsApi",

@@ -3,7 +3,7 @@ import VisualGallery from "../VisualGallery";
 import HotelInteractiveMap from "../HotelInteractiveMap";
 import HotelDesc from "../HotelDesc";
 import Wrapper from "../../../../components/Wrapper";
-import { useGetHotelDetailsQuery } from "../../../../services/hotels";
+import { useGetHotelDetailsQuery } from "../../../../services/user/hotels";
 import React from "react";
 import DetailedHotelSkeleton from "../../skeletons/DetailedHotelSkeleton/DetailedHotelSkeleton";
 import HotelsReviews from "../HotelReviews";

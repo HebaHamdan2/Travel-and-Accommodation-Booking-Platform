@@ -1,8 +1,8 @@
 import { UserDetailsFormValues } from "../../pages/Checkout/types";
-import { AvailbleRoom } from "../../types";
+import { AvailbleRoom, UserRole } from "../../types";
 
 export interface AuthState {
-  userType: string | null;
+  userType: UserRole;
   authentication: string | null;
   loading: boolean;
   error?: { title: string } | null;
@@ -31,7 +31,8 @@ export interface FiltersState {
 export type CartRoomItem = Pick<
   AvailbleRoom,
   "roomId" | "roomNumber" | "roomType" | "roomPhotoUrl" | "price"
->;export interface CartItem {
+>;
+export interface CartItem {
   hotelName: string;
   checkInDate: string;
   checkOutDate: string;
@@ -59,7 +60,7 @@ export interface BookingRequest {
   totalCost: number;
   paymentMethod: string;
   bookingDateTime: string;
-  id?: string; 
+  id?: string;
 }
 
 export interface BookingResponse {
@@ -71,5 +72,5 @@ export interface BookingResponse {
   totalCost: number;
   paymentMethod: string;
   bookingStatus: string;
-  confirmationNumber: string; 
+  confirmationNumber: string;
 }

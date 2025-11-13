@@ -1,11 +1,11 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { useAppSelector } from "../../../../app/hooks";
 import UserSearchBar from "../../../../components/UserSearchBar";
-import { useGetSearchQuery } from "../../../../services/home";
 import { selectFilteredHotels } from "../../../../features/filters/selectFilteredHotels";
 import FiltersSidebar from "../FiltersSidebar";
 import InfoCard from "../../../../components/InfoCard";
 import HotelCardsSkeleton from "../../skeletons/HotelCardsSkeleton";
+import { useGetSearchQuery } from "../../../../services/user/home";
 
 const HotelsCards = () => {
   const { city, checkInDate, checkOutDate, adults, children, numberOfRooms } =

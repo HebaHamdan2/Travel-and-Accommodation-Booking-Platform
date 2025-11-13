@@ -1,8 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseURL } from "../utils/constans";
-import { Deal, RecentHotels, SearchRes, TrendDes } from "../pages/Home/types";
-import { SearchState } from "../features/types";
-import { createBaseQueryWithErrorHandler } from "./baseQueryWithErrorHandler";
+import { baseURL } from "../../utils/constans";
+import { Deal, RecentHotels, SearchRes, TrendDes } from "../../pages/Home/types";
+import { SearchState } from "../../features/types";
+import { createBaseQueryWithErrorHandler } from "../baseQueryWithErrorHandler";
 
 const baseQuery = createBaseQueryWithErrorHandler(`${baseURL}/api/home`); // to handle backend errors and add authentication to endpoints that need
 export const homeApi = createApi({

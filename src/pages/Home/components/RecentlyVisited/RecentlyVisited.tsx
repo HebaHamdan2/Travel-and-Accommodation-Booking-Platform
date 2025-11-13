@@ -1,10 +1,10 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper/index.ts";
-import { useGetRecentlyVisitedQuery } from "../../../../services/home.ts";
 import { getDecodedToken } from "../../../../utils/getDecodedToken.ts";
 import { useAppSelector } from "../../../../app/hooks.ts";
 import InofCard from "../../../../components/InfoCard/index.ts";
 import HotelCardsSkeleton from "../../skeletons/FeaturedDealsSkeleton/HotelCardsSkeleton.tsx";
+import { useGetRecentlyVisitedQuery } from "../../../../services/user/home.ts";
 
 const RecentlyVisited = () => {
   const { authentication } = useAppSelector((state) => state.auth);

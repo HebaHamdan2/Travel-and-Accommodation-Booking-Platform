@@ -1,5 +1,4 @@
 import { Box, Chip, Rating, Slider, Stack, Typography } from "@mui/material";
-import { useGetAmenitiesQuery } from "../../../../services/searchResults";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { getRoomTypes } from "../../utils/roomTypes";
 import FilterItem from "./FilterItem";
@@ -9,6 +8,7 @@ import {
   toggleAmenity,
   toggleRoomType,
 } from "../../../../features/filters/filtersSlice";
+import { useGetAmenitiesQuery } from "../../../../services/user/searchResults";
 
 const FiltersList = () => {
   const dispatch = useAppDispatch();

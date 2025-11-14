@@ -7,7 +7,7 @@ const baseQuery = createBaseQueryWithErrorHandler(`${baseURL}/api/cities`);
 export const citiesApi = createApi({
   reducerPath: "citiesApi",
   baseQuery,
-  tagTypes: ["Cities"], // for cache 
+  tagTypes: ["Cities"], // for cache
   endpoints: (builder) => ({
     getCities: builder.query<City[], CityParams>({
       query: (params) => {
@@ -41,8 +41,26 @@ export const citiesApi = createApi({
       }),
       invalidatesTags: ["Cities"], // Refresh cities list after deleting
     }),
+    updateCity: builder.mutation<
+      void,
+      { cityId: number; city: { name: string; description: string } }
+    >({
+      query: ({ cityId, city }) => ({
+        url: `/${cityId}`,
+        method: "PUT",
+        body: city,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Cities"], // Refresh cities list after updating
+    }),
   }),
 });
 
-export const { useGetCitiesQuery, useAddCityMutation, useDeleteCityMutation } =
-  citiesApi;
+export const {
+  useGetCitiesQuery,
+  useAddCityMutation,
+  useDeleteCityMutation,
+  useUpdateCityMutation,
+} = citiesApi;

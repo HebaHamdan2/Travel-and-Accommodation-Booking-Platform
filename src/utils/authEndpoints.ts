@@ -6,4 +6,5 @@ export const AUTH_REQUIRED_ENDPOINTS = [
   "adminNavigationApi",
   "addCity",
   "deleteCity",
+  "updateCity",
 ];

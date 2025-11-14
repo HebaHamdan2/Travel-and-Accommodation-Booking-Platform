@@ -1,4 +1,4 @@
-import { useGetAdminNavigationQuery } from "../services/admin/adminNavigation";
+import { useGetAdminNavigationQuery } from "../../../services/admin/adminNavigation";
 
 export interface AdminLink {
   title: string;

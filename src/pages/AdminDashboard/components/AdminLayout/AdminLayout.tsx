@@ -24,7 +24,7 @@ import { useAppDispatch } from "../../../../app/hooks";
 import { useThemeContext } from "../../../../hooks/useThemeContext";
 import { performLogout } from "../../../../features/auth/logoutHelper";
 import { LOGO_URL } from "../../../../utils/constans";
-import { useAdminNavigation } from "../../../../hooks/useAdminNavigation";
+import { useAdminNavigation } from "../../hooks/useAdminNavigation";
 
 const drawerWidth = 250;
 

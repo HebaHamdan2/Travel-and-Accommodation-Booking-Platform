@@ -28,11 +28,10 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { useDebounce } from "../../../../hooks/useDebouns";
-import {
-  useAddCityMutation,
-  useDeleteCityMutation,
-  useGetCitiesQuery,
-} from "../../../../services/admin/cities";
+import { useGetCitiesQuery } from "../../../../services/admin/cities";
+import { useDeleteCity } from "./hooks/useDeleteCity";
+import { useAddCity } from "./hooks/useAddCity";
+import { useUpdateCity } from "./hooks/useUpdateCity";
 
 export default function ManageCities() {
   const [search, setSearch] = useState("");
@@ -40,12 +39,30 @@ export default function ManageCities() {
   const [pageNumber, setPageNumber] = useState(1);
   const [newCityName, setNewCityName] = useState("");
   const [newCityDesc, setNewCityDesc] = useState("");
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [cityToDelete, setCityToDelete] = useState<{
-    id: number;
-    name: string;
-  } | null>(null);
+  const [updateName, setUpdateName] = useState("");
+  const [updateDesc, setUpdateDesc] = useState("");
+  const {
+    open: updateOpen,
+    setOpen: setUpdateOpen,
+    cityToUpdate,
+    handleOpen: handleUpdateOpen,
+    handleUpdate,
+    isUpdating,
+  } = useUpdateCity();
+  const {
+    open: addOpen,
+    setOpen: setAddOpen,
+    handleAddCity,
+    isAdding,
+  } = useAddCity();
+  const {
+    open: deleteOpen,
+    setOpen: setDeleteOpen,
+    cityToDelete,
+    confirmDelete,
+    handleConfirmDelete,
+    isDeleting,
+  } = useDeleteCity();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -61,46 +78,10 @@ export default function ManageCities() {
     pageNumber,
   });
 
-  const [addCity, { isLoading: isAdding }] = useAddCityMutation();
-  const [deleteCity, { isLoading: isDeleting }] = useDeleteCityMutation();
   const showSnackbar = (message: string, severity: "success" | "error") => {
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);
     setSnackbarOpen(true);
-  };
-  const confirmDelete = (city: { id: number; name: string }) => {
-    setCityToDelete(city);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleAddCity = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!newCityName.trim()) return;
-
-    try {
-      await addCity({ name: newCityName, description: newCityDesc }).unwrap();
-      setNewCityName("");
-      setNewCityDesc("");
-      setAddDialogOpen(false);
-      setPageNumber(1);
-      showSnackbar("City added successfully!", "success");
-    } catch (error: any) {
-      showSnackbar("Failed to add city.", "error");
-    }
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!cityToDelete) return;
-    try {
-      await deleteCity(cityToDelete.id).unwrap();
-      showSnackbar("City deleted successfully!", "success");
-    } catch (error: any) {
-      showSnackbar("Failed to delete city.", "error");
-      console.error(error);
-    } finally {
-      setDeleteDialogOpen(false);
-      setCityToDelete(null);
-    }
   };
 
   const cities = data ?? [];
@@ -162,7 +143,7 @@ export default function ManageCities() {
             fontWeight: 600,
             bgcolor: "primary.main",
           }}
-          onClick={() => setAddDialogOpen(true)}
+          onClick={() => setAddOpen(true)}
         >
           Add City
         </Button>
@@ -195,7 +176,16 @@ export default function ManageCities() {
               </TableRow>
             ) : (
               cities.map((city) => (
-                <TableRow key={city.id}>
+                <TableRow
+                  key={city.id}
+                  hover
+                  onClick={() => {
+                    handleUpdateOpen(city);
+                    setUpdateName(city.name);
+                    setUpdateDesc(city.description);
+                  }}
+                  sx={{ cursor: "pointer" }}
+                >
                   <TableCell>{city.id}</TableCell>
                   <TableCell>{city.name}</TableCell>
                   <TableCell>{city.description}</TableCell>
@@ -203,9 +193,10 @@ export default function ManageCities() {
                     <Tooltip title="Delete City">
                       <IconButton
                         color="error"
-                        onClick={() =>
-                          confirmDelete({ id: city.id, name: city.name })
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          confirmDelete({ id: city.id, name: city.name }, e);
+                        }}
                         disabled={isDeleting}
                       >
                         <DeleteIcon />
@@ -246,22 +237,37 @@ export default function ManageCities() {
         </Button>
       </Stack>
 
+      {/* CRUD City Dialogs -Read  */}
       <Dialog
-        open={addDialogOpen}
-        onClose={() => setAddDialogOpen(false)}
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
         fullWidth
         maxWidth="sm"
         aria-labelledby="add-city-dialog-title"
       >
         <DialogTitle id="add-city-dialog-title">Add New City</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleAddCity} id="add-city-form">
+          <form
+            onSubmit={(e) =>
+              handleAddCity(
+                e,
+                newCityName,
+                newCityDesc,
+                showSnackbar,
+                () => {
+                  setNewCityName("");
+                  setNewCityDesc("");
+                },
+                () => setPageNumber(1)
+              )
+            }
+            id="add-city-form"
+          >
             <TextField
               autoFocus
               required
               margin="dense"
               label="City Name"
-              name="name"
               value={newCityName}
               onChange={(e) => setNewCityName(e.target.value)}
               fullWidth
@@ -270,7 +276,7 @@ export default function ManageCities() {
             <TextField
               margin="dense"
               label="Description"
-              name="description"
+              required
               value={newCityDesc}
               onChange={(e) => setNewCityDesc(e.target.value)}
               fullWidth
@@ -281,15 +287,15 @@ export default function ManageCities() {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setAddDialogOpen(false)}>Cancel</Button>
+          <Button onClick={() => setAddOpen(false)}>Cancel</Button>
           <Button type="submit" form="add-city-form" disabled={isAdding}>
             Add
           </Button>
         </DialogActions>
       </Dialog>
       <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
         aria-labelledby="delete-city-dialog-title"
         aria-describedby="delete-city-dialog-description"
       >
@@ -300,9 +306,9 @@ export default function ManageCities() {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
           <Button
-            onClick={handleConfirmDelete}
+            onClick={() => handleConfirmDelete(showSnackbar)}
             color="error"
             variant="contained"
           >
@@ -310,7 +316,56 @@ export default function ManageCities() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog
+        open={updateOpen}
+        onClose={() => setUpdateOpen(false)}
+        fullWidth
+        maxWidth="sm"
+        aria-labelledby="update-city-dialog-title"
+      >
+        <DialogTitle id="update-city-dialog-title">
+          Update City: {cityToUpdate?.name}
+        </DialogTitle>
+        <DialogContent>
+          <form
+            id="update-city-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdate(updateName, updateDesc, showSnackbar);
+            }}
+          >
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              label="City Name"
+              value={updateName}
+              onChange={(e) => setUpdateName(e.target.value)}
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              margin="dense"
+              required
+              label="Description"
+              value={updateDesc}
+              onChange={(e) => setUpdateDesc(e.target.value)}
+              fullWidth
+              multiline
+              minRows={3}
+              variant="standard"
+            />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setUpdateOpen(false)}>Cancel</Button>
+          <Button type="submit" form="update-city-form" disabled={isUpdating}>
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
 
+      {/* Snackbar */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

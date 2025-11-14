@@ -67,3 +67,14 @@ export interface Review {
   rating: number;
   description: string;
 }
+export interface City {
+  id: number;
+  name: string;
+  description: string;
+}
+export interface CityParams{
+  name?:string,
+  searchQuery?:string,
+  pageSize?:number,
+  pageNumber?:number,
+}

@@ -8,10 +8,13 @@ import AdminDashboard from "../pages/AdminDashboard";
 import SearchResults from "../pages/SearchResults";
 import Hotel from "../pages/Hotel";
 import Checkout from "../pages/Checkout/Checkout";
+import ManageCities from "../pages/AdminDashboard/components/ManageCities";
+import ManageHotels from "../pages/AdminDashboard/components/ManageHotels";
+import ManageRooms from "../pages/AdminDashboard/components/ManageRooms";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout  />,
+    element: <RootLayout />,
     children: [
       {
         index: true,
@@ -19,7 +22,7 @@ export const router = createBrowserRouter([
       },
       { path: "login", element: <Login /> },
       {
-        element: <ProtectedLayout  allowedRoles={["User"]} />,
+        element: <ProtectedLayout allowedRoles={["User"]} />,
         children: [
           {
             path: "home",
@@ -40,8 +43,21 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        element: <AdminAuthLayout  allowedRoles={["Admin"]}/>,
-        children: [{ path: "admin", element: <AdminDashboard /> }],
+        element: <AdminAuthLayout allowedRoles={["Admin"]} />,
+        children: [
+          {
+            path: "admin",
+            element: <AdminDashboard />,
+            children: [
+              { path: "manage-cities", element: <ManageCities /> },
+              { path: "manage-hotels", element: <ManageHotels /> },
+              {
+                path: "manage-rooms",
+                element: <ManageRooms />,
+              },
+            ],
+          },
+        ],
       },
     ],
   },

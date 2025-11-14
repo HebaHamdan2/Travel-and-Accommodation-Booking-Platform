@@ -4,4 +4,6 @@ export const AUTH_REQUIRED_ENDPOINTS = [
   "getBooking",
   "createBooking",
   "adminNavigationApi",
+  "addCity",
+  "deleteCity",
 ];

@@ -13,6 +13,7 @@ import { hotelsApi } from "../services/user/hotels.ts";
 import { bookingApi } from "../services/user/booking.ts";
 import { adminNavigationApi } from "../services/admin/adminNavigation.ts";
 import { citiesApi } from "../services/admin/cities.ts";
+import { adminhotelsApi } from "../services/admin/hotels.ts";
 
 const persistConfig = {
   key: "root",
@@ -29,8 +30,9 @@ const rootReducer = combineReducers({
   [searchResultsApi.reducerPath]: searchResultsApi.reducer,
   [hotelsApi.reducerPath]: hotelsApi.reducer,
   [bookingApi.reducerPath]: bookingApi.reducer,
-  [adminNavigationApi.reducerPath]:adminNavigationApi.reducer,
-  [citiesApi.reducerPath]:citiesApi.reducer,
+  [adminNavigationApi.reducerPath]: adminNavigationApi.reducer,
+  [citiesApi.reducerPath]: citiesApi.reducer,
+  [adminhotelsApi.reducerPath]: adminhotelsApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -50,6 +52,7 @@ export const store = configureStore({
       bookingApi.middleware,
       adminNavigationApi.middleware,
       citiesApi.middleware,
+      adminhotelsApi.middleware
     ),
 });
 export const persistor = persistStore(store);

@@ -364,8 +364,7 @@ export default function ManageCities() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Snackbar */}
+ {/* Snackbar */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

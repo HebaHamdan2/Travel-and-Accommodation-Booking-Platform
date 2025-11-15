@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseURL } from "../../utils/constans";
 import { createBaseQueryWithErrorHandler } from "../baseQueryWithErrorHandler";
-import { City, CityParams } from "../../types";
+import { AdminHotel, City, QueryParams } from "../../types";
 
 const baseQuery = createBaseQueryWithErrorHandler(`${baseURL}/api/cities`);
 export const citiesApi = createApi({
@@ -9,7 +9,7 @@ export const citiesApi = createApi({
   baseQuery,
   tagTypes: ["Cities"], // for cache
   endpoints: (builder) => ({
-    getCities: builder.query<City[], CityParams>({
+    getCities: builder.query<City[], QueryParams>({
       query: (params) => {
         const {
           name,
@@ -29,7 +29,7 @@ export const citiesApi = createApi({
         method: "POST",
         body: city,
         headers: {
-          "Content-Type": "application/json-patch+json",
+          "Content-Type": "application/json",
         },
       }),
       invalidatesTags: ["Cities"], // Refresh cities list after adding
@@ -55,6 +55,33 @@ export const citiesApi = createApi({
       }),
       invalidatesTags: ["Cities"], // Refresh cities list after updating
     }),
+    addHotelByCityId: builder.mutation<
+      void,
+      { cityId: number; hotel: Omit<AdminHotel, "id"> }
+    >({
+      query: ({ cityId, hotel }) => ({
+        url: `/${cityId}/hotels`,
+        method: "POST",
+        body: hotel,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Cities"],
+    }),
+    deleteHotelByCityId: builder.mutation<
+      void,
+      { cityId: number; hotelId: number }
+    >({
+      query: ({ cityId, hotelId }) => ({
+        url: `/${cityId}/hotels/${hotelId}`,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Cities"],
+    }),
   }),
 });
 
@@ -63,4 +90,6 @@ export const {
   useAddCityMutation,
   useDeleteCityMutation,
   useUpdateCityMutation,
+  useAddHotelByCityIdMutation,
+  useDeleteHotelByCityIdMutation,
 } = citiesApi;

@@ -7,4 +7,8 @@ export const AUTH_REQUIRED_ENDPOINTS = [
   "addCity",
   "deleteCity",
   "updateCity",
+  "adminhotelsApi",
+  "addHotelByCityId",
+  "deleteHotelByCityId",
+  "updateHotel",
 ];

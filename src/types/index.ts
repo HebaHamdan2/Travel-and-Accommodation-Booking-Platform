@@ -72,9 +72,24 @@ export interface City {
   name: string;
   description: string;
 }
-export interface CityParams{
-  name?:string,
-  searchQuery?:string,
-  pageSize?:number,
-  pageNumber?:number,
+export interface QueryParams {
+  name?: string;
+  searchQuery?: string;
+  pageSize?: number;
+  pageNumber?: number;
+}
+export enum HotelType {
+  Boutique = 0,
+  Resort = 1,
+  Budget = 2,
+  Business = 3 // only if backend supports this
+}
+export interface AdminHotel {
+  id: number;
+  name: string;
+  description: string;
+  hotelType: HotelType;
+  starRating: number;
+  latitude: number;
+  longitude: number;
 }

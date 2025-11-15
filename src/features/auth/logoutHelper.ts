@@ -9,6 +9,9 @@ import { hotelsApi } from "../../services/user/hotels";
 import { bookingApi } from "../../services/user/booking";
 import { searchResultsApi } from "../../services/user/searchResults";
 import { adminNavigationApi } from "../../services/admin/adminNavigation";
+import { citiesApi } from "../../services/admin/cities";
+import { adminhotelsApi } from "../../services/admin/hotels";
+import { adminroomsApi } from "../../services/admin/rooms";
 export const performLogout = () => async (dispatch: AppDispatch) => {
   // Clear Redux slices
   dispatch(logout());
@@ -22,6 +25,9 @@ export const performLogout = () => async (dispatch: AppDispatch) => {
     bookingApi,
     searchResultsApi,
     adminNavigationApi,
+    citiesApi,
+    adminhotelsApi,
+    adminroomsApi,
   ];
 
   apiSlices.forEach((api) => dispatch(api.util.resetApiState()));

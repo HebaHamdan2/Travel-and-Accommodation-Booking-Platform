@@ -1,8 +1,18 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseURL } from "../../utils/constans";
 import { createBaseQueryWithErrorHandler } from "../baseQueryWithErrorHandler";
-import { AdminHotel, QueryParams } from "../../types";
+import {
+  addHotelRoomResponse,
+  AdminHotel,
+  AvailbleRoom,
+  QueryParams,
+  RoomBodyRequest,
+} from "../../types";
 import { mockHotelsData } from "../../mock/adminHotels.mock";
+import {
+  DEFAUL_CHECKENDATE,
+  DEFAULT_CHECKOUTDATE,
+} from "../../features/constants";
 
 const baseQuery = createBaseQueryWithErrorHandler(`${baseURL}/api/hotels`);
 export const adminhotelsApi = createApi({
@@ -47,6 +57,46 @@ export const adminhotelsApi = createApi({
       }),
       invalidatesTags: ["AdminHotels"],
     }),
+    getHotelRooms: builder.query<
+      AvailbleRoom[],
+      { hotelId: number; checkInDate?: string; checkOutDate?: string }
+    >({
+      query: ({ hotelId }) =>
+        `/${hotelId}/rooms?checkInDate=${DEFAUL_CHECKENDATE}&checkOutDate=${DEFAULT_CHECKOUTDATE}`,
+    }),
+    addHotelRoom: builder.mutation<
+      addHotelRoomResponse,
+      { hotelId: number; room: RoomBodyRequest }
+    >({
+      query: ({ hotelId, room }) => ({
+        url: `/${hotelId}/rooms`,
+        method: "POST",
+        body: room,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["AdminHotels"],
+    }),
+    deleteHotelRoom: builder.mutation<
+      void,
+      { hotelId: number; roomId: number }
+    >({
+      query: ({ hotelId, roomId }) => ({
+        url: `/${hotelId}/rooms/${roomId}`,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["AdminHotels"],
+    }),
   }),
 });
-export const { useGetHotelsQuery, useUpdateHotelMutation } = adminhotelsApi;
+export const {
+  useGetHotelsQuery,
+  useUpdateHotelMutation,
+  useGetHotelRoomsQuery,
+  useAddHotelRoomMutation,
+  useDeleteHotelRoomMutation,
+} = adminhotelsApi;

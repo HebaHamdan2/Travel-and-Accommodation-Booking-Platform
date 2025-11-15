@@ -25,7 +25,6 @@ const DeleteHotelDialog: React.FC<DeleteHotelDialogProps> = ({
       const success = await handleDeleteHotel(cityId, hotelId);
       if (success) {
         onSuccess?.("Hotel deleted successfully!");
-        onClose();
       } else {
         onError?.("Failed to delete hotel. Please try again.");
       }
@@ -33,6 +32,8 @@ const DeleteHotelDialog: React.FC<DeleteHotelDialogProps> = ({
       onError?.(
         err?.message || "Something went wrong while deleting the hotel."
       );
+    } finally {
+      onClose();
     }
   };
 

@@ -82,7 +82,7 @@ export enum HotelType {
   Boutique = 0,
   Resort = 1,
   Budget = 2,
-  Business = 3 // only if backend supports this
+  Business = 3, // only if backend supports this
 }
 export interface AdminHotel {
   id: number;
@@ -92,4 +92,11 @@ export interface AdminHotel {
   starRating: number;
   latitude: number;
   longitude: number;
+}
+export interface addHotelRoomResponse extends AdminHotel {
+  rooms: AvailbleRoom[];
+}
+export interface RoomBodyRequest {
+  roomNumber: string;
+  cost: number;
 }

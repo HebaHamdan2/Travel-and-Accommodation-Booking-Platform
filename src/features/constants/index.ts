@@ -7,13 +7,13 @@ export const initialAuth: AuthState = {
   loading: false,
   error: null,
 };
-const today = dayjs().startOf("day").format("YYYY-MM-DD");
-const tomorrow = dayjs().add(1, "day").startOf("day").format("YYYY-MM-DD");
+export const DEFAUL_CHECKENDATE = dayjs().startOf("day").format("YYYY-MM-DD");
+export const DEFAULT_CHECKOUTDATE = dayjs().add(1, "day").startOf("day").format("YYYY-MM-DD");
 
 export const initialSearch: SearchState = {
   city: "",
-  checkInDate: today,
-  checkOutDate: tomorrow,
+  checkInDate: DEFAUL_CHECKENDATE,
+  checkOutDate: DEFAULT_CHECKOUTDATE,
   starRate: undefined,
   numberOfRooms: 1,
   adults: 2,

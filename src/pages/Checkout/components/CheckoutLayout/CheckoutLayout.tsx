@@ -5,7 +5,7 @@ const CheckoutLayout = () => {
   return (
     <>
       <Navbar />
-      <CheckoutStepper/>
+      <CheckoutStepper />
     </>
   );
 };

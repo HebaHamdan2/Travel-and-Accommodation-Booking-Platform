@@ -17,10 +17,11 @@ import { BaseCardProps } from "../types";
 import { SearchRes } from "../../../pages/Home/types";
 import { useNavigate } from "react-router-dom";
 import { baseCardStyles } from "../styles/baseCardStyles";
+import { ROUTES } from "../../../utils/constans";
 const SearchResultCard: React.FC<BaseCardProps<SearchRes>> = ({ data }) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(`/hotels/${data.hotelId}`);
+    navigate(`${ROUTES.HOTEL(data.hotelId)}`);
   };
   return (
     <Card sx={{ ...baseCardStyles, maxWidth: "42rem" }}>

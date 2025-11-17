@@ -5,9 +5,8 @@ import TrendingDestSkeleton from "../../skeletons/TrendingDestSkeleton";
 import { useGetTrendingDestQuery } from "../../../../services/user/home";
 
 const TrendingDest = () => {
-  const { data: trends, isLoading, isError, error } = useGetTrendingDestQuery();
+  const { data: trends, isLoading } = useGetTrendingDestQuery();
   if (isLoading) return <TrendingDestSkeleton />;
-  if (isError) return <Typography color="error">{String(error)}</Typography>;
   return (
     <Wrapper id="trending">
       <Box

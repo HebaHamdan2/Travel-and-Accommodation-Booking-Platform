@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Container } from "@mui/material";
-import { WrapperProps } from "../../pages/Home/types";
+import { WrapperProps } from "../../types";
 
 const Wrapper: React.FC<WrapperProps> = ({ children, id }) => {
   return (
@@ -11,7 +11,7 @@ const Wrapper: React.FC<WrapperProps> = ({ children, id }) => {
         justifyContent: "center",
         textAlign: "center",
         py: 10,
-        px:1,
+        px: 1,
         backgroundColor: "background.default",
         borderBottom: "1px solid",
         borderColor: "divider",

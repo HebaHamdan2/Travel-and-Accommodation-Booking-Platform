@@ -9,17 +9,13 @@ import { useGetRecentlyVisitedQuery } from "../../../../services/user/home.ts";
 const RecentlyVisited = () => {
   const { authentication } = useAppSelector((state) => state.auth);
   const userId = getDecodedToken(authentication || "")?.user_id ?? null;
-  const {
-    data: recentVisited,
-    isLoading,
-    isError,
-    error,
-  } = useGetRecentlyVisitedQuery(userId as string, {
-    skip: !userId, // prevents the API call until a valid userId exists
-  });
+  const { data: recentVisited, isLoading } = useGetRecentlyVisitedQuery(
+    userId as string,
+    {
+      skip: !userId, // prevents the API call until a valid userId exists
+    }
+  );
   if (isLoading) return <HotelCardsSkeleton />;
-  if (isError) return <Typography color="error">{String(error)}</Typography>;
-
   return (
     <Wrapper id="recent">
       <Box
@@ -49,7 +45,12 @@ const RecentlyVisited = () => {
         >
           <Grid container spacing={3} justifyContent="center">
             {recentVisited?.slice(0, 3).map((hotel) => (
-              <Grid key={hotel.hotelId} size={{ xs: 12, md: 6, lg: 4 }}>
+              <Grid
+                key={hotel.hotelId}
+                size={{ xs: 12, md: 6, lg: 4 }}
+                display="flex"
+                justifyContent="center"
+              >
                 <InofCard variant="recentVisited" data={hotel} />
               </Grid>
             ))}

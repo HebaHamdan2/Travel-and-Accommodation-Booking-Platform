@@ -109,7 +109,7 @@ const CartItemCard: React.FC<BaseCardProps<CartRoomItemCardIfo>> = ({
           }}
           onClick={handleRemoveItem}
         >
-          Romeve From Cart
+          Remove From Cart
         </Button>
       </CardActions>
     </Card>

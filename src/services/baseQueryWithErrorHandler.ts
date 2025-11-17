@@ -4,19 +4,25 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
-import { AUTH_REQUIRED_ENDPOINTS } from "../utils/authEndpoints";
 import { RootState } from "../app/store";
 import { handleApiError } from "../utils/apiErrorHandlers";
-export const createBaseQueryWithErrorHandler = (baseUrl: string) => {
-  const AuthBaseQuery = fetchBaseQuery({
+import { AUTH_REQUIRED_ENDPOINTS } from "../utils/constans";
+import { showNotification } from "../features/notifications/notificationsSlice";
+
+type ExtendedError = FetchBaseQueryError & {
+  messageToShow?: string;
+};
+
+export const createBaseQueryWithErrorHandler = (
+  baseUrl: string
+): BaseQueryFn<string | FetchArgs, unknown, ExtendedError> => {
+  const rawBaseQuery = fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers, { getState, endpoint }) => {
-     const state = getState() as RootState;
-    const token = state.auth?.authentication;
+      const token = (getState() as RootState).auth?.authentication;
       if (token && AUTH_REQUIRED_ENDPOINTS.includes(endpoint)) {
         headers.set("Authorization", `Bearer ${token}`);
       }
-
       return headers;
     },
   });
@@ -24,15 +30,50 @@ export const createBaseQueryWithErrorHandler = (baseUrl: string) => {
   const baseQueryWithErrorHandler: BaseQueryFn<
     string | FetchArgs,
     unknown,
-    FetchBaseQueryError
+    ExtendedError
   > = async (args, api, extraOptions) => {
-    const result = await AuthBaseQuery(args, api, extraOptions);///Send the real HTTP request to the backend and wait for a response
+    const result = await rawBaseQuery(args, api, extraOptions);
 
-    if (result.error) {
-      handleApiError(result.error, args, api);
+    if (result.error?.status === "PARSING_ERROR") {
+      const message = "Server sent invalid response. Please try again later.";
+
+      api.dispatch(
+        showNotification({
+          message,
+          type: "error",
+        })
+      );
+
+      return {
+        error: {
+          status: "PARSING_ERROR",
+          originalStatus: result.error.originalStatus,
+          data: result.error.data,
+          error: result.error.error,
+          messageToShow: message,
+        },
+      };
     }
 
-    return result;
+    if (result.error) {
+      const message = handleApiError(result.error, args, api);
+
+      api.dispatch(
+        showNotification({
+          message,
+          type: "error",
+        })
+      );
+
+      return {
+        error: {
+          ...result.error,
+          messageToShow: message,
+        },
+      };
+    }
+
+    return { data: result.data as unknown };
   };
 
   return baseQueryWithErrorHandler;

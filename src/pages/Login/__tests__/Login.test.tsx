@@ -1,15 +1,15 @@
 import { screen } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import userEvent from "@testing-library/user-event";
-import { mockedFaildUser, mockedUser } from "../mocks/users";
+import { mockedAdmin, mockedFaildUser, mockedUser } from "../mocks/users";
 import Login from "../Login";
 import { handlers } from "../mocks/loginHandlers";
 import renderWithProviders from "../../../tests/utils/renderWithProviders";
 import { LoginValues } from "../../../types";
 
 const getters = {
-  getUsernameInput: () => screen.getByLabelText(/^Username/),
-  getPasswordInput: () => screen.getByLabelText(/^Password/),
+  getUsernameInput: () => screen.getByLabelText(/username/i),
+  getPasswordInput: () => screen.getByLabelText(/password/i),
   getLoginButton: () =>
     screen.getByRole("button", {
       name: /Login/,
@@ -41,7 +41,6 @@ describe("Login Page", () => {
 
     await userEvent.type(usernameInput, mockedUser.userName);
     await userEvent.type(passwordInput, mockedUser.password);
-
     expect(usernameInput).toHaveValue(mockedUser.userName);
     expect(passwordInput).toHaveValue(mockedUser.password);
   });
@@ -71,10 +70,19 @@ describe("Login Page", () => {
     await userEvent.type(usernameInput, mockedFaildUser.userName);
     await userEvent.type(passwordInput, mockedFaildUser.password);
     await userEvent.click(loginButton);
-
-    const error = await screen.findByText(
-      /Request failed with status code 401/i
-    );
-    expect(error).toBeInTheDocument();
+    const error = await screen.findByRole("alert");
+    expect(error).toHaveTextContent(/Request failed with status code 401/i);
+  });
+  it("should display success message on successful Login", async () => {
+    renderWithProviders(<Login />);
+    await mockedLogin(mockedUser);
+    const msg = await screen.findByRole("alert");
+    expect(msg).toHaveTextContent(/Logged in successfully!/i);
+  });
+  it("should display success message on successful Login", async () => {
+    renderWithProviders(<Login />);
+    await mockedLogin(mockedAdmin);
+    const msg = await screen.findByRole("alert");
+    expect(msg).toHaveTextContent(/Logged in successfully!/i);
   });
 });

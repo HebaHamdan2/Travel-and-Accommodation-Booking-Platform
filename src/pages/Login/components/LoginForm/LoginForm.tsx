@@ -1,73 +1,42 @@
-import {
-  Box,
-  Stack,
-  TextField,
-  Typography,
-  InputAdornment,
-  Button,
-} from "@mui/material";
-import React, { useState } from "react";
+import { Box, Stack, Typography, Button } from "@mui/material";
+import React from "react";
 import { AccountCircle, Lock } from "@mui/icons-material";
 import { useFormik } from "formik";
 import { loginValidationSchema } from "../../validation";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { login } from "../../../../features/auth/authSlice";
 import { LoginValues } from "../../../../types";
-import CustomSnackbar from "../../../../components/CustomSnackbar";
+import { showNotification } from "../../../../features/notifications/notificationsSlice";
+import FormikTextField from "../../../../components/FormikTextField";
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state) => state.auth);
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity?: "success" | "error";
-  }>({ open: false, message: "" });
-
+  async function handleSubmit(values: LoginValues) {
+    const res = await dispatch(login(values));
+    if (login.fulfilled.match(res)) {
+      dispatch(
+        showNotification({
+          message: "Logged in successfully!",
+          type: "success",
+        })
+      );
+    } else {
+      const errorMsg =
+        (res.payload as { title?: string })?.title ||
+        "Login failed! Check credentials.";
+      dispatch(
+        showNotification({
+          message: errorMsg,
+          type: "error",
+        })
+      );
+    }
+  }
   const formik = useFormik({
     initialValues: { userName: "", password: "" },
     validationSchema: loginValidationSchema,
-    onSubmit: async (values: LoginValues) => {
-      const res = await dispatch(login(values));
-        if (login.fulfilled.match(res)) {
-        setSnackbar({
-          open: true,
-          message: "Logged in successfully!",
-          severity: "success",
-        });
-      } else {
-        setSnackbar({
-          open: true,
-          message:
-            (res.payload as { title?: string })?.title ||
-            "Login failed! Check credentials.",
-          severity: "error",
-        });
-      }
-    },
+    onSubmit: handleSubmit,
   });
-  const renderTextField = (
-    name: "userName" | "password",
-    label: string,
-    type: string = "text",
-    icon: React.ReactNode
-  ) => (
-    <TextField
-      name={name}
-      label={label}
-      type={type}
-      fullWidth
-      onChange={formik.handleChange}
-      onBlur={formik.handleBlur}
-      value={formik.values[name]}
-      error={formik.touched[name] && Boolean(formik.errors[name])}
-      helperText={formik.touched[name] && formik.errors[name]}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">{icon}</InputAdornment>
-        ),
-      }}
-    />
-  );
 
   return (
     <Box
@@ -113,8 +82,19 @@ const LoginForm: React.FC = () => {
         Login with username
       </Typography>
       <Stack spacing={{ xs: 2.5, sm: 3 }}>
-        {renderTextField("userName", "Username", "text", <AccountCircle />)}
-        {renderTextField("password", "Password", "password", <Lock />)}
+        <FormikTextField<LoginValues>
+          name="userName"
+          label="Username"
+          icon={<AccountCircle />}
+          formik={formik}
+        />
+        <FormikTextField<LoginValues>
+          name="password"
+          label="Password"
+          type="password"
+          icon={<Lock />}
+          formik={formik}
+        />
         <Button
           type="submit"
           variant="contained"
@@ -138,12 +118,6 @@ const LoginForm: React.FC = () => {
           {loading ? "Logging in..." : "Login"}
         </Button>
       </Stack>
-      <CustomSnackbar
-        open={snackbar.open}
-        severity={snackbar.severity}
-        message={snackbar.message}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-      />
     </Box>
   );
 };

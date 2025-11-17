@@ -7,16 +7,15 @@ const HotelLayout = () => {
   return (
     <>
       <Navbar />
-       <Suspense
+      <Suspense
         fallback={
           <Box sx={{ textAlign: "center", mt: 8 }}>
             <CircularProgress color="primary" />
           </Box>
         }
       >
-      <DetailedHotelInfo/>
-     
-       </Suspense>
+        <DetailedHotelInfo />
+      </Suspense>
     </>
   );
 };

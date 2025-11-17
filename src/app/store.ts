@@ -4,6 +4,7 @@ import searchReducer from "../features/search/searchSlice";
 import filtersReducer from "../features/filters/filtersSlice.ts";
 import cartReducer from "../features/cart/cartSlice.ts";
 import bookingReducer from "../features/booking/bookingSlice.ts";
+import notificationsReducer from "../features/notifications/notificationsSlice.ts";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import { checkTokenExpMiddleware } from "../middlewares/checkTokenExpMiddleware.ts";
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   filters: filtersReducer,
   cart: cartReducer,
   booking: bookingReducer,
+  notifications: notificationsReducer,
   [homeApi.reducerPath]: homeApi.reducer,
   [searchResultsApi.reducerPath]: searchResultsApi.reducer,
   [hotelsApi.reducerPath]: hotelsApi.reducer,
@@ -46,6 +48,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
+      immutableCheck: false,
     }).concat(
       homeApi.middleware,
       checkTokenExpMiddleware,
@@ -55,7 +58,7 @@ export const store = configureStore({
       adminNavigationApi.middleware,
       citiesApi.middleware,
       adminhotelsApi.middleware,
-      adminroomsApi.middleware,
+      adminroomsApi.middleware
     ),
 });
 export const persistor = persistStore(store);

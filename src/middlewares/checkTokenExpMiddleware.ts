@@ -9,7 +9,7 @@ export const checkTokenExpMiddleware: Middleware =
     const state = store.getState() as any;
     const token = state.auth?.authentication;
     if (token && isTokenExpired(token)) {
-   (store.dispatch as AppDispatch)(performLogout());
+      (store.dispatch as AppDispatch)(performLogout());
     }
     return result;
   };

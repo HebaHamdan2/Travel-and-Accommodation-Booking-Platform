@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { AuthState, SearchState,SearchSliceState, CartState, BookingState, FiltersState } from "../types";
+import { AuthState, SearchState,SearchSliceState, CartState, BookingState, FiltersState, NotificationState } from "../types";
 
 export const initialAuth: AuthState = {
   userType: null,
@@ -44,4 +44,9 @@ export const BookingInitialState: BookingState = {
   status: "idle",
   error: undefined,
   confirmationNumber: undefined,
+};
+
+export const NotifcationInitialState: NotificationState = {
+  message: null,
+  type: null,
 };

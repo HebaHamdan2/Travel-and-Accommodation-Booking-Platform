@@ -96,7 +96,6 @@ const ManageRooms: React.FC = () => {
             ))}
           </Select>
         </FormControl>
-
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -114,58 +113,61 @@ const ManageRooms: React.FC = () => {
           Add Room
         </Button>
       </Stack>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Room ID</TableCell>
-              <TableCell>Room Number</TableCell>
-              <TableCell>Room Type</TableCell>
-              <TableCell>Adults Capacity</TableCell>
-              <TableCell>Children Capacity</TableCell>
-              <TableCell>Amenities</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Availability</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rooms.map((room) => (
-              <TableRow
-                key={room.roomId}
-                hover
-                selected={selectedRoom?.roomId === room.roomId}
-                sx={{ cursor: "pointer" }}
-                onClick={() => handleRowClick(room)}
-              >
-                <TableCell>{room.roomId}</TableCell>
-                <TableCell>{room.roomNumber}</TableCell>
-                <TableCell>{room.roomType}</TableCell>
-                <TableCell>{room.capacityOfAdults}</TableCell>
-                <TableCell>{room.capacityOfChildren}</TableCell>
-                <TableCell>
-                  {room.roomAmenities.map((a) => a.name).join(", ")}
-                </TableCell>
-                <TableCell>{room.price}</TableCell>
-                <TableCell>
-                  {room.availability ? "Available" : "Not Available"}
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    color="error"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteClick(room);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+      <Box sx={{ overflowX: "auto" }}>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Room ID</TableCell>
+                <TableCell>Room Number</TableCell>
+                <TableCell>Room Type</TableCell>
+                <TableCell>Adults Capacity</TableCell>
+                <TableCell>Children Capacity</TableCell>
+                <TableCell>Amenities</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>Availability</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {rooms.map((room) => (
+                <TableRow
+                  key={room.roomId}
+                  hover
+                  selected={selectedRoom?.roomId === room.roomId}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => handleRowClick(room)}
+                >
+                  <TableCell>{room.roomId}</TableCell>
+                  <TableCell>{room.roomNumber}</TableCell>
+                  <TableCell>{room.roomType}</TableCell>
+                  <TableCell>{room.capacityOfAdults}</TableCell>
+                  <TableCell>{room.capacityOfChildren}</TableCell>
+                  <TableCell>
+                    {room.roomAmenities.map((a) => a.name).join(", ")}
+                  </TableCell>
+                  <TableCell>{room.price}</TableCell>
+                  <TableCell>
+                    {room.availability ? "Available" : "Not Available"}
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      color="error"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClick(room);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+
       {/* Add Room Dialog */}
       {selectedHotelId && (
         <AddRoomDialog

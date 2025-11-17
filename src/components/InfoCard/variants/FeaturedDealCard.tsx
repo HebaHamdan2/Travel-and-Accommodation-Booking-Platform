@@ -14,13 +14,14 @@ import LocationAndRating from "../../LocationAndRating";
 import { BaseCardProps } from "../types";
 import { useNavigate } from "react-router-dom";
 import { Deal } from "../../../pages/Home/types";
+import { ROUTES } from "../../../utils/constans";
 const FeaturedDealCard: React.FC<BaseCardProps<Deal>> = ({ data }) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(`/hotels/${data.hotelId}`);
+    navigate(`${ROUTES.HOTEL(data.hotelId)}`);
   };
   return (
-    <Card sx={{ ...baseCardStyles, maxWidth: "32rem" }}>
+    <Card sx={{ ...baseCardStyles, width: "32rem" }}>
       <CardActionArea onClick={handleNavigate}>
         <CardMedia
           component="img"

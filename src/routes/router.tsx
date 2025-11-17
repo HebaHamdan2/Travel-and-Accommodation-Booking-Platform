@@ -11,25 +11,30 @@ import Checkout from "../pages/Checkout/Checkout";
 import ManageCities from "../pages/AdminDashboard/components/ManageCities";
 import ManageHotels from "../pages/AdminDashboard/components/ManageHotels";
 import ManageRooms from "../pages/AdminDashboard/components/ManageRooms";
+import { ROUTES } from "../utils/constans";
+import ErrorPage from "../pages/ErrorPage";
+import AdminErrorPage from "../pages/AdminErrorPage";
+import AdminRoot from "../pages/AdminDashboard/components/AdminRoot";
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
-        element: <Navigate to="/home" replace />,
+        element: <Navigate to={ROUTES.HOME} replace />,
       },
-      { path: "login", element: <Login /> },
+      { path: ROUTES.LOGIN, element: <Login /> },
       {
         element: <ProtectedLayout allowedRoles={["User"]} />,
         children: [
           {
-            path: "home",
+            path: ROUTES.HOME,
             element: <Home />,
           },
           {
-            path: "search-results",
+            path: ROUTES.SEARCH_RESULTS,
             element: <SearchResults />,
           },
           {
@@ -37,7 +42,7 @@ export const router = createBrowserRouter([
             element: <Hotel />,
           },
           {
-            path: "checkout",
+            path: ROUTES.CHECKOUT,
             element: <Checkout />,
           },
         ],
@@ -46,19 +51,22 @@ export const router = createBrowserRouter([
         element: <AdminAuthLayout allowedRoles={["Admin"]} />,
         children: [
           {
-            path: "admin",
+            path: ROUTES.ADMIN.ROOT,
             element: <AdminDashboard />,
+            errorElement: <AdminErrorPage />,
             children: [
-              { path: "manage-cities", element: <ManageCities /> },
-              { path: "manage-hotels", element: <ManageHotels /> },
+              { index: true, element: <AdminRoot />, },
+              { path: ROUTES.ADMIN.MANAGE_CITIES, element: <ManageCities /> },
+              { path: ROUTES.ADMIN.MANAGE_HOTELS, element: <ManageHotels /> },
               {
-                path: "manage-rooms",
+                path: ROUTES.ADMIN.MANAGE_ROOMS,
                 element: <ManageRooms />,
               },
             ],
           },
         ],
       },
+      { path: "*", element: <ErrorPage /> },
     ],
   },
 ]);

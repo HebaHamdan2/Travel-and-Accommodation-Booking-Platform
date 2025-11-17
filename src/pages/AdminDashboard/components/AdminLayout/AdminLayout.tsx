@@ -23,7 +23,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../app/hooks";
 import { useThemeContext } from "../../../../hooks/useThemeContext";
 import { performLogout } from "../../../../features/auth/logoutHelper";
-import { LOGO_URL } from "../../../../utils/constans";
+import { LOGO_URL, ROUTES } from "../../../../utils/constans";
 import { useAdminNavigation } from "../../hooks/useAdminNavigation";
 
 const drawerWidth = 250;
@@ -56,15 +56,15 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     dispatch(performLogout());
-    navigate("/login");
+    navigate(ROUTES.LOGIN);
   };
 
   const drawer = (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "95%", backgroundColor: "background.default" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%", backgroundColor: "background.default" }}>
       <Toolbar sx={{ justifyContent: "center", mt: 1 }}>
         <img src={LOGO_URL} alt="Logo" style={{ width: 80 }} />
       </Toolbar>
-      <List sx={{ flexGrow: 1, p: 1 }}>
+      <List sx={{ flexGrow: 1, p: 1 ,mt:"10%"}}>
         {Links.map(({ title, path }) => (
           <ListItem key={path} disablePadding>
             <ListItemButton
@@ -169,15 +169,6 @@ export default function AdminLayout() {
       >
         <Toolbar />
         <Outlet />
-
-        {location.pathname === "/admin" && (
-          <Box sx={{ textAlign: "center", mt: 5 }}>
-            <Typography variant="h5" fontWeight={600}>
-              Welcome to the Admin Dashboard
-            </Typography>
-            <Typography sx={{ mt: 1 }}>Use the menu to manage Cities, Hotels, and Rooms.</Typography>
-          </Box>
-        )}
       </Box>
     </Box>
   );

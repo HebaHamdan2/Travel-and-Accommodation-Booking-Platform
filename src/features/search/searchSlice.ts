@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { initialSearchState } from "../constants";
 import { SearchSliceState } from "../types";
+import { SearchRes } from "../../pages/Home/types";
 
 const searchSlice = createSlice({
   name: "search",
@@ -16,7 +17,7 @@ const searchSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    fetchSearchSuccess: (state, action: PayloadAction<any[]>) => {
+    fetchSearchSuccess: (state, action: PayloadAction<SearchRes[]>) => {
       state.loading = false;
       state.results = action.payload;
     },

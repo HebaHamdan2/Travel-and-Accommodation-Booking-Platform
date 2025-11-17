@@ -1,7 +1,15 @@
 {
   "files": [],
    "compilerOptions": {
-    "types": ["jest", "@testing-library/jest-dom", "vite/client", "node"]
+    "types": ["jest", "@testing-library/jest-dom", "vite/client", "node"],
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"],
+      "@components/*": ["components/*"],
+      "@features/*": ["features/*"],
+      "@services/*": ["services/*"],
+      "@app/*": ["app/*"]
+    }
   },
   "references": [
     { "path": "./tsconfig.app.json" },

@@ -149,89 +149,92 @@ export default function ManageHotels() {
           Add Hotel
         </Button>
       </Paper>
-      <TableContainer
-        component={Paper}
-        sx={{ borderRadius: 2, boxShadow: "0px 2px 8px rgba(0,0,0,0.05)" }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: "primary.main" }}>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Latitude</TableCell>
-              <TableCell>Longitude</TableCell>
-              <TableCell align="center">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {hotelsLoading ? (
-              <TableRow>
-                <TableCell colSpan={8} align="center">
-                  <CircularProgress size={24} />
-                </TableCell>
+      <Box sx={{ overflowX: "auto" }}>
+        <TableContainer
+          component={Paper}
+          sx={{ borderRadius: 2, boxShadow: "0px 2px 8px rgba(0,0,0,0.05)" }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "primary.main" }}>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Rating</TableCell>
+                <TableCell>Latitude</TableCell>
+                <TableCell>Longitude</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
-            ) : paginatedHotels.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={8} align="center">
-                  No hotels found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedHotels.map((hotel) => (
-                <TableRow
-                  key={hotel.id}
-                  hover
-                  onClick={() => setUpdateHotel(hotel)}
-                  sx={{ cursor: "pointer" }}
-                >
-                  <TableCell>{hotel.id}</TableCell>
-                  <TableCell>{hotel.name}</TableCell>
-                  <TableCell>{hotel.description}</TableCell>
-                  <TableCell>{HOTEL_TYPE_LABELS[hotel.hotelType]}</TableCell>
-                  <TableCell>
-                    <Rating value={hotel.starRating} readOnly />
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={hotel.latitude}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  </TableCell>
-
-                  {/* Longitude */}
-                  <TableCell>
-                    <Chip
-                      label={hotel.longitude}
-                      size="small"
-                      color="secondary"
-                      variant="outlined"
-                    />
-                  </TableCell>
-
-                  <TableCell align="center">
-                    <Tooltip title="Delete Hotel">
-                      <IconButton
-                        color="error"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDeleteHotelId(hotel.id);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
+            </TableHead>
+            <TableBody>
+              {hotelsLoading ? (
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
+                    <CircularProgress size={24} />
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              ) : paginatedHotels.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
+                    No hotels found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                paginatedHotels.map((hotel) => (
+                  <TableRow
+                    key={hotel.id}
+                    hover
+                    onClick={() => setUpdateHotel(hotel)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell>{hotel.id}</TableCell>
+                    <TableCell>{hotel.name}</TableCell>
+                    <TableCell>{hotel.description}</TableCell>
+                    <TableCell>{HOTEL_TYPE_LABELS[hotel.hotelType]}</TableCell>
+                    <TableCell>
+                      <Rating value={hotel.starRating} readOnly />
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={hotel.latitude}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      />
+                    </TableCell>
+
+                    {/* Longitude */}
+                    <TableCell>
+                      <Chip
+                        label={hotel.longitude}
+                        size="small"
+                        color="secondary"
+                        variant="outlined"
+                      />
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <Tooltip title="Delete Hotel">
+                        <IconButton
+                          color="error"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteHotelId(hotel.id);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+
       <Stack
         direction="row"
         spacing={2}

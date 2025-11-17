@@ -18,6 +18,9 @@ const DestinationCard: React.FC<BaseCardProps<TrendDes>> = ({ data }) => {
         image={data.thumbnailUrl}
         alt={data.cityName}
         sx={{ objectFit: "cover", height: "100%" }}
+        onError={(e) => {
+          e.currentTarget.src = "/not-found.jpg"; // fallback image
+        }}
       />
       <Box
         sx={{
@@ -26,7 +29,7 @@ const DestinationCard: React.FC<BaseCardProps<TrendDes>> = ({ data }) => {
           left: 0,
           right: 0,
           textAlign: "center",
-          color: "#fff",
+          color: "background.default",
           fontWeight: "bold",
           textShadow: "0 1px 3px rgba(0,0,0,0.7)",
         }}

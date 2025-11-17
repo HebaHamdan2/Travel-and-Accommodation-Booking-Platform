@@ -14,4 +14,8 @@ testEnvironment: "jsdom",
     `[/\\\\]node_modules[/\\\\](?!${esModules}).+\\.(js|jsx|mjs|cjs|ts|tsx)$`,
     '^.+\\.module\\.(css|sass|scss)$',
   ],
+  moduleNameMapper: {
+  '^@/(.*)$': '<rootDir>/src/$1',  
+  '\\.(css|scss|sass)$': 'identity-obj-proxy', 
+},
 };

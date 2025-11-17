@@ -18,6 +18,7 @@ import { UpdateHotelDialogProps } from "../../types";
 import { hotelTypes } from "../../utils";
 import { Formik, Form } from "formik";
 import { UpdateValidationSchema } from "../../validation";
+import FormikTextField from "../../../../../../components/FormikTextField";
 
 const UpdateHotelDialog: React.FC<UpdateHotelDialogProps> = ({
   open,
@@ -65,38 +66,28 @@ const UpdateHotelDialog: React.FC<UpdateHotelDialogProps> = ({
         enableReinitialize
         onSubmit={handleSubmit}
       >
-        {({ values, errors, touched, handleChange }) => (
+        {(formik) => (
           <Form>
             <DialogContent sx={{ display: "grid", gap: 2, mt: 1 }}>
-              <TextField
-                label="Name"
-                name="name"
-                fullWidth
-                value={values.name}
-                onChange={handleChange}
-                error={touched.name && Boolean(errors.name)}
-                helperText={touched.name && errors.name}
-              />
-              <TextField
-                label="Description"
+              <FormikTextField name="name" label="Name" formik={formik} />
+              <FormikTextField
                 name="description"
-                fullWidth
+                label="description"
+                formik={formik}
                 multiline
                 minRows={3}
-                value={values.description}
-                onChange={handleChange}
-                error={touched.description && Boolean(errors.description)}
-                helperText={touched.description && errors.description}
               />
               <FormControl
                 fullWidth
-                error={touched.hotelType && Boolean(errors.hotelType)}
+                error={
+                  formik.touched.hotelType && Boolean(formik.errors.hotelType)
+                }
               >
                 <InputLabel>Hotel Type</InputLabel>
                 <Select
                   name="hotelType"
-                  value={values.hotelType}
-                  onChange={handleChange}
+                  value={formik.values.hotelType}
+                  onChange={formik.handleChange}
                 >
                   {hotelTypes.map((t) => (
                     <MenuItem key={t.value} value={t.value}>
@@ -105,7 +96,7 @@ const UpdateHotelDialog: React.FC<UpdateHotelDialogProps> = ({
                   ))}
                 </Select>
                 <FormHelperText>
-                  {touched.hotelType && errors.hotelType}
+                  {formik.touched.hotelType && formik.errors.hotelType}
                 </FormHelperText>
               </FormControl>
               <TextField
@@ -114,10 +105,14 @@ const UpdateHotelDialog: React.FC<UpdateHotelDialogProps> = ({
                 type="number"
                 inputProps={{ step: 1, min: 1, max: 5 }} // integers only
                 fullWidth
-                value={values.starRating}
-                onChange={handleChange}
-                error={touched.starRating && Boolean(errors.starRating)}
-                helperText={touched.starRating && errors.starRating}
+                value={formik.values.starRating}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.starRating && Boolean(formik.errors.starRating)
+                }
+                helperText={
+                  formik.touched.starRating && formik.errors.starRating
+                }
               />
 
               <TextField
@@ -125,20 +120,24 @@ const UpdateHotelDialog: React.FC<UpdateHotelDialogProps> = ({
                 name="latitude"
                 type="number"
                 fullWidth
-                value={values.latitude}
-                onChange={handleChange}
-                error={touched.latitude && Boolean(errors.latitude)}
-                helperText={touched.latitude && errors.latitude}
+                value={formik.values.latitude}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.latitude && Boolean(formik.errors.latitude)
+                }
+                helperText={formik.touched.latitude && formik.errors.latitude}
               />
               <TextField
                 label="Longitude"
                 name="longitude"
                 type="number"
                 fullWidth
-                value={values.longitude}
-                onChange={handleChange}
-                error={touched.longitude && Boolean(errors.longitude)}
-                helperText={touched.longitude && errors.longitude}
+                value={formik.values.longitude}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.longitude && Boolean(formik.errors.longitude)
+                }
+                helperText={formik.touched.longitude && formik.errors.longitude}
               />
             </DialogContent>
             <DialogActions>

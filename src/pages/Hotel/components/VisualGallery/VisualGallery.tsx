@@ -5,23 +5,18 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/styles.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import { useGetHotelGalleryQuery } from "../../../../services/user/hotels";
-import { GALLERY } from "../../constant";
 import { HotelProps } from "../../types";
 import VisualGallerySkeleton from "../../skeletons/VisualGallerySkeleton";
+import { GALLERY } from "../../../../mock/gallery.mock";
 const VisualGallery: React.FC<HotelProps> = ({ hotelId }) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { data, isError, isLoading } = useGetHotelGalleryQuery(hotelId);
+  const { data, isLoading, isError } = useGetHotelGalleryQuery(hotelId);
   if (isLoading) return <VisualGallerySkeleton />;
-
-  const hotelImgs = data && data.length > 0 ? data : GALLERY;
-  const hasError = !data || data.length === 0 || isError;
-  if (hasError) {
-    console.clear();
-  }
+  const hotelImgs = isError ? GALLERY : data || [];
   const handleOpen = (index: number) => {
     setCurrentIndex(index);
-     setOpen(true); 
+    setOpen(true);
   };
   const mainImage = hotelImgs[0];
   const thumbnails = hotelImgs.slice(1, 4);

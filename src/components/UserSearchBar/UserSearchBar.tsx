@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   TextField,
@@ -17,6 +18,7 @@ import {
   adultsOptions,
   childrenOptions,
   roomsOptions,
+  ROUTES,
 } from "../../utils/constans";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,37 +29,43 @@ import {
   fetchSearchFailure,
 } from "../../features/search/searchSlice";
 import { useLazyGetSearchQuery } from "../../services/user/home";
+import { ensureValidCheckOut, formatDate } from "../../utils/dateUtils";
+import { SearchParams } from "../../types";
+
 const UserSearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const [triggerSearch, { isLoading }] = useLazyGetSearchQuery();
 
-  const { city, checkInDate, checkOutDate, adults, children, numberOfRooms } =
-    useAppSelector((state) => state.search);
-  const updateSearch = (field: string, value: any) => {
+  const {
+    city = "",
+    checkInDate,
+    checkOutDate,
+    adults,
+    children,
+    numberOfRooms,
+  } = useAppSelector((state) => state.search);
+
+  const updateSearch = (field: keyof SearchParams, value: any) => {
     dispatch(setSearchData({ [field]: value }));
   };
+
   const handleCheckInChange = (date: Dayjs | null) => {
     if (!date) return;
-    updateSearch("checkInDate", date.format("YYYY-MM-DD"));
-    if (date && (!checkOutDate || date.isAfter(checkOutDate))) {
-      updateSearch("checkOutDate", date.add(1, "day").format("YYYY-MM-DD"));
-    }
+    updateSearch("checkInDate", formatDate(date));
+    updateSearch("checkOutDate", ensureValidCheckOut(date, checkOutDate));
   };
+
   const handleCheckOutChange = (date: Dayjs | null) => {
     if (!date) return;
-    if (checkInDate && date.isBefore(checkInDate)) {
-      updateSearch(
-        "checkOutDate",
-        dayjs(checkInDate).add(1, "day").format("YYYY-MM-DD")
-      );
-    } else updateSearch("checkOutDate", date.format("YYYY-MM-DD"));
+    updateSearch("checkOutDate", ensureValidCheckOut(checkInDate, date));
   };
+
   const handleSearch = async () => {
     try {
       dispatch(fetchSearchStart());
-      const params = {
+      const params: SearchParams = {
         city,
         checkInDate,
         checkOutDate,
@@ -68,8 +76,8 @@ const UserSearchBar: React.FC = () => {
       const result = await triggerSearch(params, true);
       if (result?.data) {
         dispatch(fetchSearchSuccess(result.data));
-        if (location.pathname !== "/search-results") {
-          navigate("/search-results");
+        if (location.pathname !== ROUTES.SEARCH_RESULTS) {
+          navigate(ROUTES.SEARCH_RESULTS);
         }
       } else {
         dispatch(fetchSearchFailure("No data returned"));
@@ -78,6 +86,7 @@ const UserSearchBar: React.FC = () => {
       dispatch(fetchSearchFailure(error?.message || "Search failed"));
     }
   };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box
@@ -94,10 +103,11 @@ const UserSearchBar: React.FC = () => {
       >
         <TextField
           placeholder="Search cities..."
-          value={city}
+          value={city || ""}
           onChange={(e) => updateSearch("city", e.target.value)}
           size="small"
           variant="outlined"
+          fullWidth
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -113,18 +123,18 @@ const UserSearchBar: React.FC = () => {
         />
         <CustomDatePicker
           label="Check in"
-          value={dayjs(checkInDate)}
+          value={checkInDate ? dayjs(checkInDate) : null}
           onChange={handleCheckInChange}
           disablePast
         />
         <CustomDatePicker
           label="Check out"
-          value={dayjs(checkOutDate)}
+          value={checkOutDate ? dayjs(checkOutDate) : null}
           onChange={handleCheckOutChange}
-          minDate={dayjs(checkInDate)?.add(1, "day")}
+          minDate={checkInDate ? dayjs(checkInDate).add(1, "day") : undefined}
         />
         <Box sx={{ display: "flex", gap: 1, minWidth: 240, flex: 1 }}>
-          <FormControl size="small" fullWidth>
+          <FormControl fullWidth size="small">
             <InputLabel>Adults</InputLabel>
             <Select
               value={adults}
@@ -138,7 +148,7 @@ const UserSearchBar: React.FC = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl size="small" fullWidth>
+          <FormControl fullWidth size="small">
             <InputLabel>Children</InputLabel>
             <Select
               value={children}
@@ -152,7 +162,7 @@ const UserSearchBar: React.FC = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl size="small" fullWidth>
+          <FormControl fullWidth size="small">
             <InputLabel>Rooms</InputLabel>
             <Select
               value={numberOfRooms}
@@ -171,6 +181,7 @@ const UserSearchBar: React.FC = () => {
           variant="contained"
           startIcon={<SearchIcon />}
           onClick={handleSearch}
+          disabled={isLoading}
           sx={{
             backgroundColor: "primary.main",
             textTransform: "none",
@@ -180,7 +191,7 @@ const UserSearchBar: React.FC = () => {
             "&:hover": { opacity: 0.8 },
           }}
         >
-          {isLoading ? "Searching..." : "Search"}{" "}
+          {isLoading ? "Searching..." : "Search"}
         </Button>
       </Box>
     </LocalizationProvider>

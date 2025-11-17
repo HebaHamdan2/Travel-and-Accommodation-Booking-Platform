@@ -20,7 +20,7 @@ import { UserDetailsFormValues } from "../../types";
 import UserDetailsForm from "../UserDetailsForm/UserDetailsForm";
 import BookingConfirmation from "../BookingConfirmation/BookingConfirmation";
 import YourSelections from "../YourSelections";
-import { CartItem } from "../../../../features/types";
+import { BookingResponse, CartItem } from "../../../../features/types";
 import { clearCart } from "../../../../features/cart/cartSlice";
 import { useCreateBookingMutation } from "../../../../services/user/booking";
 
@@ -28,7 +28,9 @@ const CheckoutStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] =
     useState<UserDetailsFormValues>(INITIAL_USER_DETAILS);
-  const [bookingResponses, setBookingResponses] = useState<any[]>([]);
+  const [bookingResponses, setBookingResponses] = useState<BookingResponse[]>(
+    []
+  );
   const [openDialog, setOpenDialog] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -67,11 +69,23 @@ const CheckoutStepper = () => {
       const results = await Promise.all(
         bookings.map((b) => createBooking(b).unwrap())
       );
-      setBookingResponses(results.length ? results : bookings);
+      setBookingResponses(results.length ? results : []);
       dispatch(clearCart());
     } catch {
-      setBookingResponses(bookings);
-    } finally { 
+      const fallbackResponses: BookingResponse[] = bookings.map((b) => ({
+        customerName: b.customerName,
+        hotelName: b.hotelName,
+        roomNumber: b.roomNumber,
+        roomType: b.roomType,
+        totalCost: b.totalCost,
+        paymentMethod: b.paymentMethod,
+        bookingDateTime: b.bookingDateTime,
+        bookingStatus: "pending",
+        confirmationNumber: "N/A",
+      }));
+
+      setBookingResponses(fallbackResponses);
+    } finally {
       setOpenDialog(true);
       setActiveStep((prev) => prev + 1);
     }

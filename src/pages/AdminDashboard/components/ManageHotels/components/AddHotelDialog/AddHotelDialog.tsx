@@ -8,7 +8,6 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-  TextField,
   Select,
   FormHelperText,
 } from "@mui/material";
@@ -18,6 +17,7 @@ import { AddHotelDialogProps } from "../../types";
 import { hotelTypes } from "../../utils";
 import { Formik, Form } from "formik";
 import { AddValidationSchema } from "../../validation";
+import FormikTextField from "../../../../../../components/FormikTextField";
 
 const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
   open,
@@ -73,38 +73,28 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
         validationSchema={AddValidationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, errors, touched, handleChange }) => (
+        {(formik) => (
           <Form>
             <DialogContent sx={{ display: "grid", gap: 2, mt: 1 }}>
-              <TextField
-                label="Name"
-                name="name"
-                fullWidth
-                value={values.name}
-                onChange={handleChange}
-                error={touched.name && Boolean(errors.name)}
-                helperText={touched.name && errors.name}
-              />
-              <TextField
-                label="Description"
+              <FormikTextField name="name" label="Name" formik={formik} />
+              <FormikTextField
                 name="description"
-                fullWidth
+                label="Description"
+                formik={formik}
                 multiline
                 minRows={3}
-                value={values.description}
-                onChange={handleChange}
-                error={touched.description && Boolean(errors.description)}
-                helperText={touched.description && errors.description}
               />
               <FormControl
                 fullWidth
-                error={touched.hotelType && Boolean(errors.hotelType)}
+                error={
+                  formik.touched.hotelType && Boolean(formik.errors.hotelType)
+                }
               >
                 <InputLabel>Hotel Type</InputLabel>
                 <Select
                   name="hotelType"
-                  value={values.hotelType}
-                  onChange={handleChange}
+                  value={formik.values.hotelType}
+                  onChange={formik.handleChange}
                 >
                   {hotelTypes.map((t) => (
                     <MenuItem key={t.value} value={t.value}>
@@ -113,51 +103,41 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
                   ))}
                 </Select>
                 <FormHelperText>
-                  {touched.hotelType && errors.hotelType}
+                  {formik.touched.hotelType && formik.errors.hotelType}
                 </FormHelperText>
               </FormControl>
-              <TextField
-                label="Star Rating"
+
+              <FormikTextField
                 name="starRating"
+                label="Star Rating"
                 type="number"
                 inputProps={{ step: 1, min: 1, max: 5 }}
-                fullWidth
-                value={values.starRating}
-                onChange={handleChange}
-                error={touched.starRating && Boolean(errors.starRating)}
-                helperText={touched.starRating && errors.starRating}
+                formik={formik}
               />
-              <TextField
-                label="Latitude"
+
+              <FormikTextField
                 name="latitude"
+                label="Latitude"
                 type="number"
                 inputProps={{ step: 0.000001, min: -90, max: 90 }}
-                fullWidth
-                value={values.latitude}
-                onChange={handleChange}
-                error={touched.latitude && Boolean(errors.latitude)}
-                helperText={touched.latitude && errors.latitude}
+                formik={formik}
               />
-              <TextField
-                label="Longitude"
+              <FormikTextField
                 name="longitude"
+                label="Longitude"
                 type="number"
                 inputProps={{ step: 0.000001, min: -180, max: 180 }}
-                fullWidth
-                value={values.longitude}
-                onChange={handleChange}
-                error={touched.longitude && Boolean(errors.longitude)}
-                helperText={touched.longitude && errors.longitude}
+                formik={formik}
               />
               <FormControl
                 fullWidth
-                error={touched.cityId && Boolean(errors.cityId)}
+                error={formik.touched.cityId && Boolean(formik.errors.cityId)}
               >
                 <InputLabel>City</InputLabel>
                 <Select
                   name="cityId"
-                  value={values.cityId}
-                  onChange={handleChange}
+                  value={formik.values.cityId}
+                  onChange={formik.handleChange}
                 >
                   {cities.map((c) => (
                     <MenuItem key={c.id} value={c.id}>
@@ -166,7 +146,7 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
                   ))}
                 </Select>
                 <FormHelperText>
-                  {touched.cityId && errors.cityId}
+                  {formik.touched.cityId && formik.errors.cityId}
                 </FormHelperText>
               </FormControl>
             </DialogContent>

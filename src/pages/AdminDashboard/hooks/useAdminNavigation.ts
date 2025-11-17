@@ -1,4 +1,4 @@
-import { useGetAdminNavigationQuery } from "../../../services/admin/adminNavigation";
+// import { useGetAdminNavigationQuery } from "../../../services/admin/adminNavigation";
 
 export interface AdminLink {
   title: string;
@@ -12,13 +12,15 @@ const staticLinks: AdminLink[] = [
 ];
 
 export const useAdminNavigation = (): AdminLink[] => {
-  const { data, isError } = useGetAdminNavigationQuery();
+  // const { data, isError } = useGetAdminNavigationQuery();
 
-  if (isError || !data?.length) {
-    return staticLinks;
-  }
-  return data.map((item: string) => ({
-    title: item,
-    path: item.toLowerCase().replace(/\s+/g, "-"),
-  }));
+  // if (isError || !data?.length) {
+  //   return staticLinks;
+  // }
+
+  // return data.map((item: string) => ({
+  //   title: item,
+  //   path: item.toLowerCase().replace(/\s+/g, "-"),
+  // }));
+  return staticLinks;
 };

@@ -14,20 +14,24 @@ import LocationAndRating from "../../LocationAndRating";
 import { BaseCardProps } from "../types";
 import { RecentHotels } from "../../../pages/Home/types";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../utils/constans";
 
 const RecentVisitedCard: React.FC<BaseCardProps<RecentHotels>> = ({ data }) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(`/hotels/${data.hotelId}`);
+    navigate(`${ROUTES.HOTEL(data.hotelId)}`);
   };
   return (
-    <Card sx={{ ...baseCardStyles, maxWidth: "32rem" }}>
+    <Card sx={{ ...baseCardStyles, width: "32rem" }}>
       <CardActionArea onClick={handleNavigate}>
         <CardMedia
           component="img"
           image={data.thumbnailUrl}
           alt={data.hotelName}
           sx={{ height: 320, objectFit: "cover" }}
+          onError={(e) => {
+            e.currentTarget.src = "/not-found.jpg";
+          }}
         />
         <CardContent sx={{ px: 3, pb: 2 }}>
           <Typography

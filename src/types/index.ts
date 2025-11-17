@@ -2,8 +2,15 @@ import { PaletteMode } from "@mui/material";
 import { ReactNode } from "react";
 export type UserRole = "User" | "Admin" | null;
 
+export interface NavbarProps {
+  sections?: { label: string; id: string }[];
+}
 export interface LayoutProps {
   allowedRoles: UserRole[];
+}
+export interface WrapperProps {
+  children: ReactNode;
+  id?: string;
 }
 export interface ThemeContextType {
   mode: PaletteMode;
@@ -15,6 +22,14 @@ export interface ThemeProps {
 export interface LoginValues {
   userName: string;
   password: string;
+}
+export interface SearchParams {
+  city: string;
+  checkInDate: string;
+  checkOutDate: string;
+  adults: number;
+  children: number;
+  numberOfRooms: number;
 }
 export interface DecodedToken {
   user_id: string;

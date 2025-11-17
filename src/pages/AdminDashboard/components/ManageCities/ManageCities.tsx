@@ -148,67 +148,70 @@ export default function ManageCities() {
           Add City
         </Button>
       </Paper>
-      <TableContainer
-        component={Paper}
-        sx={{ borderRadius: 2, boxShadow: "0px 2px 8px rgba(0,0,0,0.05)" }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: "primary.main" }}>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell align="center">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={4} align="center">
-                  <CircularProgress size={24} />
-                </TableCell>
+      <Box sx={{ overflowX: "auto" }}>
+        {" "}
+        <TableContainer
+          component={Paper}
+          sx={{ borderRadius: 2, boxShadow: "0px 2px 8px rgba(0,0,0,0.05)" }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "primary.main" }}>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
-            ) : cities.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} align="center">
-                  No cities found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              cities.map((city) => (
-                <TableRow
-                  key={city.id}
-                  hover
-                  onClick={() => {
-                    handleUpdateOpen(city);
-                    setUpdateName(city.name);
-                    setUpdateDesc(city.description);
-                  }}
-                  sx={{ cursor: "pointer" }}
-                >
-                  <TableCell>{city.id}</TableCell>
-                  <TableCell>{city.name}</TableCell>
-                  <TableCell>{city.description}</TableCell>
-                  <TableCell align="center">
-                    <Tooltip title="Delete City">
-                      <IconButton
-                        color="error"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          confirmDelete({ id: city.id, name: city.name }, e);
-                        }}
-                        disabled={isDeleting}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
+            </TableHead>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    <CircularProgress size={24} />
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              ) : cities.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    No cities found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                cities.map((city) => (
+                  <TableRow
+                    key={city.id}
+                    hover
+                    onClick={() => {
+                      handleUpdateOpen(city);
+                      setUpdateName(city.name);
+                      setUpdateDesc(city.description);
+                    }}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell>{city.id}</TableCell>
+                    <TableCell>{city.name}</TableCell>
+                    <TableCell>{city.description}</TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Delete City">
+                        <IconButton
+                          color="error"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            confirmDelete({ id: city.id, name: city.name }, e);
+                          }}
+                          disabled={isDeleting}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
 
       {/* Pagination */}
       <Stack
@@ -364,7 +367,7 @@ export default function ManageCities() {
           </Button>
         </DialogActions>
       </Dialog>
- {/* Snackbar */}
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

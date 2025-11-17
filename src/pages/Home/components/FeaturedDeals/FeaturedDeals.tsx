@@ -5,9 +5,8 @@ import HotelCardsSkeleton from "../../skeletons/FeaturedDealsSkeleton/HotelCards
 import { useGetFeaturedDealsQuery } from "../../../../services/user/home.ts";
 
 const FeaturedDeals = () => {
-  const { data: deals, isLoading, isError, error } = useGetFeaturedDealsQuery();
+  const { data: deals, isLoading } = useGetFeaturedDealsQuery();
   if (isLoading) return <HotelCardsSkeleton />;
-  if (isError) return <Typography color="error">{String(error)}</Typography>;
 
   return (
     <Wrapper id="featured">
@@ -38,7 +37,12 @@ const FeaturedDeals = () => {
         >
           <Grid container spacing={3} justifyContent="center">
             {deals?.slice(0, 3).map((deal) => (
-              <Grid key={deal.hotelId} size={{ xs: 12, md: 6, lg: 4 }}>
+              <Grid
+                key={deal.hotelId}
+                size={{ xs: 12, md: 6, lg: 4 }}
+                display="flex"
+                justifyContent="center"
+              >
                 <InofCard variant="featuredDeals" data={deal} />
               </Grid>
             ))}

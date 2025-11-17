@@ -1,9 +1,4 @@
-import { ReactNode } from "react";
-
-export interface WrapperProps {
-  children: ReactNode;
-  id?: string;
-}
+import { Amenity } from "../../../types";
 export interface RecentHotels {
   hotelId: number;
   hotelName: string;
@@ -21,11 +16,9 @@ export interface TrendDes {
   description: string;
   thumbnailUrl: string;
 }
-export type amenity = {
+export interface amenity extends Amenity {
   id: 0;
-  name: string;
-  description: string;
-};
+}
 export interface Deal {
   hotelId: number;
   originalRoomPrice: number;
@@ -51,13 +44,3 @@ export interface SearchRes {
   discount: number;
   amenities: amenity[];
 }
-// interface RoomData {
-//   id: string;
-//   roomType: string;
-//   image: string;
-//   capacityOfAdults: number;
-//   capacityOfChildren: number;
-//   roomAmenities: string[];
-//   isInCart: boolean;
-// }
-

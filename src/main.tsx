@@ -6,7 +6,7 @@ import { persistor, store } from "./app/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeContextProvider } from "./contexts/ThemeContext.tsx";
-import LoadingScreen from "./components/LoadingScreen/LoadingScreen.tsx";
+import LoadingScreen from "./components/LoadingScreen";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>

@@ -1,4 +1,5 @@
 import { UserDetailsFormValues } from "../../pages/Checkout/types";
+import { SearchRes } from "../../pages/Home/types";
 import { AvailbleRoom, UserRole } from "../../types";
 
 export interface AuthState {
@@ -17,7 +18,7 @@ export interface SearchState {
   children: number;
 }
 export interface SearchSliceState extends SearchState {
-  results: any[];
+  results: SearchRes[];
   loading: boolean;
   error: string | null;
 }
@@ -73,4 +74,10 @@ export interface BookingResponse {
   paymentMethod: string;
   bookingStatus: string;
   confirmationNumber: string;
+}
+export type NotificationType = "error" | "success" | "warning" | "info";
+
+export interface NotificationState {
+  message: string | null;
+  type: NotificationType | null;
 }

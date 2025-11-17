@@ -20,6 +20,7 @@ import {
   addRoomToCart,
   removeFromCart,
 } from "../../../features/cart/cartSlice";
+import { showNotification } from "../../../features/notifications/notificationsSlice";
 
 const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
   const {
@@ -48,6 +49,12 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
   const handleToggleCart = () => {
     if (isInCart) {
       dispatch(removeFromCart({ hotelName, roomNumber: roomNumber }));
+      dispatch(
+        showNotification({
+          message: "Room removed from your cart",
+          type: "success",
+        })
+      );
     } else {
       dispatch(
         addRoomToCart({
@@ -61,6 +68,12 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
             roomPhotoUrl,
             price,
           },
+        })
+      );
+      dispatch(
+        showNotification({
+          message: "Room added to your cart successfully",
+          type: "success",
         })
       );
     }

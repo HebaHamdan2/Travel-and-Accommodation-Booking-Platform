@@ -1,5 +1,4 @@
 import Navbar from "../../../../components/Navbar";
-import { sections } from "../../constants";
 import HotelCardsSkeleton from "../../skeletons/FeaturedDealsSkeleton";
 import HomeHeroSkeleton from "../../skeletons/HomeHeroSkeleton";
 import TrendingDestSkeleton from "../../skeletons/TrendingDestSkeleton";
@@ -11,7 +10,7 @@ const TrendingDest = React.lazy(() => import("../TrendingDest"));
 const HomeLayout = () => {
   return (
     <>
-      <Navbar sections={sections} />
+      <Navbar isHome={true} />
       <Suspense fallback={<HomeHeroSkeleton />}>
         <HomeHero />
       </Suspense>

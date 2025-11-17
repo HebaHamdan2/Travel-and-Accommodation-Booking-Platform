@@ -1,17 +1,5 @@
-import React from "react";
 import { TextField, InputAdornment } from "@mui/material";
-import { FormikProps } from "formik";
-
-interface Props<T> {
-  name: keyof T & string;
-  label: string;
-  type?: string;
-  icon?: React.ReactNode;
-  formik: FormikProps<T>;
-  multiline?: boolean;
-  minRows?: number;
-  inputProps?: any;
-}
+import { FormikTextFieldProps } from "../InfoCard/types";
 
 function FormikTextField<T>({
   name,
@@ -22,7 +10,7 @@ function FormikTextField<T>({
   multiline,
   minRows,
   inputProps,
-}: Props<T>) {
+}: FormikTextFieldProps<T>) {
   return (
     <TextField
       fullWidth
@@ -31,11 +19,11 @@ function FormikTextField<T>({
       type={type}
       multiline={multiline}
       minRows={minRows}
-      value={formik.values[name] as any}
+      value={formik.values[name as keyof T] as any}
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
-      error={formik.touched[name] && Boolean(formik.errors[name])}
-      helperText={formik.touched[name] && (formik.errors[name] as any)}
+      error={formik.touched[name as keyof T] && Boolean(formik.errors[name as keyof T])}
+      helperText={formik.touched[name as keyof T] && (formik.errors[name as keyof T ] as any)}
       inputProps={inputProps}
       InputProps={{
         startAdornment: icon ? (

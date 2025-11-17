@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export type UserRole = "User" | "Admin" | null;
 
 export interface NavbarProps {
-  sections?: { label: string; id: string }[];
+ isHome?: boolean;
 }
 export interface LayoutProps {
   allowedRoles: UserRole[];

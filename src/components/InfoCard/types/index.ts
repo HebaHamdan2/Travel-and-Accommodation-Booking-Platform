@@ -1,3 +1,4 @@
+import { FormikProps } from "formik";
 import { CartRoomItem } from "../../../features/types";
 import {
   Deal,
@@ -11,8 +12,8 @@ export interface RoomCardInfo extends AvailbleRoom {
   checkInDate: string;
   checkOutDate: string;
 }
-export interface CartRoomItemCardIfo extends CartRoomItem{
-hotelName: string;
+export interface CartRoomItemCardIfo extends CartRoomItem {
+  hotelName: string;
 }
 export interface BaseCardProps<T> {
   data: T;
@@ -45,3 +46,17 @@ export type InfoCardProps =
   | SearchResultCardProps
   | RoomCardProps
   | CartItemProps;
+export interface FormikTextFieldProps<T> {
+  name: string;
+  label: string;
+  type?: string;
+  icon?: React.ReactNode;
+  formik: FormikProps<T>;
+  multiline?: boolean;
+  minRows?: number;
+  inputProps?: any;
+}
+export type FormikTextFieldStoryProps = Omit<
+  FormikTextFieldProps<any>,
+  "formik"
+>;

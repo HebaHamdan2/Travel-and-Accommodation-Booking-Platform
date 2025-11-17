@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { useAppDispatch } from "../../../app/hooks";
 import { removeFromCart } from "../../../features/cart/cartSlice";
+import { showNotification } from "@/features/notifications/notificationsSlice";
 
 const CartItemCard: React.FC<BaseCardProps<CartRoomItemCardIfo>> = ({
   data,
@@ -22,6 +23,9 @@ const CartItemCard: React.FC<BaseCardProps<CartRoomItemCardIfo>> = ({
   function handleRemoveItem() {
     dispatch(
       removeFromCart({ hotelName: data.hotelName, roomNumber: data.roomNumber })
+    );
+    dispatch(
+      showNotification({ message: "Room Removed from cart", type: "success" })
     );
   }
   return (

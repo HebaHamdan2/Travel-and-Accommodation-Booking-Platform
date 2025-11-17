@@ -24,7 +24,8 @@ import { useThemeContext } from "../../hooks/useThemeContext";
 import { performLogout } from "../../features/auth/logoutHelper";
 import { LOGO_URL, ROUTES } from "../../utils/constans";
 import { NavbarProps } from "../../types";
-const Navbar: React.FC<NavbarProps> = ({ sections }) => {
+import { sections } from "@/pages/Home/constants";
+const Navbar: React.FC<NavbarProps> = ({ isHome=false }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>(
     sections?.[0]?.id || ""
@@ -35,7 +36,7 @@ const Navbar: React.FC<NavbarProps> = ({ sections }) => {
   const dispatch = useAppDispatch();
 
   const handleScroll = (id: string) => {
-    if (!sections) return;
+    if (!isHome) return;
     const target = document.getElementById(id);
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -51,7 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ sections }) => {
 
   return (
     <AppBar
-      position={sections?.length?"sticky":"static"}
+      position={isHome?"sticky":"static"}
       sx={{
         backgroundColor: "background.default",
         color: "text.primary",
@@ -72,14 +73,14 @@ const Navbar: React.FC<NavbarProps> = ({ sections }) => {
             alt="App Logo"
             sx={{ width: { xs: 90, md: 140 }, cursor: "pointer" }}
             onClick={() =>
-              !sections?.length
+              !isHome
                 ? navigate("/home")
                 : window.scrollTo({ top: 0, behavior: "smooth" })
             }
           />
 
           {/* Sections (only for home) */}
-          {sections && (
+          {isHome && (
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: 5 }}>
               {sections.map(({ label, id }) => (
                 <Typography
@@ -142,7 +143,7 @@ const Navbar: React.FC<NavbarProps> = ({ sections }) => {
           </Box>
 
           {/* Mobile Menu */}
-          {sections && (
+          {isHome && (
             <IconButton
               sx={{ display: { xs: "flex", md: "none" } }}
               onClick={() => setDrawerOpen(true)}
@@ -154,7 +155,7 @@ const Navbar: React.FC<NavbarProps> = ({ sections }) => {
       </Container>
 
       {/* Drawer for mobile sections */}
-      {sections && (
+      {isHome && (
         <Drawer
           anchor="right"
           open={drawerOpen}

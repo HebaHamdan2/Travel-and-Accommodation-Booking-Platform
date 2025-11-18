@@ -40,7 +40,7 @@ const FormDialog = <T extends object>({
         }}
       >
         {(formik: FormikProps<T>) => (
-          <Form>
+          <Form data-testid="form">
             <DialogContent dividers>
               {renderForm ? renderForm(formik) : null}
             </DialogContent>

@@ -19,7 +19,7 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
   cities,
   onSubmit,
 }) => {
-  const initialValues: Omit<AdminHotel, "id"> & { cityId: number | 0 } = {
+  const initialValues: Omit<AdminHotel, "id"> & { cityId: number | "" } = {
     name: "",
     description: "",
     hotelType: 0,

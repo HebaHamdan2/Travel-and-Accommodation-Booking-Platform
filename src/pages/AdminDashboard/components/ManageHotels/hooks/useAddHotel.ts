@@ -8,12 +8,12 @@ export const useAddHotel = () => {
   const dispatch = useAppDispatch();
 
   const handleAddHotel = async (
-    cityId: number,
+    cityId: number | '',
     hotel: Omit<AdminHotel, "id">,
     resetFields?: () => void
   ) => {
     try {
-      await addHotel({ cityId, hotel }).unwrap();
+      await addHotel({ cityId: Number(cityId), hotel }).unwrap();
       dispatch(
         showNotification({
           message: "Hotel added successfully!",

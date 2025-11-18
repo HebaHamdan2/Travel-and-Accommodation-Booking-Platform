@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
@@ -18,6 +18,13 @@ const VisualGallery: React.FC<HotelProps> = ({ hotelId }) => {
     setCurrentIndex(index);
     setOpen(true);
   };
+  if (!hotelImgs.length) {
+    return (
+      <Box sx={{ textAlign: "center", p: 3 }}>
+        <Typography>No images available.</Typography>
+      </Box>
+    );
+  }
   const mainImage = hotelImgs[0];
   const thumbnails = hotelImgs.slice(1, 4);
   const remaining = hotelImgs.length - 4;

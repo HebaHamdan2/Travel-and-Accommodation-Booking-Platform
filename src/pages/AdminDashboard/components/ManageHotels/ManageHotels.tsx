@@ -263,17 +263,15 @@ export default function ManageHotels() {
           return success;
         }}
       />
-      {updateHotel && (
-        <UpdateHotelDialog
-          open={!!updateHotel}
-          onClose={() => setUpdateHotel(null)}
-          hotel={updateHotel}
-          onSubmit={async (hotelId: number, hotels: Omit<AdminHotel, "id">) => {
-            const success = await handleUpdateHotel(hotelId, hotels);
-            return success;
-          }}
-        />
-      )}
+      <UpdateHotelDialog
+        open={!!updateHotel}
+        onClose={() => setUpdateHotel(null)}
+        hotel={updateHotel}
+        onSubmit={async (hotelId: number, hotels: Omit<AdminHotel, "id">) => {
+          const success = await handleUpdateHotel(hotelId, hotels);
+          return success;
+        }}
+      />
       {deleteHotelId !== null && hotelDetails && (
         <DeleteHotelDialog
           open={true}

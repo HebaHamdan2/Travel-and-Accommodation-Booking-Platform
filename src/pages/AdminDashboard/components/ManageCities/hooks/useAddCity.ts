@@ -1,37 +1,36 @@
-import { useState } from "react";
 import { useAddCityMutation } from "../../../../../services/admin/cities";
-type ShowSnackbar = (message: string, severity: "success" | "error") => void;
+import { useAppDispatch } from "@/app/hooks";
+import { showNotification } from "@/features/notifications/notificationsSlice";
 
 export const useAddCity = () => {
   const [addCity, { isLoading: isAdding }] = useAddCityMutation();
-  const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
 
   const handleAddCity = async (
-    e: React.FormEvent<HTMLFormElement>,
     name: string,
     description: string,
-    showSnackbar?: ShowSnackbar,
     resetFields?: () => void,
     resetPage?: () => void
   ) => {
-    e.preventDefault();
     if (!name.trim() || !description.trim()) return;
 
     try {
       await addCity({ name, description }).unwrap();
-      showSnackbar?.("City added successfully!", "success");
+      dispatch(
+        showNotification({
+          message: "City added successfully!",
+          type: "success",
+        })
+      );
       resetFields?.();
       resetPage?.();
-      setOpen(false);
+      return true;
     } catch (error: any) {
-      console.error(error);
-      showSnackbar?.("Failed to add city.", "error");
+      return false;
     }
   };
 
   return {
-    open,
-    setOpen,
     handleAddCity,
     isAdding,
   };

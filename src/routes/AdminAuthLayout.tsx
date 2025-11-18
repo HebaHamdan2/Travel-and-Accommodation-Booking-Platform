@@ -4,13 +4,13 @@ import React from "react";
 import { LayoutProps } from "../types";
 import { ROUTES } from "../utils/constans";
 
-const AdminAuthLayout: React.FC<LayoutProps> = ({ allowedRoles }) => {
+const AdminAuthLayout: React.FC<LayoutProps> = ({ allowedRoles = [] }) => {
   const { userType, authentication } = useAppSelector((state) => state.auth);
   if (!authentication) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
-  if (!allowedRoles.includes(userType)) {
+  if (!userType || !allowedRoles.includes(userType)) {
     return <Navigate to={ROUTES.HOME} replace />;
   }
   return <Outlet />;

@@ -1,5 +1,5 @@
 import { TextField, InputAdornment } from "@mui/material";
-import { FormikTextFieldProps } from "../InfoCard/types";
+import { FormikTextFieldProps } from "./types";
 
 function FormikTextField<T>({
   name,
@@ -19,11 +19,19 @@ function FormikTextField<T>({
       type={type}
       multiline={multiline}
       minRows={minRows}
+      variant="standard"
+      margin="normal"
       value={formik.values[name as keyof T] as any}
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
-      error={formik.touched[name as keyof T] && Boolean(formik.errors[name as keyof T])}
-      helperText={formik.touched[name as keyof T] && (formik.errors[name as keyof T ] as any)}
+      error={
+        formik.touched[name as keyof T] &&
+        Boolean(formik.errors[name as keyof T])
+      }
+      helperText={
+        formik.touched[name as keyof T] &&
+        (formik.errors[name as keyof T] as any)
+      }
       inputProps={inputProps}
       InputProps={{
         startAdornment: icon ? (

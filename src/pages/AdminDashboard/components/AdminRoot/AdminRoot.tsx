@@ -6,7 +6,7 @@ const AdminRoot = () => {
       <Typography variant="h5" fontWeight={600}>
         Welcome to the Admin Dashboard
       </Typography>
-      <Typography sx={{ mt: 1 }}>
+      <Typography sx={{ mt: 1, color: "text.secondary" }}>
         Use the menu to manage Cities, Hotels, and Rooms.
       </Typography>
     </Box>

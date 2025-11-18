@@ -16,60 +16,62 @@ import {
   Stack,
   Tooltip,
   CircularProgress,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  Snackbar,
-  Alert,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-
 import { useDebounce } from "../../../../hooks/useDebouns";
 import { useGetCitiesQuery } from "../../../../services/admin/cities";
 import { useDeleteCity } from "./hooks/useDeleteCity";
 import { useAddCity } from "./hooks/useAddCity";
 import { useUpdateCity } from "./hooks/useUpdateCity";
+import AddCityDialog from "./components/AddCityDialog";
+import DeleteCityDialog from "./components/DeleteCityDialog";
+import { City } from "@/types";
+import UpdateCityDialog from "./components/UpdateCityDialog";
 
 export default function ManageCities() {
   const [search, setSearch] = useState("");
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
-  const [newCityName, setNewCityName] = useState("");
-  const [newCityDesc, setNewCityDesc] = useState("");
-  const [updateName, setUpdateName] = useState("");
-  const [updateDesc, setUpdateDesc] = useState("");
-  const {
-    open: updateOpen,
-    setOpen: setUpdateOpen,
-    cityToUpdate,
-    handleOpen: handleUpdateOpen,
-    handleUpdate,
-    isUpdating,
-  } = useUpdateCity();
-  const {
-    open: addOpen,
-    setOpen: setAddOpen,
-    handleAddCity,
-    isAdding,
-  } = useAddCity();
-  const {
-    open: deleteOpen,
-    setOpen: setDeleteOpen,
-    cityToDelete,
-    confirmDelete,
-    handleConfirmDelete,
-    isDeleting,
-  } = useDeleteCity();
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<City>({
+    id: 0,
+    name: "",
+    description: "",
+  });
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
-  );
+  const { handleUpdate } = useUpdateCity();
+  const { handleAddCity } = useAddCity();
+  const { handleConfirmDelete } = useDeleteCity();
+  const handleDeleteClick = (city: {
+    id: number;
+    name: string;
+    description: string;
+  }) => {
+    setSelectedCity(city);
+    setOpenDelete(true);
+  };
 
+  const confirmDelete = async () => {
+    if (!selectedCity) return;
+    const success = await handleConfirmDelete(
+      selectedCity.id,
+      selectedCity.name
+    );
+    if (success) {
+      setOpenDelete(false);
+    }
+  };
+  const handleRowClick = (city: City) => {
+    setSelectedCity(city);
+    setOpenUpdate(true);
+  };
   const debouncedSearch = useDebounce(search, 400);
 
   const { data, isLoading } = useGetCitiesQuery({
@@ -77,13 +79,6 @@ export default function ManageCities() {
     pageSize,
     pageNumber,
   });
-
-  const showSnackbar = (message: string, severity: "success" | "error") => {
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
-  };
-
   const cities = data ?? [];
   const hasPrev = pageNumber > 1;
   const hasNext = cities.length === pageSize;
@@ -116,22 +111,25 @@ export default function ManageCities() {
           }}
           InputProps={{ endAdornment: <SearchIcon color="action" /> }}
         />
-        <TextField
-          select
-          label="Limit"
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-            setPageNumber(1);
-          }}
-          sx={{ width: { xs: "100%", sm: "8rem" } }}
-        >
-          {[5, 10, 15, 20].map((size) => (
-            <MenuItem key={size} value={size}>
-              {size}
-            </MenuItem>
-          ))}
-        </TextField>
+        <FormControl sx={{ width: { xs: "100%", sm: "8rem" } }}>
+          <InputLabel id="limit-select-label">Limit</InputLabel>
+          <Select
+            labelId="limit-select-label"
+            id="limit-select"
+            value={pageSize}
+            label="Limit"
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setPageNumber(1);
+            }}
+          >
+            {[5, 10, 15, 20].map((size) => (
+              <MenuItem key={size} value={size}>
+                {size}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -143,13 +141,12 @@ export default function ManageCities() {
             fontWeight: 600,
             bgcolor: "primary.main",
           }}
-          onClick={() => setAddOpen(true)}
+          onClick={() => setOpenAdd(true)}
         >
           Add City
         </Button>
       </Paper>
       <Box sx={{ overflowX: "auto" }}>
-        {" "}
         <TableContainer
           component={Paper}
           sx={{ borderRadius: 2, boxShadow: "0px 2px 8px rgba(0,0,0,0.05)" }}
@@ -181,11 +178,7 @@ export default function ManageCities() {
                   <TableRow
                     key={city.id}
                     hover
-                    onClick={() => {
-                      handleUpdateOpen(city);
-                      setUpdateName(city.name);
-                      setUpdateDesc(city.description);
-                    }}
+                    onClick={() => handleRowClick(city)}
                     sx={{ cursor: "pointer" }}
                   >
                     <TableCell>{city.id}</TableCell>
@@ -197,9 +190,12 @@ export default function ManageCities() {
                           color="error"
                           onClick={(e) => {
                             e.stopPropagation();
-                            confirmDelete({ id: city.id, name: city.name }, e);
+                            handleDeleteClick({
+                              id: city.id,
+                              name: city.name,
+                              description: city.description,
+                            });
                           }}
-                          disabled={isDeleting}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -212,7 +208,6 @@ export default function ManageCities() {
           </Table>
         </TableContainer>
       </Box>
-
       {/* Pagination */}
       <Stack
         direction="row"
@@ -239,148 +234,42 @@ export default function ManageCities() {
           Next
         </Button>
       </Stack>
-
       {/* CRUD City Dialogs -Read  */}
-      <Dialog
-        open={addOpen}
-        onClose={() => setAddOpen(false)}
-        fullWidth
-        maxWidth="sm"
-        aria-labelledby="add-city-dialog-title"
-      >
-        <DialogTitle id="add-city-dialog-title">Add New City</DialogTitle>
-        <DialogContent>
-          <form
-            onSubmit={(e) =>
-              handleAddCity(
-                e,
-                newCityName,
-                newCityDesc,
-                showSnackbar,
-                () => {
-                  setNewCityName("");
-                  setNewCityDesc("");
-                },
-                () => setPageNumber(1)
-              )
-            }
-            id="add-city-form"
-          >
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              label="City Name"
-              value={newCityName}
-              onChange={(e) => setNewCityName(e.target.value)}
-              fullWidth
-              variant="standard"
-            />
-            <TextField
-              margin="dense"
-              label="Description"
-              required
-              value={newCityDesc}
-              onChange={(e) => setNewCityDesc(e.target.value)}
-              fullWidth
-              multiline
-              minRows={3}
-              variant="standard"
-            />
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setAddOpen(false)}>Cancel</Button>
-          <Button type="submit" form="add-city-form" disabled={isAdding}>
-            Add
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
-        aria-labelledby="delete-city-dialog-title"
-        aria-describedby="delete-city-dialog-description"
-      >
-        <DialogTitle id="delete-city-dialog-title">Confirm Delete</DialogTitle>
-        <DialogContent>
-          <Typography id="delete-city-dialog-description">
-            Are you sure you want to delete city "{cityToDelete?.name}"?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
-          <Button
-            onClick={() => handleConfirmDelete(showSnackbar)}
-            color="error"
-            variant="contained"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={updateOpen}
-        onClose={() => setUpdateOpen(false)}
-        fullWidth
-        maxWidth="sm"
-        aria-labelledby="update-city-dialog-title"
-      >
-        <DialogTitle id="update-city-dialog-title">
-          Update City: {cityToUpdate?.name}
-        </DialogTitle>
-        <DialogContent>
-          <form
-            id="update-city-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleUpdate(updateName, updateDesc, showSnackbar);
-            }}
-          >
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              label="City Name"
-              value={updateName}
-              onChange={(e) => setUpdateName(e.target.value)}
-              fullWidth
-              variant="standard"
-            />
-            <TextField
-              margin="dense"
-              required
-              label="Description"
-              value={updateDesc}
-              onChange={(e) => setUpdateDesc(e.target.value)}
-              fullWidth
-              multiline
-              minRows={3}
-              variant="standard"
-            />
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setUpdateOpen(false)}>Cancel</Button>
-          <Button type="submit" form="update-city-form" disabled={isUpdating}>
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <AddCityDialog
+        open={openAdd}
+        onClose={() => setOpenAdd(false)}
+        onSubmit={async (name, description, resetForm) => {
+          const result = await handleAddCity(name, description, resetForm, () =>
+            setPageNumber(1)
+          );
+          const success = result ?? false;
+          return success;
+        }}
+      />
+      <DeleteCityDialog
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        cityId={selectedCity?.id}
+        cityName={selectedCity?.name}
+        onConfirm={confirmDelete}
+      />
+      <UpdateCityDialog
+        open={openUpdate}
+        onClose={() => setOpenUpdate(false)}
+        selectedCity={{
+          id: selectedCity.id,
+          name: selectedCity.name,
+          description: selectedCity.description,
+        }}
+        onSubmit={async (city: Omit<City, "id">) => {
+          const success = await handleUpdate(
+            selectedCity.id,
+            city.name,
+            city.description
+          );
+          return success;
+        }}
+      />
     </Box>
   );
 }

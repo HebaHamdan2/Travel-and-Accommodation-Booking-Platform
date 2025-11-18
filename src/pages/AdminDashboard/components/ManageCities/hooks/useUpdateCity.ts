@@ -1,51 +1,34 @@
-import { useState } from "react";
-import { useUpdateCityMutation } from "../../../../../services/admin/cities";
+import { useAppDispatch } from "@/app/hooks";
+import { showNotification } from "@/features/notifications/notificationsSlice";
+import { useUpdateCityMutation } from "@/services/admin/cities";
 
 export const useUpdateCity = () => {
-  const [open, setOpen] = useState(false);
-  const [cityToUpdate, setCityToUpdate] = useState<{
-    id: number;
-    name: string;
-    description: string;
-  } | null>(null);
-
   const [updateCity, { isLoading: isUpdating }] = useUpdateCityMutation();
-
-  const handleOpen = (city: {
-    id: number;
-    name: string;
-    description: string;
-  }) => {
-    setCityToUpdate(city);
-    setOpen(true);
-  };
+  const dispatch = useAppDispatch();
 
   const handleUpdate = async (
+    cityId: number,
     name: string,
-    description: string,
-    showSnackbar: (msg: string, severity: "success" | "error") => void,
-    onSuccess?: () => void
+    description: string
   ) => {
-    if (!cityToUpdate) return;
     try {
       await updateCity({
-        cityId: cityToUpdate.id,
+        cityId,
         city: { name, description },
       }).unwrap();
-      showSnackbar("City updated successfully!", "success");
-      setOpen(false);
-      onSuccess?.();
+      dispatch(
+        showNotification({
+          message: "City updated successfully!",
+          type: "success",
+        })
+      );
+      return true;
     } catch (err) {
-      showSnackbar("Failed to update city.", "error");
-      console.error(err);
+      return false;
     }
   };
 
   return {
-    open,
-    setOpen,
-    cityToUpdate,
-    handleOpen,
     handleUpdate,
     isUpdating,
   };

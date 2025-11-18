@@ -14,8 +14,6 @@ import {
   Select,
   MenuItem,
   Stack,
-  Snackbar,
-  Alert,
   IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -26,20 +24,20 @@ import { skipToken } from "@reduxjs/toolkit/query/react";
 import {
   useGetHotelsQuery,
   useGetHotelRoomsQuery,
-  useAddHotelRoomMutation,
-  useDeleteHotelRoomMutation,
 } from "../../../../services/admin/hotels";
 import { AvailbleRoom, AdminHotel, RoomBodyRequest } from "../../../../types";
 
 import AddRoomDialog from "./components/AddRoomDialog";
 import UpdateRoomDialog from "./components/UpdateRoomDialog";
 import DeleteRoomDialog from "./components/DeleteRoomDialog";
-import { useUpdateRoomMutation } from "../../../../services/admin/rooms";
+import { useAddRoom } from "./hooks/useAddRoom";
+import { useUpdateRoom } from "./hooks/useUpdateRoom";
+import { useDeleteRoom } from "./hooks/useDeleteRoom";
 
 const ManageRooms: React.FC = () => {
   const { data: hotels = [] } = useGetHotelsQuery({});
   const [selectedHotelId, setSelectedHotelId] = useState<number | "">("");
-  const { data: rooms = [], refetch } = useGetHotelRoomsQuery(
+  const { data: rooms = [] } = useGetHotelRoomsQuery(
     selectedHotelId ? { hotelId: selectedHotelId } : skipToken,
     { skip: !selectedHotelId }
   );
@@ -48,15 +46,9 @@ const ManageRooms: React.FC = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error";
-  }>({ open: false, message: "", severity: "success" });
-
-  const [addRoom] = useAddHotelRoomMutation();
-  const [updateRoom] = useUpdateRoomMutation();
-  const [deleteRoom] = useDeleteHotelRoomMutation();
+  const { handleAddRoom } = useAddRoom();
+  const { handleUpdateRoom } = useUpdateRoom();
+  const { handleDeleteRoom } = useDeleteRoom();
 
   const handleHotelChange = (event: SelectChangeEvent<number>) => {
     setSelectedHotelId(Number(event.target.value));
@@ -72,6 +64,11 @@ const ManageRooms: React.FC = () => {
     setSelectedRoom(room);
     setOpenDelete(true);
   };
+  const handleConfirmDelete = async (hotelId: number, roomId: number) => {
+    const success = await handleDeleteRoom(hotelId, roomId);
+    return success;
+  };
+
   useEffect(() => {
     if (hotels.length && selectedHotelId === "") {
       setSelectedHotelId(hotels[0].id);
@@ -174,16 +171,8 @@ const ManageRooms: React.FC = () => {
           open={openAdd}
           onClose={() => setOpenAdd(false)}
           onSubmit={async (room: RoomBodyRequest) => {
-            try {
-              await addRoom({
-                room: { ...room },
-                hotelId: selectedHotelId,
-              }).unwrap();
-              refetch();
-              return true;
-            } catch (err: any) {
-              return false;
-            }
+            const success = await handleAddRoom(selectedHotelId, room);
+            return success;
           }}
         />
       )}
@@ -196,16 +185,8 @@ const ManageRooms: React.FC = () => {
             cost: selectedRoom.price,
           }}
           onSubmit={async (room: RoomBodyRequest) => {
-            try {
-              await updateRoom({
-                roomId: selectedRoom.roomId,
-                room,
-              }).unwrap();
-              refetch();
-              return true;
-            } catch (err: any) {
-              return false;
-            }
+            const success = await handleUpdateRoom(selectedRoom.roomId, room);
+            return success;
           }}
         />
       )}
@@ -217,28 +198,9 @@ const ManageRooms: React.FC = () => {
           onClose={() => setOpenDelete(false)}
           hotelId={selectedHotelId}
           roomId={selectedRoom.roomId}
-          onSuccess={async () => {
-            await deleteRoom({
-              hotelId: selectedHotelId,
-              roomId: selectedRoom.roomId,
-            }).unwrap();
-            refetch();
-          }}
+          onConfirm={handleConfirmDelete}
         />
       )}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          severity={snackbar.severity}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

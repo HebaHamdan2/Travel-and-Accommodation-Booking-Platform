@@ -16,15 +16,12 @@ import {
   Stack,
   Tooltip,
   CircularProgress,
-  Snackbar,
-  Alert,
   Rating,
   Chip,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-
 import { useDebounce } from "../../../../hooks/useDebouns";
 import { useGetHotelsQuery } from "../../../../services/admin/hotels";
 import { useGetHotelDetailsQuery } from "../../../../services/user/hotels";
@@ -34,6 +31,9 @@ import AddHotelDialog from "./components/AddHotelDialog";
 import UpdateHotelDialog from "./components/UpdateHotelDialog";
 import DeleteHotelDialog from "./components/DeleteHotelDialog/DeleteHotelDialog";
 import { HOTEL_TYPE_LABELS } from "../../../../utils/constans";
+import { useAddHotel } from "./hooks/useAddHotel";
+import { useDeleteHotel } from "./hooks/useDeleteHotel";
+import { useUpdateHotel } from "./hooks/useUpdateHotel";
 
 export default function ManageHotels() {
   const [search, setSearch] = useState("");
@@ -42,13 +42,10 @@ export default function ManageHotels() {
   const [addOpen, setAddOpen] = useState(false);
   const [updateHotel, setUpdateHotel] = useState<AdminHotel | null>(null);
   const [deleteHotelId, setDeleteHotelId] = useState<number | null>(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
-  );
-
+  const { handleAddHotel } = useAddHotel();
   const debouncedSearch = useDebounce(search, 400);
+  const { handleDeleteHotel } = useDeleteHotel();
+  const { handleUpdateHotel } = useUpdateHotel();
 
   const { data: hotelsData = [], isLoading: hotelsLoading } = useGetHotelsQuery(
     {
@@ -85,13 +82,6 @@ export default function ManageHotels() {
 
   const hasPrev = pageNumber > 1;
   const hasNext = filteredHotels.length > pageNumber * pageSize;
-
-  const showSnackbar = (message: string, severity: "success" | "error") => {
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
-  };
-
   return (
     <Box sx={{ p: { xs: 2, sm: 3 }, maxWidth: "80rem", mx: "auto" }}>
       <Paper
@@ -193,7 +183,11 @@ export default function ManageHotels() {
                     <TableCell>{hotel.description}</TableCell>
                     <TableCell>{HOTEL_TYPE_LABELS[hotel.hotelType]}</TableCell>
                     <TableCell>
-                      <Rating value={hotel.starRating} readOnly />
+                      <Rating
+                        value={hotel.starRating}
+                        sx={{ color: "star" }}
+                        readOnly
+                      />
                     </TableCell>
                     <TableCell>
                       <Chip
@@ -203,7 +197,6 @@ export default function ManageHotels() {
                         variant="outlined"
                       />
                     </TableCell>
-
                     {/* Longitude */}
                     <TableCell>
                       <Chip
@@ -213,7 +206,6 @@ export default function ManageHotels() {
                         variant="outlined"
                       />
                     </TableCell>
-
                     <TableCell align="center">
                       <Tooltip title="Delete Hotel">
                         <IconButton
@@ -260,51 +252,45 @@ export default function ManageHotels() {
           Next
         </Button>
       </Stack>
-
       {/* Add / Update / Delete Dialogs */}
       <AddHotelDialog
         open={addOpen}
         onClose={() => setAddOpen(false)}
         cities={citiesData}
-        onSuccess={(msg: string) => showSnackbar(msg, "success")}
-        onError={(msg) => showSnackbar(msg, "error")}
+        onSubmit={async (hotel, cityId, resetForm) => {
+          const result = await handleAddHotel(cityId, hotel, resetForm);
+          const success = result ?? false;
+          return success;
+        }}
       />
-
       {updateHotel && (
         <UpdateHotelDialog
           open={!!updateHotel}
           onClose={() => setUpdateHotel(null)}
           hotel={updateHotel}
-          onSuccess={(msg: string) => showSnackbar(msg, "success")}
-          onError={(msg) => showSnackbar(msg, "error")}
+          onSubmit={async (hotelId: number, hotels: Omit<AdminHotel, "id">) => {
+            const success = await handleUpdateHotel(hotelId, hotels);
+            return success;
+          }}
         />
       )}
-
       {deleteHotelId !== null && hotelDetails && (
         <DeleteHotelDialog
           open={true}
           onClose={() => setDeleteHotelId(null)}
           hotelId={deleteHotelId}
           cityId={hotelDetails.cityId}
-          onSuccess={(msg: string) => showSnackbar(msg, "success")}
-          onError={(msg) => showSnackbar(msg, "error")}
+          onConfirm={async () => {
+            const success = await handleDeleteHotel(
+              hotelDetails.cityId,
+              deleteHotelId
+            );
+            if (success) {
+              setDeleteHotelId(null);
+            }
+          }}
         />
       )}
-
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }

@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormikTextField from "../FormikTextField";
-import { FormikTextFieldStoryProps } from "@/components/InfoCard/types";
+import { FormikTextFieldStoryProps } from "../types";
 export default function FormikTextFieldStory(props: FormikTextFieldStoryProps) {
   const { name } = props;
 

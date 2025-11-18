@@ -1,23 +1,13 @@
 import { forwardRef, useImperativeHandle } from "react";
-import {
-  Box,
-  Stack,
-  TextField,
-  Typography,
-  MenuItem,
-} from "@mui/material";
+import { Box, Stack, TextField, Typography, MenuItem } from "@mui/material";
 import { useFormik } from "formik";
 import {
   UserDetailsFormHandle,
   UserDetailsFormProps,
   UserDetailsFormValues,
 } from "../../types";
-import {
-  INITIAL_USER_DETAILS,
-  PAYMENT_METHODS,
-} from "../../constans";
+import { INITIAL_USER_DETAILS, PAYMENT_METHODS } from "../../constans";
 import { UserDetailsValidationSchema } from "./validation";
-
 
 const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
   ({ onValidSubmit, initialValues = INITIAL_USER_DETAILS }, ref) => {
@@ -95,8 +85,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
                 label="Card Number"
                 {...formik.getFieldProps("cardNumber")}
                 error={
-                  formik.touched.cardNumber &&
-                  Boolean(formik.errors.cardNumber)
+                  formik.touched.cardNumber && Boolean(formik.errors.cardNumber)
                 }
                 helperText={
                   formik.touched.cardNumber && formik.errors.cardNumber
@@ -108,8 +97,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
                 label="Expiry Date (MM/YY)"
                 {...formik.getFieldProps("cardExpiry")}
                 error={
-                  formik.touched.cardExpiry &&
-                  Boolean(formik.errors.cardExpiry)
+                  formik.touched.cardExpiry && Boolean(formik.errors.cardExpiry)
                 }
                 helperText={
                   formik.touched.cardExpiry && formik.errors.cardExpiry
@@ -120,9 +108,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
                 fullWidth
                 label="CVV"
                 {...formik.getFieldProps("cardCvv")}
-                error={
-                  formik.touched.cardCvv && Boolean(formik.errors.cardCvv)
-                }
+                error={formik.touched.cardCvv && Boolean(formik.errors.cardCvv)}
                 helperText={formik.touched.cardCvv && formik.errors.cardCvv}
               />
             </>

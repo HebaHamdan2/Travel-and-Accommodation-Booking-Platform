@@ -1,20 +1,26 @@
-import { useState } from "react";
+import { showNotification } from "@/features/notifications/notificationsSlice";
 import { useDeleteHotelByCityIdMutation } from "../../../../../services/admin/cities";
+import { useAppDispatch } from "@/app/hooks";
 
 export const useDeleteHotel = () => {
   const [deleteHotel, { isLoading }] = useDeleteHotelByCityIdMutation();
-  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({ open: false, message: "", severity: "success" });
+  const dispatch = useAppDispatch();
 
   const handleDeleteHotel = async (cityId: number, hotelId: number) => {
+    if (!cityId) return;
     try {
       await deleteHotel({ cityId, hotelId }).unwrap();
-      setSnackbar({ open: true, message: "Hotel deleted successfully!", severity: "success" });
+      dispatch(
+        showNotification({
+          message: `Hotel deleted successfully!`,
+          type: "success",
+        })
+      );
       return true;
     } catch (err: any) {
-      setSnackbar({ open: true, message: err?.data?.message ?? "Failed to delete hotel", severity: "error" });
       return false;
     }
   };
 
-  return { handleDeleteHotel, isLoading, snackbar, setSnackbar };
+  return { handleDeleteHotel, isLoading };
 };

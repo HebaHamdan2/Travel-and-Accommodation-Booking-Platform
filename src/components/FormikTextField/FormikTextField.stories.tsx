@@ -1,34 +1,27 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Box } from "@mui/material";
 import { MemoryRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import PersonIcon from "@mui/icons-material/Person";
 import FormikTextFieldStory from "./mock/FormikTextFieldStory";
-import { persistor, store } from "@/app/store";
-import { ThemeContextProvider } from "@/contexts/ThemeContext";
+import { AppProviders } from "@/providers/AppProviders";
 const meta: Meta<typeof FormikTextFieldStory> = {
   title: "Components/FormikTextField",
   component: FormikTextFieldStory,
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <MemoryRouter>
-            <ThemeContextProvider>
-              <Box
-                sx={{
-                  p: 4,
-                  backgroundColor: "background.default",
-                }}
-              >
-                <Story />
-              </Box>
-            </ThemeContextProvider>
-          </MemoryRouter>
-        </PersistGate>
-      </Provider>
+      <AppProviders>
+        <MemoryRouter>
+          <Box
+            sx={{
+              p: 4,
+              backgroundColor: "background.default",
+            }}
+          >
+            <Story />
+          </Box>
+        </MemoryRouter>
+      </AppProviders>
     ),
   ],
   argTypes: {

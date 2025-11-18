@@ -1,11 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import InofCard from "./InfoCard";
-import { ThemeContextProvider } from "../../contexts/ThemeContext";
 import { Box } from "@mui/material";
 import { MemoryRouter } from "react-router-dom";
-import { persistor, store } from "../../app/store";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import {
   mockDeal,
   mockDestination,
@@ -14,32 +10,29 @@ import {
   mockResult,
   mockRoomCard,
 } from "./mock/cards.mock";
+import { AppProviders } from "@/providers/AppProviders";
 const meta: Meta<typeof InofCard> = {
   title: "Components/InfoCard",
   component: InofCard,
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <MemoryRouter>
-            <ThemeContextProvider>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  p: 4,
-                  backgroundColor: "background.default",
-                  minHeight: "100vh",
-                }}
-              >
-                <Story />
-              </Box>
-            </ThemeContextProvider>
-          </MemoryRouter>
-        </PersistGate>
-      </Provider>
+      <AppProviders>
+        <MemoryRouter>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 4,
+              backgroundColor: "background.default",
+              minHeight: "100vh",
+            }}
+          >
+            <Story />
+          </Box>
+        </MemoryRouter>
+      </AppProviders>
     ),
   ],
 };

@@ -1,10 +1,8 @@
 import { render, RenderOptions } from "@testing-library/react";
 import React from "react";
-import { Provider } from "react-redux";
-import { ThemeContextProvider } from "../../contexts/ThemeContext";
-import { store } from "../../app/store";
 import { MemoryRouter } from "react-router-dom";
 import GlobalNotification from "../../components/GlobalNotification";
+import { AppProviders } from "@/providers/AppProviders";
 
 const renderWithProviders = (
   Component: React.ReactElement,
@@ -12,14 +10,12 @@ const renderWithProviders = (
 ) => {
   function Wrapper({ children }: { children: React.ReactNode }) {
     return (
-      <Provider store={store}>
+      <AppProviders>
         <MemoryRouter>
-          <ThemeContextProvider>
-            {children}
-            <GlobalNotification />
-          </ThemeContextProvider>
+          {children}
+          <GlobalNotification />
         </MemoryRouter>
-      </Provider>
+      </AppProviders>
     );
   }
   return render(Component, { wrapper: Wrapper, ...options });

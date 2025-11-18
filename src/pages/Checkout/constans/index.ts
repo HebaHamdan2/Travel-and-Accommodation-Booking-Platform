@@ -5,4 +5,7 @@ export const INITIAL_USER_DETAILS = {
   email: "",
   paymentMethod: "",
   specialRequests: "",
+  cardNumber: "",
+  cardExpiry: "",
+  cardCvv: "",
 };

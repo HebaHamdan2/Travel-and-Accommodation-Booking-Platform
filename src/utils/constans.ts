@@ -13,6 +13,7 @@ export const ROUTES = {
     MANAGE_HOTELS: "/admin/manage-hotels",
     MANAGE_ROOMS: "/admin/manage-rooms",
   },
+  UNAUTHORIZED: "/unauthorized",
 };
 //endpoints need authentication
 export const AUTH_REQUIRED_ENDPOINTS = [

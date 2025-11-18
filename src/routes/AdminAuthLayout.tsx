@@ -10,8 +10,12 @@ const AdminAuthLayout: React.FC<LayoutProps> = ({ allowedRoles = [] }) => {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
-  if (!userType || !allowedRoles.includes(userType)) {
-    return <Navigate to={ROUTES.HOME} replace />;
+  if (!authentication) {
+    return <Navigate to={ROUTES.LOGIN} replace />;
+  }
+
+  if (!allowedRoles.includes(userType)) {
+    return <Navigate to={ROUTES.UNAUTHORIZED} replace />;
   }
   return <Outlet />;
 };

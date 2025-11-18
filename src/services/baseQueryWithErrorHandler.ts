@@ -60,7 +60,7 @@ export const createBaseQueryWithErrorHandler = (
 
       api.dispatch(
         showNotification({
-          message,
+          message: `${result.error?.status || "Error"} - ${message}`,
           type: "error",
         })
       );

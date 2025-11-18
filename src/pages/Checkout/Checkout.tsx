@@ -1,6 +1,6 @@
 import CheckoutLayout from "./components/CheckoutLayout";
 
-const Cart = () => {
+const Checkout = () => {
   return (
     <>
       <CheckoutLayout />
@@ -8,4 +8,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Checkout;

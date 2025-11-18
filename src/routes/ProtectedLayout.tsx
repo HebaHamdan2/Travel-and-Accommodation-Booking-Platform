@@ -7,9 +7,12 @@ import { ROUTES } from "../utils/constans";
 const ProtectedLayout: React.FC<LayoutProps> = ({ allowedRoles }) => {
   const { authentication, userType } = useAppSelector((state) => state.auth);
 
-  if (!authentication || !allowedRoles.includes(userType))
+  if (!authentication) {
     return <Navigate to={ROUTES.LOGIN} replace />;
-
+  }
+  if (!allowedRoles.includes(userType)) {
+    return <Navigate to={ROUTES.UNAUTHORIZED} replace />;
+  }
   return <Outlet />;
 };
 

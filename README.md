@@ -9,9 +9,17 @@ The entire application is fully responsive, supports dark/light themes, and is d
 </p>
 
 # Live Links
-- TRAVEL App Deployment: https://deploy-preview-1--travelandac.netlify.app/
-- Chromatic Storybook: 
-- My custom Figma Design: https://www.figma.com/design/SO9mx1Q65o9VQUQjaqPebw/Travel-and-Accommodation-Booking-Platform?node-id=0-1&t=tbGxMp7eVwIN8VvD-1
+- **Project Documentation & Screenshots:**  
+  https://docs.google.com/document/d/1FpsyabDafneoHnqC_Ya0ik9RTPVlTKjtfMfGU5direQ/edit?usp=sharing
+
+- **Live TRAVEL App Deployment:**  
+  https://deploy-preview-1--travelandac.netlify.app/
+
+- **Chromatic Storybook:**  
+  https://travel--691d02aa820d432625c840c7.chromatic.com/
+
+- **Custom Figma Design:**  
+  https://www.figma.com/design/SO9mx1Q65o9VQUQjaqPebw/Travel-and-Accommodation-Booking-Platform?node-id=0-1&t=tbGxMp7eVwIN8VvD-1
 
 # Technology Stack
 - **React (Vite + TypeScript)**: A modern, fast React setup with TypeScript support and optimized builds using Vite, used for: building a scalable, fully typed frontend architecture with fast development and efficient production builds.

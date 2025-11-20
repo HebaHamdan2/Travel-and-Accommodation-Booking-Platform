@@ -1691,6 +1691,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@epic-web/invariant@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@epic-web/invariant@npm:1.0.0"
+  checksum: 10c0/72dbeb026e4e4eb3bc9c65739b91408ca77ab7d603a2494fa2eff3790ec22892c4caba751cffdf30f5ccf0e7ba79c1e9c96cf0a357404b9432bf1365baac23ca
+  languageName: node
+  linkType: hard
+
 "@esbuild/aix-ppc64@npm:0.25.12":
   version: 0.25.12
   resolution: "@esbuild/aix-ppc64@npm:0.25.12"
@@ -4914,6 +4921,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chromatic@npm:^13.3.4":
+  version: 13.3.4
+  resolution: "chromatic@npm:13.3.4"
+  peerDependencies:
+    "@chromatic-com/cypress": ^0.*.* || ^1.0.0
+    "@chromatic-com/playwright": ^0.*.* || ^1.0.0
+  peerDependenciesMeta:
+    "@chromatic-com/cypress":
+      optional: true
+    "@chromatic-com/playwright":
+      optional: true
+  bin:
+    chroma: dist/bin.js
+    chromatic: dist/bin.js
+    chromatic-cli: dist/bin.js
+  checksum: 10c0/1800c1640dbc168b621daeca5895698cb5a0a1def50b9d1ada5ea99ce242bf1f70d15065460948b168eedea1f56422553184f4cce1d01a7816f32c60054d704d
+  languageName: node
+  linkType: hard
+
 "ci-info@npm:^4.2.0":
   version: 4.3.1
   resolution: "ci-info@npm:4.3.1"
@@ -5101,6 +5127,19 @@ __metadata:
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
   checksum: 10c0/157cbc59b2430ae9a90034a5f3a1b398b6738bf510f713edc4d4e45e169bc514d3d99dd34d8d01ca7ae7830b5b8b537e46ae8f3c8f932371b0875c0151d7ec91
+  languageName: node
+  linkType: hard
+
+"cross-env@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "cross-env@npm:10.1.0"
+  dependencies:
+    "@epic-web/invariant": "npm:^1.0.0"
+    cross-spawn: "npm:^7.0.6"
+  bin:
+    cross-env: dist/bin/cross-env.js
+    cross-env-shell: dist/bin/cross-env-shell.js
+  checksum: 10c0/834a862db456ba1fedf6c6da43436b123ae38f514fa286d6f0937c14fa83f13469f77f70f2812db041ae2d84f82bac627040b8686030aca27fbdf113dfa38b63
   languageName: node
   linkType: hard
 
@@ -6881,7 +6920,9 @@ __metadata:
     axios: "npm:^1.13.1"
     babel-jest: "npm:^30.2.0"
     broadcast-channel: "npm:^7.2.0"
+    chromatic: "npm:^13.3.4"
     classnames: "npm:^2.5.1"
+    cross-env: "npm:^10.1.0"
     dayjs: "npm:^1.11.19"
     eslint: "npm:^9.30.1"
     eslint-plugin-react: "npm:^7.34.1"

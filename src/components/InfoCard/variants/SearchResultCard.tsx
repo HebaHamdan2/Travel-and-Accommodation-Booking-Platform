@@ -32,6 +32,9 @@ const SearchResultCard: React.FC<BaseCardProps<SearchRes>> = ({ data }) => {
             image={data.roomPhotoUrl}
             alt={data.hotelName}
             sx={{ height: 320, objectFit: "cover" }}
+            onError={(e) => {
+              e.currentTarget.src = "/not-found.jpg"; // fallback image
+            }}
           />
           {data.starRating && (
             <Stack

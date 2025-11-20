@@ -13,19 +13,20 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import Badge from "@mui/material/Badge";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useThemeContext } from "../../hooks/useThemeContext";
 import { performLogout } from "../../features/auth/logoutHelper";
 import { LOGO_URL, ROUTES } from "../../utils/constans";
 import { NavbarProps } from "../../types";
 import { sections } from "@/pages/Home/constants";
-const Navbar: React.FC<NavbarProps> = ({ isHome=false }) => {
+const Navbar: React.FC<NavbarProps> = ({ isHome = false }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>(
     sections?.[0]?.id || ""
@@ -34,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ isHome=false }) => {
   const { mode, toggleMode } = useThemeContext();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
+  const { items } = useAppSelector((state) => state.cart);
   const handleScroll = (id: string) => {
     if (!isHome) return;
     const target = document.getElementById(id);
@@ -52,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ isHome=false }) => {
 
   return (
     <AppBar
-      position={isHome?"sticky":"static"}
+      position={isHome ? "sticky" : "static"}
       sx={{
         backgroundColor: "background.default",
         color: "text.primary",
@@ -124,7 +125,20 @@ const Navbar: React.FC<NavbarProps> = ({ isHome=false }) => {
               )}
             </IconButton>
             <IconButton onClick={() => navigate("/checkout")}>
-              <ShoppingCartOutlinedIcon fontSize="small" />
+              <Badge
+                badgeContent={items[0]?.rooms.length}
+                invisible={!items[0]?.rooms?.length}
+                color="primary"
+                sx={{
+                  "& .MuiBadge-badge": {
+                    fontSize: "0.7rem",
+                    height: 18,
+                    minWidth: 18,
+                  },
+                }}
+              >
+                <ShoppingCartOutlinedIcon fontSize="small" />
+              </Badge>
             </IconButton>
             <Button
               variant="text"

@@ -101,6 +101,9 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
               image={roomPhotoUrl}
               alt={`room-${roomId}`}
               sx={{ height: 250, objectFit: "cover" }}
+              onError={(e) => {
+                e.currentTarget.src = "/not-found.jpg"; // fallback image
+              }}
             />
           </Box>
           <CardContent sx={{ px: 3, pb: 2, textAlign: "left" }}>

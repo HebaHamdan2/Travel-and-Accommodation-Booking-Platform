@@ -50,6 +50,9 @@ const CartItemCard: React.FC<BaseCardProps<CartRoomItemCardIfo>> = ({
               image={data.roomPhotoUrl}
               alt={`room-${data.roomId}`}
               sx={{ height: 250, objectFit: "cover" }}
+              onError={(e) => {
+                e.currentTarget.src = "/not-found.jpg"; // fallback image
+              }}
             />
           </Box>
           <CardContent sx={{ px: 3, pb: 2, textAlign: "left" }}>

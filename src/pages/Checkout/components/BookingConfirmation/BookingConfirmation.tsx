@@ -18,37 +18,37 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   });
   return (
     <Box sx={{ maxWidth: 1000, mx: "auto", py: 4, px: { xs: 2, sm: 4 } }}>
-      <Paper
-        elevation={4}
-        sx={{
-          p: { xs: 2, sm: 4 },
-          borderRadius: 3,
-          overflow: "hidden",
-        }}
-      >
-        <Box textAlign="center" mb={3}>
-          <img
-            src={LOGO_URL}
-            alt="Logo"
-            style={{ width: 70, marginBottom: 16 }}
-          />
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            gutterBottom
-            sx={{ fontSize: { xs: "1.5rem", sm: "2rem" } }}
-          >
-            Thank you, {customerDetails.fullName}!
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Your {bookings.length}{" "}
-            {bookings.length > 1 ? "rooms have" : "room has"} been successfully
-            booked.
-          </Typography>
-        </Box>
+      <Box ref={componentRef}>
+        <Paper
+          elevation={4}
+          sx={{
+            p: { xs: 2, sm: 4 },
+            borderRadius: 3,
+            overflow: "hidden",
+          }}
+        >
+          <Box textAlign="center" mb={3}>
+            <img
+              src={LOGO_URL}
+              alt="Logo"
+              style={{ width: 70, marginBottom: 16 }}
+            />
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ fontSize: { xs: "1.5rem", sm: "2rem" } }}
+            >
+              Thank you, {customerDetails.fullName}!
+            </Typography>
 
-        <Divider sx={{ mb: 3 }} />
-        <div ref={componentRef}>
+            <Typography variant="subtitle1" color="text.secondary">
+              Your {bookings.length}
+              {bookings.length > 1 ? "rooms have" : "room has"} been
+              successfully booked.
+            </Typography>
+          </Box>
+          <Divider sx={{ mb: 3 }} />
           <Grid container spacing={3}>
             {bookings.map((b, index) => (
               <Grid sx={{ xs: 12, sm: 6 }} key={index}>
@@ -61,7 +61,6 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                     flexDirection: "column",
                     gap: 1.5,
                     height: "100%",
-                    backgroundColor: "background.default",
                   }}
                 >
                   <Typography variant="subtitle1" fontWeight="bold">
@@ -75,8 +74,9 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                   <Typography variant="body2">
                     Payment: {b.paymentMethod}
                   </Typography>
+
                   <Typography variant="body2">
-                    Status:
+                    Status:{" "}
                     <Box
                       component="span"
                       sx={{
@@ -87,11 +87,13 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                       {b.bookingStatus}
                     </Box>
                   </Typography>
+
                   {b.confirmationNumber && (
                     <Typography variant="body2" fontWeight="medium">
                       Confirmation #: {b.confirmationNumber}
                     </Typography>
                   )}
+
                   <Typography variant="caption" color="text.secondary">
                     Booked on: {new Date(b.bookingDateTime).toLocaleString()}
                   </Typography>
@@ -99,46 +101,43 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
               </Grid>
             ))}
           </Grid>
-        </div>
-        <Box
+        </Paper>
+      </Box>
+      <Box
+        sx={{
+          mt: 4,
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
+        <Button
+          variant="contained"
+          onClick={handlePrint}
+          color="primary"
           sx={{
-            mt: 4,
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            justifyContent: "center",
-            gap: 2,
+            textTransform: "none",
+            fontWeight: 700,
+            borderRadius: "1rem",
+            minWidth: { xs: "100%", sm: 160 },
           }}
         >
-          <Button
-            variant="contained"
-            onClick={handlePrint}
-            color="primary"
-            sx={{
-              textTransform: "none",
-              fontWeight: 700,
-              borderRadius: "1rem",
-              minWidth: { xs: "100%", sm: 160 },
-              fontSize: { xs: "0.9rem", sm: "1rem" },
-            }}
-          >
-            Download PDF
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={onReset}
-            sx={{
-              minWidth: { xs: "100%", sm: 160 },
-              fontSize: { xs: "0.9rem", sm: "1rem" },
-              color: "secondary",
-              textTransform: "none",
-              fontWeight: 700,
-              borderRadius: "1rem",
-            }}
-          >
-            Book Another
-          </Button>
-        </Box>
-      </Paper>
+          Download PDF
+        </Button>
+
+        <Button
+          variant="outlined"
+          onClick={onReset}
+          sx={{
+            minWidth: { xs: "100%", sm: 160 },
+            fontWeight: 700,
+            borderRadius: "1rem",
+          }}
+        >
+          Book Another
+        </Button>
+      </Box>
     </Box>
   );
 };

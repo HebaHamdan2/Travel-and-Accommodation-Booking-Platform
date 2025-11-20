@@ -1,5 +1,13 @@
 import dayjs from "dayjs";
-import { AuthState, SearchState,SearchSliceState, CartState, BookingState, FiltersState, NotificationState } from "../types";
+import {
+  AuthState,
+  SearchState,
+  SearchSliceState,
+  BookingState,
+  FiltersState,
+  NotificationState,
+  CartItem,
+} from "../types";
 
 export const initialAuth: AuthState = {
   userType: null,
@@ -8,7 +16,10 @@ export const initialAuth: AuthState = {
   error: null,
 };
 export const DEFAUL_CHECKENDATE = dayjs().startOf("day").format("YYYY-MM-DD");
-export const DEFAULT_CHECKOUTDATE = dayjs().add(1, "day").startOf("day").format("YYYY-MM-DD");
+export const DEFAULT_CHECKOUTDATE = dayjs()
+  .add(1, "day")
+  .startOf("day")
+  .format("YYYY-MM-DD");
 
 export const initialSearch: SearchState = {
   city: "",
@@ -31,16 +42,20 @@ export const initialFilterState: FiltersState = {
   amenities: [],
   roomTypes: [],
 };
-export const initialCartState:CartState={
-    items:[],
-}
+export const initialCartState: CartItem = {
+  hotelName: "",
+  checkInDate: "",
+  checkOutDate: "",
+  rooms: [],
+  totalPrice: 0,
+};
 export const BookingInitialState: BookingState = {
   userDetails: {
     fullName: "",
     email: "",
     paymentMethod: "credit_card",
   },
-  cartItems: [],
+  cartItem: initialCartState,
   status: "idle",
   error: undefined,
   confirmationNumber: undefined,

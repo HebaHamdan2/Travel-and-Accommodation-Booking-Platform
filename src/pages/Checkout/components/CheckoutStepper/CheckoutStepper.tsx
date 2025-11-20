@@ -7,10 +7,6 @@ import {
   Button,
   Typography,
   Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper";
 import { INITIAL_USER_DETAILS, STEPS } from "../../constans";
@@ -20,9 +16,10 @@ import { UserDetailsFormValues } from "../../types";
 import UserDetailsForm from "../UserDetailsForm/UserDetailsForm";
 import BookingConfirmation from "../BookingConfirmation/BookingConfirmation";
 import YourSelections from "../YourSelections";
-import { BookingResponse, CartItem } from "../../../../features/types";
+import { BookingResponse } from "../../../../features/types";
 import { clearCart } from "../../../../features/cart/cartSlice";
 import { useCreateBookingMutation } from "../../../../services/user/booking";
+import GenericDialog from "@/components/GenericDialog";
 
 const CheckoutStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -34,12 +31,12 @@ const CheckoutStepper = () => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const dispatch = useAppDispatch();
-  const { items } = useAppSelector((state: RootState) => state.cart);
+  const cart = useAppSelector((state: RootState) => state.cart);
   const formRef = useRef<{ submitForm: () => void } | null>(null);
   const [createBooking, { isLoading: creating }] = useCreateBookingMutation();
 
   const handleNext = () => {
-    if (activeStep === 0 && items.length === 0) return;
+    if (activeStep === 0 && cart.rooms.length === 0) return;
     if (activeStep === 1 && formRef.current) {
       formRef.current.submitForm();
       return;
@@ -53,17 +50,15 @@ const CheckoutStepper = () => {
   };
 
   const handlePayment = async () => {
-    const bookings = items.flatMap((hotel: CartItem) =>
-      hotel.rooms.map((room) => ({
-        roomNumber: room.roomNumber.toString(),
-        customerName: formData.fullName,
-        hotelName: hotel.hotelName,
-        roomType: room.roomType,
-        totalCost: room.price,
-        paymentMethod: formData.paymentMethod,
-        bookingDateTime: new Date().toISOString(),
-      }))
-    );
+    const bookings = cart.rooms.map((room) => ({
+      roomNumber: room.roomNumber.toString(),
+      customerName: formData.fullName,
+      hotelName: cart.hotelName,
+      roomType: room.roomType,
+      totalCost: room.price,
+      paymentMethod: formData.paymentMethod,
+      bookingDateTime: new Date().toISOString(),
+    }));
 
     try {
       const results = await Promise.all(
@@ -126,12 +121,12 @@ const CheckoutStepper = () => {
 
         <Box sx={{ mt: 2, minHeight: { xs: 250, sm: 350 } }}>
           {activeStep === 0 &&
-            (items.length === 0 ? (
+            (cart.rooms.length === 0 ? (
               <Typography align="center" variant="h6" color="text.secondary">
                 Your cart is empty. Add some rooms to continue.
               </Typography>
             ) : (
-              <YourSelections cartItems={items} />
+              <YourSelections cartItem={cart} />
             ))}
 
           {activeStep === 1 && (
@@ -194,22 +189,23 @@ const CheckoutStepper = () => {
               variant="contained"
               sx={{ textTransform: "none" }}
               onClick={handleNext}
-              disabled={activeStep === 0 && items.length === 0}
+              disabled={activeStep === 0 && cart.rooms.length === 0}
             >
               {activeStep === STEPS.length - 1 ? "Finish" : "Next"}
             </Button>
           )}
         </Box>
       </Paper>
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Booking Complete</DialogTitle>
-        <DialogContent>
-          <Typography>Your booking has been successfully processed!</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>OK</Button>
-        </DialogActions>
-      </Dialog>
+      <GenericDialog
+        open={openDialog}
+        variant="success"
+        title="Booking Complete"
+        message="Your booking has been successfully processed!"
+        confirmText="OK"
+        onClose={() => {
+          setOpenDialog(false);
+        }}
+      />
     </Wrapper>
   );
 };

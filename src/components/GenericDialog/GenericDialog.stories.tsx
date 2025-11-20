@@ -71,3 +71,23 @@ export const DeleteDialogStory: Story = {
     onClose: () => {},
   },
 };
+export const WarningDialogStory: Story = {
+  args: {
+    open: true,
+    variant: "warning",
+    title: "Warning",
+    confirmText: "Continue",
+    onConfirm: () => {},
+    onClose: () => {},
+  },
+};
+export const SuccessDialogStory: Story = {
+  args: {
+    open: true,
+    variant: "success",
+    title: "Success",
+    confirmText: "OK",
+    onConfirm: () => {},
+    onClose: () => {},
+  },
+};

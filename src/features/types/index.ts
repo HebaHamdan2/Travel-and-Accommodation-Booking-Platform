@@ -41,13 +41,9 @@ export interface CartItem {
   totalPrice: number;
 }
 
-export interface CartState {
-  items: CartItem[];
-}
-
 export interface BookingState {
   userDetails: UserDetailsFormValues;
-  cartItems: CartItem[];
+  cartItem: CartItem;
   status: "idle" | "loading" | "success" | "error";
   error?: string;
   confirmationNumber?: string;

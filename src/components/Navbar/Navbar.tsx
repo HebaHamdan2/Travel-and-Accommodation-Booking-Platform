@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ isHome = false }) => {
   const { mode, toggleMode } = useThemeContext();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { items } = useAppSelector((state) => state.cart);
+  const cart = useAppSelector((state) => state.cart);
   const handleScroll = (id: string) => {
     if (!isHome) return;
     const target = document.getElementById(id);
@@ -126,12 +126,13 @@ const Navbar: React.FC<NavbarProps> = ({ isHome = false }) => {
             </IconButton>
             <IconButton onClick={() => navigate("/checkout")}>
               <Badge
-                badgeContent={items[0]?.rooms.length}
-                invisible={!items[0]?.rooms?.length}
+                badgeContent={cart?.rooms.length}
+                invisible={!cart?.rooms?.length}
                 color="primary"
                 sx={{
                   "& .MuiBadge-badge": {
                     fontSize: "0.7rem",
+                    fontWeight:"800",
                     height: 18,
                     minWidth: 18,
                   },

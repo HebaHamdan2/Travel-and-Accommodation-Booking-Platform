@@ -1,11 +1,14 @@
 import { GenericDialogProps } from "./types";
 import DeleteDialog from "./variants/DeleteDialog";
 import FormDialog from "./variants/FormDialog";
+import SuccessDialog from "./variants/SuccessDialog";
+import WarningDialog from "./variants/WarningDialog";
 const GenericDialog = <T extends object>({
   open,
   onClose,
   variant,
   title,
+  message,
   initialValues,
   validationSchema,
   onSubmit,
@@ -22,6 +25,10 @@ const GenericDialog = <T extends object>({
         return "Update Item";
       case "delete":
         return "Confirm Delete";
+      case "warning":
+        return "Warning";
+      case "success":
+        return "Success";
     }
   };
 
@@ -36,7 +43,29 @@ const GenericDialog = <T extends object>({
       />
     );
   }
-
+  if (variant === "warning") {
+    return (
+      <WarningDialog
+        open={open}
+        onClose={onClose}
+        onConfirm={onConfirm!}
+        title={getTitle()}
+        confirmText={confirmText}
+        message={message}
+      />
+    );
+  }
+  if (variant === "success") {
+    return (
+      <SuccessDialog
+        open={open}
+        onClose={onClose}
+        title={getTitle()}
+        message={message}
+        confirmText={confirmText}
+      />
+    );
+  }
   // Add / Update variants
   return (
     <FormDialog

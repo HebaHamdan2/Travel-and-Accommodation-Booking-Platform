@@ -19,25 +19,20 @@ const cartSlice = createSlice({
       const { hotelName, checkInDate, checkOutDate, room } = action.payload;
       const nights = calculateNights(checkInDate, checkOutDate);
 
-      let hotelItem = state.items.find((item) => item.hotelName === hotelName);
-
-      if (!hotelItem) {
-        // first room added from this item
-        state.items.push({
-          hotelName,
-          checkInDate,
-          checkOutDate,
-          rooms: [room],
-          totalPrice: calculateRoomsTotal([room], nights),
-        });
+      if (!state.hotelName) {
+        // first room
+        state.hotelName = hotelName;
+        state.checkInDate = checkInDate;
+        state.checkOutDate = checkOutDate;
+        state.rooms = [room];
+        state.totalPrice = calculateRoomsTotal([room], nights);
       } else {
-        const roomExists = hotelItem.rooms.some(
+        const roomExists = state.rooms.some(
           (r) => r.roomNumber === room.roomNumber
-        ); //already book this room (exists on the cart)
+        );
         if (!roomExists) {
-          //only if not exists (already added) on the cart
-          hotelItem.rooms.push(room);
-          hotelItem.totalPrice = calculateRoomsTotal(hotelItem.rooms, nights);
+          state.rooms.push(room);
+          state.totalPrice = calculateRoomsTotal(state.rooms, nights);
         }
       }
     },
@@ -45,33 +40,14 @@ const cartSlice = createSlice({
       state,
       action: PayloadAction<{ hotelName: string; roomNumber: number }>
     ) => {
-      const { hotelName, roomNumber } = action.payload;
-      const hotelItem = state.items.find(
-        (item) => item.hotelName === hotelName
-      );
-      if (!hotelItem) return;
+      const { roomNumber } = action.payload;
 
-      hotelItem.rooms = hotelItem.rooms.filter(
-        (r) => r.roomNumber !== roomNumber
-      ); //remove room with this number from hotelItems
+      state.rooms = state.rooms.filter((r) => r.roomNumber !== roomNumber); //remove room with this number from the cart
 
-      if (hotelItem.rooms.length === 0) {
-        //if the hotelItems empty "no rooms booked from it" then remove it
-        state.items = state.items.filter(
-          (item) => item.hotelName !== hotelName
-        );
-      } else {
-        // still there is rooms booked from this hotel then recalculate the total price from this hotel after remove the room
-        const nights = calculateNights(
-          hotelItem.checkInDate,
-          hotelItem.checkOutDate
-        );
-        hotelItem.totalPrice = calculateRoomsTotal(hotelItem.rooms, nights);
-      }
+      const nights = calculateNights(state.checkInDate, state.checkOutDate);
+      state.totalPrice = calculateRoomsTotal(state.rooms, nights);
     },
-    clearCart: (state) => {
-      state.items = [];
-    },
+    clearCart: () => initialCartState,
   },
 });
 export const { addRoomToCart, removeFromCart, clearCart } = cartSlice.actions;

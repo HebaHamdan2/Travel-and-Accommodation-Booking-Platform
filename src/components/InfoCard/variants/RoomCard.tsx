@@ -18,10 +18,12 @@ import { baseCardStyles } from "../styles/baseCardStyles";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   addRoomToCart,
+  clearCart,
   removeFromCart,
 } from "../../../features/cart/cartSlice";
 import { showNotification } from "../../../features/notifications/notificationsSlice";
 import GenericDialog from "@/components/GenericDialog";
+import { CartRoomItem } from "@/features/types";
 
 const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
   const {
@@ -39,14 +41,17 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
   } = data;
 
   const dispatch = useAppDispatch();
-  const cartItems = useAppSelector((state) => state.cart.items);
-
+  const cart = useAppSelector((state) => state.cart);
+  const [openConflictDialog, setOpenConflictDialog] = useState(false);
+  const [pendingRoom, setPendingRoom] = useState<null | {
+    hotelName: string;
+    checkInDate: string;
+    checkOutDate: string;
+    room: CartRoomItem;
+  }>(null);
   // Check if the room is already in the cart
-  const isInCart = cartItems.some(
-    (hotel) =>
-      hotel.hotelName === hotelName &&
-      hotel.rooms.some((room) => room.roomId === roomId)
-  );
+  const isInCart = cart?.rooms.some((room) => room.roomId === roomId);
+
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   function confirmDelete() {
     dispatch(removeFromCart({ hotelName, roomNumber: roomNumber }));
@@ -55,32 +60,68 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
     );
     setOpenDeleteDialog(false);
   }
+  const isDifferentHotel = cart.hotelName && cart.hotelName !== hotelName;
+
+  const isDifferentDates =
+    cart.checkInDate &&
+    cart.checkOutDate &&
+    (cart.checkInDate !== checkInDate || cart.checkOutDate !== checkOutDate);
+
+  const hasConflict = isDifferentHotel || isDifferentDates;
+
+  function addRoom(roomInfo: any) {
+    dispatch(addRoomToCart(roomInfo));
+    dispatch(
+      showNotification({
+        message: "Room added to your cart successfully",
+        type: "success",
+      })
+    );
+  }
+
   const handleToggleCart = () => {
     if (isInCart) {
       setOpenDeleteDialog(true);
-    } else {
-      dispatch(
-        addRoomToCart({
-          hotelName,
-          checkInDate,
-          checkOutDate,
-          room: {
-            roomId,
-            roomNumber,
-            roomType,
-            roomPhotoUrl,
-            price,
-          },
-        })
-      );
-      dispatch(
-        showNotification({
-          message: "Room added to your cart successfully",
-          type: "success",
-        })
-      );
+      return;
     }
+    // different hotel or dates => conflict dialog
+    if (cart.rooms.length > 0 && hasConflict) {
+      setPendingRoom({
+        hotelName,
+        checkInDate,
+        checkOutDate,
+        room: {
+          roomId,
+          roomNumber,
+          roomType,
+          roomPhotoUrl,
+          price,
+        },
+      });
+      setOpenConflictDialog(true);
+      return;
+    }
+    // normal add
+    addRoom({
+      hotelName,
+      checkInDate,
+      checkOutDate,
+      room: {
+        roomId,
+        roomNumber,
+        roomType,
+        roomPhotoUrl,
+        price,
+      },
+    });
   };
+
+  function confirmReplaceCart() {
+    dispatch(clearCart());
+    addRoom(pendingRoom!);
+    setOpenConflictDialog(false);
+    setPendingRoom(null);
+  }
 
   return (
     <>
@@ -215,6 +256,15 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
         confirmText="Remove Room"
         onConfirm={confirmDelete}
         onClose={() => setOpenDeleteDialog(false)}
+      />
+      <GenericDialog
+        open={openConflictDialog}
+        variant="warning"
+        title="Start New Booking?"
+        message="You already selected rooms from a different hotel or with different dates. Starting a new booking will clear your existing selections."
+        confirmText="Start New Booking"
+        onConfirm={confirmReplaceCart}
+        onClose={() => setOpenConflictDialog(false)}
       />
     </>
   );

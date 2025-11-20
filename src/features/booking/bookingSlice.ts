@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {  CartItem } from "../types";
+import { CartItem } from "../types";
 import { UserDetailsFormValues } from "../../pages/Checkout/types";
 import { BookingInitialState } from "../constants";
 
@@ -10,8 +10,8 @@ const bookingSlice = createSlice({
     setUserDetails: (state, action: PayloadAction<UserDetailsFormValues>) => {
       state.userDetails = action.payload;
     },
-    setCartItems: (state, action: PayloadAction<CartItem[]>) => {
-      state.cartItems = action.payload;
+    setCartItems: (state, action: PayloadAction<CartItem>) => {
+      state.cartItem = action.payload;
     },
     bookingStart: (state) => {
       state.status = "loading";

@@ -45,6 +45,7 @@ The entire application is fully responsive, supports dark/light themes, and is d
 - **Netlify**: A deployment and hosting platform for frontend apps, used for Hosting the **TRAVEL** project.
 - **Swagger API Docs**: Interactive documentation for REST APIs, used for: Understanding backend endpoints provided by **Foothill** and ensuring correct request/response integration.
 - **Figma (Custom UI Design)**: Designing the entire UI of the user UI with consistent components and flows.
+- **Canva**: Designing project logo.
 - **Jira Board**: Visualizing tasks, organizing sprints, and tracking personal development progress.
 - **Excalidraw**: Following the **Foothill-provided** complete flow diagram and mapping the app’s logic.
 - **Prettier Extension**: for consistent code formatting.

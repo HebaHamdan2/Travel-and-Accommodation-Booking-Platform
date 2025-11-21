@@ -11,8 +11,8 @@ import { AddHotelDialogProps } from "../../types";
 import { hotelTypes } from "../../utils";
 import { FormikHelpers } from "formik";
 import { AddValidationSchema } from "../../validation";
-import FormikTextField from "../../../../../../components/FormikTextField";
 import GenericDialog from "@/components/GenericDialog";
+import GenericTextField from "@/components/GenericTextField/GenericTextField";
 const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
   open,
   onClose,
@@ -63,11 +63,28 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
       onSubmit={handleSubmit}
       renderForm={(formik) => (
         <>
-          <FormikTextField name="name" label="Name" formik={formik} />
-          <FormikTextField
+          <GenericTextField
+            name="name"
+            label="Name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.name && !!formik.errors.name}
+            helperText={
+              (formik.touched.name && formik.errors.name) || undefined
+            }
+          />
+          <GenericTextField
             name="description"
             label="Description"
-            formik={formik}
+            value={formik.values.description}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.description && !!formik.errors.description}
+            helperText={
+              (formik.touched.description && formik.errors.description) ||
+              undefined
+            }
             multiline
             minRows={3}
           />
@@ -96,27 +113,46 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
             </FormHelperText>
           </FormControl>
 
-          <FormikTextField
+          <GenericTextField
             name="starRating"
             label="Star Rating"
             type="number"
             inputProps={{ step: 1, min: 1, max: 5 }}
-            formik={formik}
+            value={formik.values.starRating}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.starRating && !!formik.errors.starRating}
+            helperText={
+              (formik.touched.starRating && formik.errors.starRating) ||
+              undefined
+            }
           />
 
-          <FormikTextField
+          <GenericTextField
             name="latitude"
             label="Latitude"
             type="number"
             inputProps={{ step: 0.000001, min: -90, max: 90 }}
-            formik={formik}
+            value={formik.values.description}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.latitude && !!formik.errors.latitude}
+            helperText={
+              (formik.touched.latitude && formik.errors.latitude) || undefined
+            }
           />
-          <FormikTextField
+          <GenericTextField
             name="longitude"
             label="Longitude"
             type="number"
             inputProps={{ step: 0.000001, min: -180, max: 180 }}
-            formik={formik}
+            value={formik.values.longitude}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.longitude && !!formik.errors.longitude}
+            helperText={
+              (formik.touched.longitude && formik.errors.longitude) || undefined
+            }
           />
 
           <FormControl

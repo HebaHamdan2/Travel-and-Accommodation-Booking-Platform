@@ -1,11 +1,9 @@
 import { City } from "@/types";
-import {
-  TextField,
-} from "@mui/material";
 import React from "react";
 import { UpdateCityProps } from "../../types";
 import { CitySchema } from "../../validation";
 import GenericDialog from "@/components/GenericDialog";
+import GenericTextField from "@/components/GenericTextField/GenericTextField";
 const UpdateCityDialog: React.FC<UpdateCityProps> = ({
   open,
   onClose,
@@ -36,31 +34,27 @@ const UpdateCityDialog: React.FC<UpdateCityProps> = ({
       onSubmit={handleSubmit}
       renderForm={({ values, errors, touched, handleChange, handleBlur }) => (
         <>
-          <TextField
+          <GenericTextField
             label="City Name"
             name="name"
             value={values.name}
             onChange={handleChange}
             onBlur={handleBlur}
-            fullWidth
-            margin="normal"
-            variant="standard"
             error={touched.name && Boolean(errors.name)}
-            helperText={touched.name && errors.name}
+            helperText={(touched.name && errors.name) || undefined}
           />
-          <TextField
+          <GenericTextField
             label="Description"
             name="description"
             value={values.description}
             onChange={handleChange}
             onBlur={handleBlur}
-            fullWidth
             multiline
             minRows={3}
-            margin="normal"
-            variant="standard"
             error={touched.description && Boolean(errors.description)}
-            helperText={touched.description && errors.description}
+            helperText={
+              (touched.description && errors.description) || undefined
+            }
           />
         </>
       )}

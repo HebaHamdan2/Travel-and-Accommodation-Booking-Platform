@@ -1,10 +1,10 @@
 import React from "react";
-import { TextField } from "@mui/material";
 import { FormikHelpers } from "formik";
 import { City } from "@/types";
 import { CitySchema } from "../../validation";
 import { AddCityProps } from "../../types";
 import GenericDialog from "@/components/GenericDialog";
+import GenericTextField from "@/components/GenericTextField/GenericTextField";
 const AddCityDialog: React.FC<AddCityProps> = ({ open, onClose, onSubmit }) => {
   const initialValues: Omit<City, "id"> = { name: "", description: "" };
   const handleSubmit = async (
@@ -29,31 +29,27 @@ const AddCityDialog: React.FC<AddCityProps> = ({ open, onClose, onSubmit }) => {
       onSubmit={handleSubmit}
       renderForm={({ values, errors, touched, handleChange, handleBlur }) => (
         <>
-          <TextField
+          <GenericTextField
             name="name"
             label="City Name"
             value={values.name}
             onChange={handleChange}
             onBlur={handleBlur}
-            fullWidth
-            margin="normal"
-            variant="standard"
             error={touched.name && Boolean(errors.name)}
-            helperText={touched.name && errors.name}
+            helperText={(touched.name && errors.name) || undefined}
           />
-          <TextField
+          <GenericTextField
             name="description"
             label="Description"
             value={values.description}
             onChange={handleChange}
             onBlur={handleBlur}
-            fullWidth
             multiline
             minRows={3}
-            margin="normal"
-            variant="standard"
             error={touched.description && Boolean(errors.description)}
-            helperText={touched.description && errors.description}
+            helperText={
+              (touched.description && errors.description) || undefined
+            }
           />
         </>
       )}

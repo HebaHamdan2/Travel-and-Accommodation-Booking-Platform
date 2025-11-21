@@ -19,16 +19,13 @@ const WarningDialog = ({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{title}</DialogTitle>
-
       <DialogContent>
         <Typography variant="body1">{message}</Typography>
       </DialogContent>
-
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={onClose} color="inherit" variant="text">
+        <Button onClick={onClose} variant="text" sx={{ color: "text.primary" }}>
           Cancel
         </Button>
-
         <Button
           onClick={onConfirm}
           color="warning"

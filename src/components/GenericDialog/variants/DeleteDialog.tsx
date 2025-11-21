@@ -25,7 +25,6 @@ const DeleteDialog = ({
       disableEnforceFocus
     >
       <DialogTitle>{title}</DialogTitle>
-
       <DialogContent>
         <Typography>
           Are you sure you want to delete this item? This action cannot be

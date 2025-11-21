@@ -3,7 +3,7 @@ import { AddRoomSchema } from "../../validation";
 import { RoomBodyRequest } from "../../../../../../types";
 import { UpdateRoomProps } from "../../types";
 import GenericDialog from "@/components/GenericDialog";
-import FormikTextField from "@/components/FormikTextField";
+import GenericTextField from "@/components/GenericTextField/GenericTextField";
 const UpdateRoomDialog: React.FC<UpdateRoomProps> = ({
   open,
   onClose,
@@ -36,16 +36,29 @@ const UpdateRoomDialog: React.FC<UpdateRoomProps> = ({
       onSubmit={handleSubmit}
       renderForm={(formik) => (
         <>
-          <FormikTextField
+          <GenericTextField
             name="roomNumber"
             label="Room Number"
-            formik={formik}
+            value={formik.values.roomNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.roomNumber && !!formik.errors.roomNumber}
+            helperText={
+              (formik.touched.roomNumber && formik.errors.roomNumber) ||
+              undefined
+            }
           />
-          <FormikTextField
+          <GenericTextField
             name="cost"
             label="Cost"
             type="number"
-            formik={formik}
+            value={formik.values.cost}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.cost && !!formik.errors.cost}
+            helperText={
+              (formik.touched.cost && formik.errors.cost) || undefined
+            }
           />
         </>
       )}

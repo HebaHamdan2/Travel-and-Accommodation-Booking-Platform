@@ -1,37 +1,34 @@
 import { TextField, InputAdornment } from "@mui/material";
-import { FormikTextFieldProps } from "./types";
-
-function FormikTextField<T>({
+import { GenericTextFieldProps } from "./types";
+function GenericTextField({
   name,
   label,
   type = "text",
+  value,
+  onChange,
+  onBlur,
+  error,
+  helperText,
   icon,
-  formik,
   multiline,
   minRows,
   inputProps,
-}: FormikTextFieldProps<T>) {
+}: GenericTextFieldProps) {
   return (
     <TextField
       fullWidth
       name={name}
       label={label}
       type={type}
+      value={value}
+      onChange={onChange}
+      onBlur={onBlur}
+      error={error}
+      helperText={helperText}
       multiline={multiline}
       minRows={minRows}
       variant="standard"
       margin="normal"
-      value={formik.values[name as keyof T] as any}
-      onChange={formik.handleChange}
-      onBlur={formik.handleBlur}
-      error={
-        formik.touched[name as keyof T] &&
-        Boolean(formik.errors[name as keyof T])
-      }
-      helperText={
-        formik.touched[name as keyof T] &&
-        (formik.errors[name as keyof T] as any)
-      }
       inputProps={inputProps}
       InputProps={{
         startAdornment: icon ? (
@@ -42,4 +39,4 @@ function FormikTextField<T>({
   );
 }
 
-export default FormikTextField;
+export default GenericTextField;

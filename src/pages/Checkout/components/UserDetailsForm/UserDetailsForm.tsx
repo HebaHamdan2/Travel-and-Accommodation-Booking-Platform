@@ -8,6 +8,7 @@ import {
 } from "../../types";
 import { INITIAL_USER_DETAILS, PAYMENT_METHODS } from "../../constans";
 import { UserDetailsValidationSchema } from "./validation";
+import GenericTextField from "@/components/GenericTextField/GenericTextField";
 
 const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
   ({ onValidSubmit, initialValues = INITIAL_USER_DETAILS }, ref) => {
@@ -42,20 +43,22 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
             Your Details
           </Typography>
 
-          <TextField
-            fullWidth
+          <GenericTextField
             label="Full Name"
             {...formik.getFieldProps("fullName")}
             error={formik.touched.fullName && Boolean(formik.errors.fullName)}
-            helperText={formik.touched.fullName && formik.errors.fullName}
+            helperText={
+              (formik.touched.fullName && formik.errors.fullName) || undefined
+            }
           />
 
-          <TextField
-            fullWidth
+          <GenericTextField
             label="Email"
             {...formik.getFieldProps("email")}
             error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
+            helperText={
+              (formik.touched.email && formik.errors.email) || undefined
+            }
           />
 
           <TextField
@@ -80,46 +83,46 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
 
           {formik.values.paymentMethod === "Credit Card" && (
             <>
-              <TextField
-                fullWidth
+              <GenericTextField
                 label="Card Number"
                 {...formik.getFieldProps("cardNumber")}
                 error={
                   formik.touched.cardNumber && Boolean(formik.errors.cardNumber)
                 }
                 helperText={
-                  formik.touched.cardNumber && formik.errors.cardNumber
+                  (formik.touched.cardNumber && formik.errors.cardNumber) ||
+                  undefined
                 }
               />
 
-              <TextField
-                fullWidth
+              <GenericTextField
                 label="Expiry Date (MM/YY)"
                 {...formik.getFieldProps("cardExpiry")}
                 error={
                   formik.touched.cardExpiry && Boolean(formik.errors.cardExpiry)
                 }
                 helperText={
-                  formik.touched.cardExpiry && formik.errors.cardExpiry
+                  (formik.touched.cardExpiry && formik.errors.cardExpiry) ||
+                  undefined
                 }
               />
 
-              <TextField
-                fullWidth
+              <GenericTextField
                 label="CVV"
                 {...formik.getFieldProps("cardCvv")}
                 error={formik.touched.cardCvv && Boolean(formik.errors.cardCvv)}
-                helperText={formik.touched.cardCvv && formik.errors.cardCvv}
+                helperText={
+                  (formik.touched.cardCvv && formik.errors.cardCvv) || undefined
+                }
               />
             </>
           )}
 
-          <TextField
-            fullWidth
+          <GenericTextField
             label="Special Requests or Remarks"
             {...formik.getFieldProps("specialRequests")}
             multiline
-            rows={3}
+            minRows={3}
           />
         </Stack>
       </Box>

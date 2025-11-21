@@ -50,7 +50,7 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
     room: CartRoomItem;
   }>(null);
   // Check if the room is already in the cart
-  const isInCart = cart?.rooms.some((room) => room.roomId === roomId);
+const isInCart = cart?.rooms?.some((room) => room.roomId === roomId) ?? false;
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   function confirmDelete() {
@@ -60,12 +60,13 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
     );
     setOpenDeleteDialog(false);
   }
-  const isDifferentHotel = cart.hotelName && cart.hotelName !== hotelName;
+const isDifferentHotel = cart?.hotelName && cart?.hotelName !== hotelName;
 
-  const isDifferentDates =
-    cart.checkInDate &&
-    cart.checkOutDate &&
-    (cart.checkInDate !== checkInDate || cart.checkOutDate !== checkOutDate);
+const isDifferentDates =
+  cart?.checkInDate &&
+  cart?.checkOutDate &&
+  (cart.checkInDate !== checkInDate || cart.checkOutDate !== checkOutDate);
+
 
   const hasConflict = isDifferentHotel || isDifferentDates;
 
@@ -85,7 +86,7 @@ const RoomCard: React.FC<BaseCardProps<RoomCardInfo>> = ({ data }) => {
       return;
     }
     // different hotel or dates => conflict dialog
-    if (cart.rooms.length > 0 && hasConflict) {
+  if ((cart.rooms?.length ?? 0) > 0 && hasConflict) {
       setPendingRoom({
         hotelName,
         checkInDate,

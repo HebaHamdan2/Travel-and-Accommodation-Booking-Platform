@@ -45,7 +45,7 @@
     "init-msw": "msw init public/",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "chromatic": "cross-env CHROMATIC_PROJECT_TOKEN=$CHROMATIC_PROJECT_TOKEN npx chromatic"
+    "chromatic": "dotenv -e .env -- npx chromatic"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.5",
@@ -73,6 +73,7 @@
     "broadcast-channel": "^7.2.0",
     "chromatic": "^13.3.4",
     "cross-env": "^10.1.0",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.30.1",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^5.2.0",

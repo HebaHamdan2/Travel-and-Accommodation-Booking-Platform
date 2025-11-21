@@ -1,8 +1,9 @@
-import { Stack, TextField } from "@mui/material";
+import GenericTextField from "@/components/GenericTextField/GenericTextField";
+import { Stack } from "@mui/material";
 
 export const mockRenderForm = (formik: any) => (
   <Stack style={{ gap: 4 }}>
-    <TextField
+    <GenericTextField
       label="Name"
       name="name"
       value={formik.values.name}

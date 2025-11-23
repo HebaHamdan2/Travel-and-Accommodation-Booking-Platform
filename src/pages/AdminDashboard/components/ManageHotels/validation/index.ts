@@ -37,5 +37,5 @@ export const AddValidationSchema = Yup.object({
     .required("Longitude is required")
     .min(-180, "Longitude must be ≥ -180")
     .max(180, "Longitude must be ≤ 180"),
-  cityId: Yup.number().required("City is required"),
+  cityId: Yup.number().required("City is required").min(0, "City is required"),
 });

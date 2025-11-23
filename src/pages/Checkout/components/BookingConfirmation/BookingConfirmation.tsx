@@ -76,7 +76,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
                   </Typography>
 
                   <Typography variant="body2">
-                    Status:{" "}
+                    Status:
                     <Box
                       component="span"
                       sx={{

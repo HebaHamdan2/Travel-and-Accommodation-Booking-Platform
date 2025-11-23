@@ -35,11 +35,6 @@ export const AUTH_REQUIRED_ENDPOINTS = [
 export const adultsOptions = Array.from({ length: 8 }, (_, i) => i + 1);
 export const childrenOptions = Array.from({ length: 6 }, (_, i) => i);
 export const roomsOptions = Array.from({ length: 5 }, (_, i) => i + 1);
-export const HOTEL_TYPE_LABELS: Record<number, string> = {
-  0: "Boutique",
-  1: "Resort",
-  2: "Budget",
-};
 export const ERROR_MESSAGES: Record<number | "default", string> = {
   400: "Bad request. Please check your input.",
   401: "Unauthorized. Please log in again.",

@@ -8,7 +8,6 @@ import {
   QueryParams,
   RoomBodyRequest,
 } from "../../types";
-import { mockHotelsData } from "../../mock/adminHotels.mock";
 import {
   DEFAUL_CHECKENDATE,
   DEFAULT_CHECKOUTDATE,
@@ -21,25 +20,12 @@ export const adminhotelsApi = createApi({
   tagTypes: ["AdminHotels"],
   endpoints: (builder) => ({
     getHotels: builder.query<AdminHotel[], QueryParams>({
-      async queryFn(queryParams, _queryApi, _extraOptions, baseQuery) {
-        const {
-          name,
-          searchQuery,
-          pageSize = 10,
-          pageNumber = 1,
-        } = queryParams || {};
-        const response = await baseQuery({
-          url: `?name=${name ?? ""}&searchQuery=${
-            searchQuery ?? ""
-          }&pageSize=${pageSize}&pageNumber=${pageNumber}`,
-          method: "GET",
-        });
-        if (response.error) {
-          console.warn("GET /hotels failed, using mock data instead.");
-          return { data: mockHotelsData };
-        }
-        return { data: response.data as AdminHotel[] };
-      },
+      query: ({ name, searchQuery, pageSize = 10, pageNumber = 1 }) => ({
+        url: `?name=${name ?? ""}&searchQuery=${
+          searchQuery ?? ""
+        }&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+        method: "GET",
+      }),
 
       providesTags: ["AdminHotels"],
     }),

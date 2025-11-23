@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle } from "react";
-import { Box, Stack, TextField, Typography, MenuItem } from "@mui/material";
+import { Box, Stack, Typography, MenuItem, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import {
   UserDetailsFormHandle,
@@ -9,9 +9,17 @@ import {
 import { INITIAL_USER_DETAILS, PAYMENT_METHODS } from "../../constans";
 import { UserDetailsValidationSchema } from "./validation";
 import GenericTextField from "@/components/GenericTextField/GenericTextField";
-
+import { useAppSelector } from "@/app/hooks";
+import { getDecodedToken } from "@/utils/getDecodedToken";
 const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
-  ({ onValidSubmit, initialValues = INITIAL_USER_DETAILS }, ref) => {
+  ({ onValidSubmit, initialValues }, ref) => {
+    const { authentication } = useAppSelector((state) => state.auth);
+    const token = getDecodedToken(authentication || "") ?? null;
+    const fullName =
+      token?.given_name && token?.family_name
+        ? `${token.given_name} ${token.family_name}`
+        : "";
+    initialValues = { ...INITIAL_USER_DETAILS, fullName };
     const formik = useFormik<UserDetailsFormValues>({
       initialValues,
       enableReinitialize: true,
@@ -42,8 +50,8 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
           >
             Your Details
           </Typography>
-
           <GenericTextField
+            id="fullName" 
             label="Full Name"
             {...formik.getFieldProps("fullName")}
             error={formik.touched.fullName && Boolean(formik.errors.fullName)}
@@ -52,7 +60,9 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
             }
           />
 
+          {/* Email */}
           <GenericTextField
+            id="email"
             label="Email"
             {...formik.getFieldProps("email")}
             error={formik.touched.email && Boolean(formik.errors.email)}
@@ -60,8 +70,8 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
               (formik.touched.email && formik.errors.email) || undefined
             }
           />
-
           <TextField
+            id="paymentMethod"
             select
             fullWidth
             label="Payment Method"
@@ -80,10 +90,10 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
               </MenuItem>
             ))}
           </TextField>
-
           {formik.values.paymentMethod === "Credit Card" && (
             <>
               <GenericTextField
+                id="cardNumber"
                 label="Card Number"
                 {...formik.getFieldProps("cardNumber")}
                 error={
@@ -94,8 +104,8 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
                   undefined
                 }
               />
-
               <GenericTextField
+                id="cardExpiry"
                 label="Expiry Date (MM/YY)"
                 {...formik.getFieldProps("cardExpiry")}
                 error={
@@ -106,8 +116,8 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
                   undefined
                 }
               />
-
               <GenericTextField
+                id="cardCvv"
                 label="CVV"
                 {...formik.getFieldProps("cardCvv")}
                 error={formik.touched.cardCvv && Boolean(formik.errors.cardCvv)}
@@ -118,7 +128,9 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
             </>
           )}
 
+          {/* Special Requests */}
           <GenericTextField
+            id="specialRequests"
             label="Special Requests or Remarks"
             {...formik.getFieldProps("specialRequests")}
             multiline

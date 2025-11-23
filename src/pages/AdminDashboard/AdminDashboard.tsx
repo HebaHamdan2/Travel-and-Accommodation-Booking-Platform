@@ -12,7 +12,6 @@ import {
   Toolbar,
   Typography,
   Button,
-  useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -35,14 +34,10 @@ export default function AdminDashboard() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { mode, toggleMode } = useThemeContext();
-  const theme = useTheme();
   const Links = useAdminNavigation();
   const currentPath = location.pathname.replace("/admin/", "");
   const match = Links.find((item) => item.path === currentPath);
-  const pageTitle =
-    currentPath === "" || currentPath === "/"
-      ? "Dashboard"
-      : match?.title || "Admin";
+  const pageTitle = match?.title || "Admin";
 
   const handleDrawerToggle = () => {
     if (!isClosing) setMobileOpen(!mobileOpen);
@@ -72,7 +67,13 @@ export default function AdminDashboard() {
       }}
     >
       <Toolbar sx={{ justifyContent: "center", mt: 1 }}>
-        <img src={LOGO_URL} alt="Logo" style={{ width: 80 }} />
+        <Box
+          component="img"
+          src={LOGO_URL}
+          alt="App Logo"
+          sx={{ width: { xs: 80, md: 120 }, cursor: "pointer" }}
+          onClick={() => navigate("/admin")}
+        />
       </Toolbar>
       <List sx={{ flexGrow: 1, p: 1, mt: "10%" }}>
         {Links.map(({ title, path }) => (
@@ -85,14 +86,14 @@ export default function AdminDashboard() {
                 mx: 1,
                 mb: 0.5,
                 "&.active": {
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.primary.contrastText,
+                  backgroundColor:"primary.main",
+                  color: "text.primary",
                 },
               }}
             >
               <ListItemText
                 primary={title}
-                primaryTypographyProps={{ fontSize: 15, fontWeight: 500 }}
+                primaryTypographyProps={{ fontSize: "1rem", fontWeight: 500 }}
               />
             </ListItemButton>
           </ListItem>
@@ -114,7 +115,7 @@ export default function AdminDashboard() {
   );
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" } }}>
       <AppBar
         position="fixed"
         sx={{
@@ -174,7 +175,6 @@ export default function AdminDashboard() {
         >
           {drawer}
         </Drawer>
-
         <Drawer
           variant="permanent"
           sx={{

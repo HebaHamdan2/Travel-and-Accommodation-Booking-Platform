@@ -1,27 +1,5 @@
-import { useState, useMemo } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Paper,
-  IconButton,
-  MenuItem,
-  Stack,
-  Tooltip,
-  CircularProgress,
-  Rating,
-  Chip,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import SearchIcon from "@mui/icons-material/Search";
+import React, { useState, useMemo } from "react";
+import { Box } from "@mui/material";
 import { useDebounce } from "../../../../hooks/useDebouns";
 import { useGetHotelsQuery } from "../../../../services/admin/hotels";
 import { useGetHotelDetailsQuery } from "../../../../services/user/hotels";
@@ -30,12 +8,14 @@ import { AdminHotel } from "../../../../types";
 import AddHotelDialog from "./components/AddHotelDialog";
 import UpdateHotelDialog from "./components/UpdateHotelDialog";
 import DeleteHotelDialog from "./components/DeleteHotelDialog/DeleteHotelDialog";
-import { HOTEL_TYPE_LABELS } from "../../../../utils/constans";
 import { useAddHotel } from "./hooks/useAddHotel";
 import { useDeleteHotel } from "./hooks/useDeleteHotel";
 import { useUpdateHotel } from "./hooks/useUpdateHotel";
-
-export default function ManageHotels() {
+import { mockHotelsData } from "@/mock/adminHotels.mock";
+import AdminTablePagination from "../AdminTable/AdminTablePagination";
+import { AdminTableHeader } from "../AdminTable/AdminTableHeader";
+import AdminTableBody from "../AdminTable/AdminTableBody";
+const ManageHotels: React.FC = () => {
   const [search, setSearch] = useState("");
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
@@ -46,18 +26,19 @@ export default function ManageHotels() {
   const debouncedSearch = useDebounce(search, 400);
   const { handleDeleteHotel } = useDeleteHotel();
   const { handleUpdateHotel } = useUpdateHotel();
-
-  const { data: hotelsData = [], isLoading: hotelsLoading } = useGetHotelsQuery(
-    {
-      searchQuery: "",
-      pageSize: 1000,
-      pageNumber: 1,
-    }
-  );
-
+  const {
+    data: hotelsData,
+    isLoading: hotelsLoading,
+    isError: errorHotels,
+  } = useGetHotelsQuery({
+    searchQuery: "",
+    pageSize: 100,
+    pageNumber: 1,
+  });
+  const safeHotels = errorHotels ? mockHotelsData : hotelsData ?? [];
   const { data: citiesData = [] } = useGetCitiesQuery({
     searchQuery: "",
-    pageSize: 1000,
+    pageSize: 100,
     pageNumber: 1,
   });
 
@@ -66,14 +47,14 @@ export default function ManageHotels() {
   });
 
   const filteredHotels = useMemo(() => {
-    if (!debouncedSearch) return hotelsData;
+    if (!debouncedSearch) return safeHotels;
     const q = debouncedSearch.toLowerCase();
-    return hotelsData.filter(
+    return safeHotels.filter(
       (h) =>
         h.name.toLowerCase().includes(q) ||
         h.description?.toLowerCase().includes(q)
     );
-  }, [hotelsData, debouncedSearch]);
+  }, [safeHotels, debouncedSearch]);
 
   const paginatedHotels = useMemo(() => {
     const start = (pageNumber - 1) * pageSize;
@@ -82,195 +63,78 @@ export default function ManageHotels() {
 
   const hasPrev = pageNumber > 1;
   const hasNext = filteredHotels.length > pageNumber * pageSize;
+  const handelAddHotelSubmit = async (
+    hotel: Omit<AdminHotel, "id">,
+    cityId: number | "",
+    resetForm?: () => void
+  ): Promise<boolean> => {
+    const result = await handleAddHotel(cityId, hotel, resetForm);
+    const success = result ?? false;
+    return success;
+  };
+  const handelUpdateHotelSubmit = async (
+    hotelId: number,
+    hotels: Omit<AdminHotel, "id">
+  ) => {
+    const success = await handleUpdateHotel(hotelId, hotels);
+    return success;
+  };
+  const handelDeleteSubmit = async () => {
+    if (deleteHotelId !== null && hotelDetails) {
+      const success = await handleDeleteHotel(
+        hotelDetails?.cityId,
+        deleteHotelId
+      );
+      if (success) {
+        setDeleteHotelId(null);
+      }
+    }
+  };
+
   return (
     <Box sx={{ p: { xs: 2, sm: 3 }, maxWidth: "80rem", mx: "auto" }}>
-      <Paper
-        sx={{
-          p: 3,
-          mb: 3,
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          gap: 2,
-          alignItems: "center",
-          justifyContent: "space-between",
-          boxShadow: "none",
+      <AdminTableHeader
+        search={search}
+        onSearch={(value) => {
+          setSearch(value);
+          setPageNumber(1);
         }}
-      >
-        <TextField
-          sx={{ flex: 1, minWidth: { xs: "100%", md: "50%" } }}
-          label="Search hotels by name or description"
-          variant="outlined"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPageNumber(1);
-          }}
-          InputProps={{ endAdornment: <SearchIcon color="action" /> }}
-        />
-        <TextField
-          select
-          label="Limit"
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-            setPageNumber(1);
-          }}
-          sx={{ width: { xs: "100%", sm: "8rem" } }}
-        >
-          {[5, 10, 15, 20].map((size) => (
-            <MenuItem key={size} value={size}>
-              {size}
-            </MenuItem>
-          ))}
-        </TextField>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{
-            textTransform: "none",
-            borderRadius: 2,
-            py: "0.9rem",
-            px: 3,
-            fontWeight: 600,
-            bgcolor: "primary.main",
-          }}
-          onClick={() => setAddOpen(true)}
-        >
-          Add Hotel
-        </Button>
-      </Paper>
+        pageSize={pageSize}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setPageNumber(1);
+        }}
+        title="Hotel"
+        onAddClick={() => setAddOpen(true)}
+      />
       <Box sx={{ overflowX: "auto" }}>
-        <TableContainer
-          component={Paper}
-          sx={{ borderRadius: 2, boxShadow: "0px 2px 8px rgba(0,0,0,0.05)" }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "primary.main" }}>
-                <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Rating</TableCell>
-                <TableCell>Latitude</TableCell>
-                <TableCell>Longitude</TableCell>
-                <TableCell align="center">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {hotelsLoading ? (
-                <TableRow>
-                  <TableCell colSpan={8} align="center">
-                    <CircularProgress size={24} />
-                  </TableCell>
-                </TableRow>
-              ) : paginatedHotels.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={8} align="center">
-                    No hotels found.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                paginatedHotels.map((hotel) => (
-                  <TableRow
-                    key={hotel.id}
-                    hover
-                    onClick={() => setUpdateHotel(hotel)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell>{hotel.id}</TableCell>
-                    <TableCell>{hotel.name}</TableCell>
-                    <TableCell>{hotel.description}</TableCell>
-                    <TableCell>{HOTEL_TYPE_LABELS[hotel.hotelType]}</TableCell>
-                    <TableCell>
-                      <Rating
-                        value={hotel.starRating}
-                        sx={{ color: "star" }}
-                        readOnly
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={hotel.latitude}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                      />
-                    </TableCell>
-                    {/* Longitude */}
-                    <TableCell>
-                      <Chip
-                        label={hotel.longitude}
-                        size="small"
-                        color="secondary"
-                        variant="outlined"
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Tooltip title="Delete Hotel">
-                        <IconButton
-                          color="error"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setDeleteHotelId(hotel.id);
-                          }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+          <AdminTableBody
+            variant="hotel"
+            data={paginatedHotels}
+            loading={hotelsLoading}
+            onRowClick={(hotel) => setUpdateHotel(hotel)}
+            onDelete={(hotel) => setDeleteHotelId(hotel.id)}
+          />
       </Box>
-
-      <Stack
-        direction="row"
-        spacing={2}
-        justifyContent="center"
-        alignItems="center"
-        sx={{ mt: 3 }}
-      >
-        <Button
-          variant="contained"
-          onClick={() => hasPrev && setPageNumber(pageNumber - 1)}
-          sx={{ textTransform: "none", backgroundColor: "secondary.main" }}
-          disabled={!hasPrev}
-        >
-          Prev
-        </Button>
-        <Typography>Page {pageNumber}</Typography>
-        <Button
-          variant="contained"
-          onClick={() => hasNext && setPageNumber(pageNumber + 1)}
-          sx={{ textTransform: "none", backgroundColor: "secondary.main" }}
-          disabled={!hasNext}
-        >
-          Next
-        </Button>
-      </Stack>
+      <AdminTablePagination
+        page={pageNumber}
+        hasNext={hasNext}
+        hasPrev={hasPrev}
+        onNext={() => setPageNumber(pageNumber + 1)}
+        onPrev={() => setPageNumber(pageNumber - 1)}
+      />
       {/* Add / Update / Delete Dialogs */}
       <AddHotelDialog
         open={addOpen}
         onClose={() => setAddOpen(false)}
         cities={citiesData}
-        onSubmit={async (hotel, cityId, resetForm) => {
-          const result = await handleAddHotel(cityId, hotel, resetForm);
-          const success = result ?? false;
-          return success;
-        }}
+        onSubmit={handelAddHotelSubmit}
       />
       <UpdateHotelDialog
         open={!!updateHotel}
         onClose={() => setUpdateHotel(null)}
         hotel={updateHotel}
-        onSubmit={async (hotelId: number, hotels: Omit<AdminHotel, "id">) => {
-          const success = await handleUpdateHotel(hotelId, hotels);
-          return success;
-        }}
+        onSubmit={handelUpdateHotelSubmit}
       />
       {deleteHotelId !== null && hotelDetails && (
         <DeleteHotelDialog
@@ -278,17 +142,10 @@ export default function ManageHotels() {
           onClose={() => setDeleteHotelId(null)}
           hotelId={deleteHotelId}
           cityId={hotelDetails.cityId}
-          onConfirm={async () => {
-            const success = await handleDeleteHotel(
-              hotelDetails.cityId,
-              deleteHotelId
-            );
-            if (success) {
-              setDeleteHotelId(null);
-            }
-          }}
+          onConfirm={handelDeleteSubmit}
         />
       )}
     </Box>
   );
-}
+};
+export default ManageHotels;

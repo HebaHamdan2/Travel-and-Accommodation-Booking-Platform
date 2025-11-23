@@ -1,6 +1,8 @@
 import { TextField, InputAdornment } from "@mui/material";
 import { GenericTextFieldProps } from "./types";
-function GenericTextField({
+import React from "react";
+const GenericTextField: React.FC<GenericTextFieldProps> = ({
+  id,
   name,
   label,
   type = "text",
@@ -13,9 +15,10 @@ function GenericTextField({
   multiline,
   minRows,
   inputProps,
-}: GenericTextFieldProps) {
+}) => {
   return (
     <TextField
+      id={id || name}
       fullWidth
       name={name}
       label={label}
@@ -37,6 +40,6 @@ function GenericTextField({
       }}
     />
   );
-}
+};
 
 export default GenericTextField;

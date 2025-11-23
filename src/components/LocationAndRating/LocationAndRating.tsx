@@ -1,11 +1,7 @@
 import { Rating, Stack, Typography } from "@mui/material";
-import React from "react";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 
-const LocationAndRating = (
-  cityName: string,
-  rating?: number
-): React.ReactNode => {
+const LocationAndRating = (cityName: string, rating?: number) => {
   return (
     <Stack
       direction="row"
@@ -14,7 +10,7 @@ const LocationAndRating = (
       alignItems="center"
     >
       <Stack direction="row" spacing={0.5} alignItems="center">
-        <PlaceOutlinedIcon  sx={{ fontSize: "1rem", color: "text.secondary" }} />
+        <PlaceOutlinedIcon sx={{ fontSize: "1rem", color: "text.secondary" }} />
         <Typography
           variant="body2"
           color="text.secondary"
@@ -24,7 +20,13 @@ const LocationAndRating = (
         </Typography>
       </Stack>
       {rating && (
-        <Rating name="rating" value={rating} precision={0.5} readOnly sx={{color:"star"}} />
+        <Rating
+          name="rating"
+          value={rating}
+          precision={0.5}
+          readOnly
+          sx={{ color: "star" }}
+        />
       )}
     </Stack>
   );

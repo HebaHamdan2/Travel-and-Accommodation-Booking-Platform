@@ -2,6 +2,7 @@ import React from "react";
 
 export interface GenericTextFieldProps {
   name: string;
+  id?:string,
   label: string;
   type?: string;
   value: any;

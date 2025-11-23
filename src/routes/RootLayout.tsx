@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer/Footer";
 import { useAppSelector } from "@/app/hooks";
 import OfflinePage from "@/errors/OfflinePage";
+import { Box } from "@mui/material";
 
 const RootLayout = () => {
   const { userType } = useAppSelector((state) => state.auth);
@@ -25,10 +26,18 @@ const RootLayout = () => {
   if (!online) return <OfflinePage />;
 
   return (
-    <>
-      <Outlet />
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
+      <Box sx={{ flex: 1 }}>
+        <Outlet />
+      </Box>
       {userType === "User" && <Footer />}
-    </>
+    </Box>
   );
 };
 

@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
         bgcolor: "primary.main",
         color: "text.primary",
         px: { xs: 2, sm: 6, md: 12 },
-        mt:4
+        mt:4,
       }}
     >
       <Box

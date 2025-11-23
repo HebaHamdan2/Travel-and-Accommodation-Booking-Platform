@@ -26,9 +26,8 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
     starRating: 3,
     latitude: 0,
     longitude: 0,
-    cityId: 0,
+    cityId: "",
   };
-
   const handleSubmit = async (
     values: typeof initialValues,
     helpers: FormikHelpers<typeof initialValues>
@@ -133,7 +132,7 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
             label="Latitude"
             type="number"
             inputProps={{ step: 0.000001, min: -90, max: 90 }}
-            value={formik.values.description}
+            value={formik.values.latitude}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.latitude && !!formik.errors.latitude}
@@ -154,7 +153,6 @@ const AddHotelDialog: React.FC<AddHotelDialogProps> = ({
               (formik.touched.longitude && formik.errors.longitude) || undefined
             }
           />
-
           <FormControl
             fullWidth
             variant="standard"

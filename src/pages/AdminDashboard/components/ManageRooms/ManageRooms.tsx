@@ -1,57 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableContainer,
-  Paper,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   Stack,
-  IconButton,
+  SelectChangeEvent,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import { SelectChangeEvent } from "@mui/material";
 import { skipToken } from "@reduxjs/toolkit/query/react";
-
 import {
   useGetHotelsQuery,
   useGetHotelRoomsQuery,
 } from "../../../../services/admin/hotels";
 import { AvailbleRoom, AdminHotel, RoomBodyRequest } from "../../../../types";
-
 import AddRoomDialog from "./components/AddRoomDialog";
 import UpdateRoomDialog from "./components/UpdateRoomDialog";
 import DeleteRoomDialog from "./components/DeleteRoomDialog";
 import { useAddRoom } from "./hooks/useAddRoom";
 import { useUpdateRoom } from "./hooks/useUpdateRoom";
 import { useDeleteRoom } from "./hooks/useDeleteRoom";
+import { mockHotelsData } from "@/mock/adminHotels.mock";
+import AdminTableBody from "../AdminTable/AdminTableBody";
 
 const ManageRooms: React.FC = () => {
-  const { data: hotels = [] } = useGetHotelsQuery({});
-  const [selectedHotelId, setSelectedHotelId] = useState<number | "">("");
-  const { data: rooms = [] } = useGetHotelRoomsQuery(
-    selectedHotelId ? { hotelId: selectedHotelId } : skipToken,
-    { skip: !selectedHotelId }
+  const { data: hotels, isError: errorHotels } = useGetHotelsQuery({});
+  const safeHotels = errorHotels ? mockHotelsData : hotels ?? [];
+  const defaultHotelId = safeHotels.length > 0 ? safeHotels[0].id.toString() : "";
+  const [selectedHotelId, setSelectedHotelId] = useState<string>(defaultHotelId);
+
+  const skipQuery = !selectedHotelId;
+  const { data: rooms = [], isLoading } = useGetHotelRoomsQuery(
+    skipQuery ? skipToken : { hotelId: Number(selectedHotelId) }
   );
 
   const [selectedRoom, setSelectedRoom] = useState<AvailbleRoom | null>(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+
   const { handleAddRoom } = useAddRoom();
   const { handleUpdateRoom } = useUpdateRoom();
   const { handleDeleteRoom } = useDeleteRoom();
 
-  const handleHotelChange = (event: SelectChangeEvent<number>) => {
-    setSelectedHotelId(Number(event.target.value));
+  const handleHotelChange = (event: SelectChangeEvent<string>) => {
+    setSelectedHotelId(event.target.value);
     setSelectedRoom(null);
   };
 
@@ -64,30 +59,33 @@ const ManageRooms: React.FC = () => {
     setSelectedRoom(room);
     setOpenDelete(true);
   };
+
   const handleConfirmDelete = async (hotelId: number, roomId: number) => {
     const success = await handleDeleteRoom(hotelId, roomId);
     return success;
   };
 
-  useEffect(() => {
-    if (hotels.length && selectedHotelId === "") {
-      setSelectedHotelId(hotels[0].id);
-    }
-  }, [hotels, selectedHotelId]);
+  const handleAddRoomSubmit = async (room: RoomBodyRequest): Promise<boolean> => {
+    const success = await handleAddRoom(Number(selectedHotelId), room);
+    return success;
+  };
+
+  const handleUpdateRoomSubmit = async (room: RoomBodyRequest): Promise<boolean> => {
+    const success = await handleUpdateRoom(Number(selectedRoom?.roomId), room);
+    return success;
+  };
 
   return (
-    <Box p={2}>
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        alignItems="center"
-        mb={3}
-      >
-        <FormControl sx={{ flex: 1 }}>
+    <Box sx={{ p: { xs: 2, sm: 3 }, maxWidth: "80rem", mx: "auto" }}>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center" mb={3}>
+        <FormControl sx={{ flex: 1 }} fullWidth>
           <InputLabel>Select Hotel</InputLabel>
-          <Select value={selectedHotelId} onChange={handleHotelChange}>
-            {hotels.map((h: AdminHotel) => (
-              <MenuItem key={h.id} value={h.id}>
+          <Select
+            value={safeHotels.some(h => h.id.toString() === selectedHotelId) ? selectedHotelId : ""}
+            onChange={handleHotelChange}
+          >
+            {safeHotels.map((h: AdminHotel) => (
+              <MenuItem key={h.id} value={h.id.toString()}>
                 {h.name}
               </MenuItem>
             ))}
@@ -110,72 +108,23 @@ const ManageRooms: React.FC = () => {
           Add Room
         </Button>
       </Stack>
+
       <Box sx={{ overflowX: "auto" }}>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Room ID</TableCell>
-                <TableCell>Room Number</TableCell>
-                <TableCell>Room Type</TableCell>
-                <TableCell>Adults Capacity</TableCell>
-                <TableCell>Children Capacity</TableCell>
-                <TableCell>Amenities</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Availability</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rooms.map((room) => (
-                <TableRow
-                  key={room.roomId}
-                  hover
-                  selected={selectedRoom?.roomId === room.roomId}
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => handleRowClick(room)}
-                >
-                  <TableCell>{room.roomId}</TableCell>
-                  <TableCell>{room.roomNumber}</TableCell>
-                  <TableCell>{room.roomType}</TableCell>
-                  <TableCell>{room.capacityOfAdults}</TableCell>
-                  <TableCell>{room.capacityOfChildren}</TableCell>
-                  <TableCell>
-                    {room.roomAmenities.map((a) => a.name).join(", ")}
-                  </TableCell>
-                  <TableCell>{room.price}</TableCell>
-                  <TableCell>
-                    {room.availability ? "Available" : "Not Available"}
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="error"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteClick(room);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <AdminTableBody
+          variant="room"
+          data={rooms}
+          loading={isLoading}
+          onRowClick={handleRowClick}
+          onDelete={handleDeleteClick}
+        />
       </Box>
 
       {/* Add Room Dialog */}
       {selectedHotelId && (
-        <AddRoomDialog
-          open={openAdd}
-          onClose={() => setOpenAdd(false)}
-          onSubmit={async (room: RoomBodyRequest) => {
-            const success = await handleAddRoom(selectedHotelId, room);
-            return success;
-          }}
-        />
+        <AddRoomDialog open={openAdd} onClose={() => setOpenAdd(false)} onSubmit={handleAddRoomSubmit} />
       )}
+
+      {/* Update Room Dialog */}
       {selectedRoom && (
         <UpdateRoomDialog
           open={openUpdate}
@@ -184,10 +133,7 @@ const ManageRooms: React.FC = () => {
             roomNumber: String(selectedRoom.roomNumber),
             cost: selectedRoom.price,
           }}
-          onSubmit={async (room: RoomBodyRequest) => {
-            const success = await handleUpdateRoom(selectedRoom.roomId, room);
-            return success;
-          }}
+          onSubmit={handleUpdateRoomSubmit}
         />
       )}
 
@@ -196,7 +142,7 @@ const ManageRooms: React.FC = () => {
         <DeleteRoomDialog
           open={openDelete}
           onClose={() => setOpenDelete(false)}
-          hotelId={selectedHotelId}
+          hotelId={Number(selectedHotelId)}
           roomId={selectedRoom.roomId}
           onConfirm={handleConfirmDelete}
         />

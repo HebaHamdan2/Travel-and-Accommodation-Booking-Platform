@@ -4,6 +4,7 @@ import {
   UserDetailsFormHandle,
   UserDetailsFormValues,
 } from "@/pages/Checkout/types";
+import { AppProviders } from "@/providers/AppProviders";
 
 interface FormTestWrapperProps {
   onValidSubmit: (values: UserDetailsFormValues) => void;
@@ -18,14 +19,16 @@ const FormTestWrapper = ({
 
   return (
     <>
-      <UserDetailsForm
-        ref={formRef}
-        onValidSubmit={onValidSubmit}
-        initialValues={initialValues}
-      />
-      <button onClick={() => formRef.current?.submitForm()}>
-        TriggerSubmit
-      </button>
+      <AppProviders>
+        <UserDetailsForm
+          ref={formRef}
+          onValidSubmit={onValidSubmit}
+          initialValues={initialValues}
+        />
+        <button onClick={() => formRef.current?.submitForm()}>
+          TriggerSubmit
+        </button>
+      </AppProviders>
     </>
   );
 };

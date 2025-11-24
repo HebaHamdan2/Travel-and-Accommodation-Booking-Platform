@@ -3,19 +3,14 @@ import Wrapper from "../../../../components/Wrapper/index.ts";
 import { getDecodedToken } from "../../../../utils/getDecodedToken.ts";
 import { useAppSelector } from "../../../../app/hooks.ts";
 import InofCard from "../../../../components/InfoCard/index.ts";
-import HotelCardsSkeleton from "../../skeletons/FeaturedDealsSkeleton/HotelCardsSkeleton.tsx";
 import { useGetRecentlyVisitedQuery } from "../../../../services/user/home.ts";
 
 const RecentlyVisited = () => {
   const { authentication } = useAppSelector((state) => state.auth);
   const userId = getDecodedToken(authentication || "")?.user_id ?? null;
-  const { data: recentVisited, isLoading } = useGetRecentlyVisitedQuery(
-    userId as string,
-    {
-      skip: !userId, // prevents the API call until a valid userId exists
-    }
-  );
-  if (isLoading) return <HotelCardsSkeleton />;
+  const { data: recentVisited } = useGetRecentlyVisitedQuery(userId as string, {
+    skip: !userId, // prevents the API call until a valid userId exists
+  });
   return (
     <Wrapper id="recent">
       <Box

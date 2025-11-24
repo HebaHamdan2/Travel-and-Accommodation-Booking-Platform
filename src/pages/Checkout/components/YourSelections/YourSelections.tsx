@@ -1,14 +1,10 @@
 import { Typography, Stack, Grid } from "@mui/material";
 import InfoCard from "../../../../components/InfoCard";
 import React from "react";
-import { CartItem } from "../../../../features/types";
-import { selectTotalCost } from "../../../../features/cart/selectTotalCost";
 import { useAppSelector } from "../../../../app/hooks";
-export interface SelectionsProps {
-  cartItem: CartItem;
-}
+import { SelectionsProps } from "../../types";
 const YourSelections: React.FC<SelectionsProps> = ({ cartItem }) => {
-  const totalCost = useAppSelector(selectTotalCost);
+  const totalCost = useAppSelector((state) => state.cart.totalPrice);
   return (
     <Stack spacing={3}>
       <Stack key={cartItem.hotelName} spacing={2}>

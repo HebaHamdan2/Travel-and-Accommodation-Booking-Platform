@@ -10,7 +10,7 @@ const ProtectedLayout: React.FC<LayoutProps> = ({ allowedRoles }) => {
   if (!authentication) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
-  if (!allowedRoles.includes(userType)) {
+  if (allowedRoles.length && !allowedRoles.includes(userType)) {
     return <Navigate to={ROUTES.UNAUTHORIZED} replace />;
   }
   return <Outlet />;

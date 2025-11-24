@@ -3,11 +3,15 @@ import { ReactNode } from "react";
 export type UserRole = "User" | "Admin" | null;
 
 export interface NavbarProps {
- isHome?: boolean;
+  isHome?: boolean;
 }
 export interface LayoutProps {
   allowedRoles: UserRole[];
 }
+export interface GlobalErrorsProps {
+  children: React.ReactNode;
+}
+
 export interface WrapperProps {
   children: ReactNode;
   id?: string;
@@ -81,6 +85,27 @@ export interface Review {
   customerName: string;
   rating: number;
   description: string;
+}
+export interface BookingRequest {
+  roomNumber: string;
+  customerName: string;
+  hotelName: string;
+  roomType: string;
+  totalCost: number;
+  paymentMethod: string;
+  bookingDateTime: string;
+  id?: string;
+}
+export interface BookingResponse {
+  customerName: string;
+  hotelName: string;
+  roomNumber: string;
+  roomType: string;
+  bookingDateTime: string;
+  totalCost: number;
+  paymentMethod: string;
+  bookingStatus: string;
+  confirmationNumber: string;
 }
 export interface City {
   id: number;

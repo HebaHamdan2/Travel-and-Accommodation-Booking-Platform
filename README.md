@@ -36,6 +36,8 @@ The entire application is fully responsive, supports dark/light themes, and is d
 - **react-to-print**: A tool that allows exporting React components as printable PDFs, used for: Generating the user’s PDF booking bill directly from the UI.
 - **Day.js**: A lightweight date-handling library, used for: Formatting and manipulating dates in booking details.
 - **jwt-decode**: A small utility for decoding JWT tokens, used for: Extracting the user ID for “recently visited hotels” and checking token expiration inside a custom Redux Toolkit middleware using data stored in localStorage.
+-**react-error-boundary**: A library for handling errors in React functional components, used for: creating global or component-level error boundaries, showing fallback UI, and preventing the entire app from crashing when a component fails.
+
 # Developer Tools
 - **TypeScript**: Improving code reliability, reducing runtime bugs, and making components, reducers, and forms type-safe.
 - **Storybook + Chromatic**: Documenting reusable components, reviewing UI behavior in isolation, and catching UI changes with Chromatic snapshots.

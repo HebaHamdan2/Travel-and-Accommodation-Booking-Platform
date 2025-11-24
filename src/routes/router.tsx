@@ -8,7 +8,6 @@ import Home from "@/pages/Home";
 import SearchResults from "@/pages/SearchResults";
 import Hotel from "@/pages/Hotel";
 import Checkout from "@/pages/Checkout";
-import AdminAuthLayout from "./AdminAuthLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
 import ManageCities from "@/pages/AdminDashboard/components/ManageCities";
 import ManageHotels from "@/pages/AdminDashboard/components/ManageHotels";
@@ -49,7 +48,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        element: <AdminAuthLayout allowedRoles={["Admin"]} />,
+        element: <ProtectedLayout allowedRoles={["Admin"]} />,
         children: [
           {
             path: ROUTES.ADMIN.ROOT,
@@ -77,7 +76,6 @@ export const router = createBrowserRouter([
         ],
       },
       { path: ROUTES.UNAUTHORIZED, element: <UnauthorizedPage /> },
-
       { path: "*", element: <ErrorPage status={404} message="Not Found" /> },
     ],
   },

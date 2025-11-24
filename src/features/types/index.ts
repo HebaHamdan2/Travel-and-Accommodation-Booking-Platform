@@ -28,7 +28,6 @@ export interface FiltersState {
   amenities: string[];
   roomTypes: string[];
 }
-
 export type CartRoomItem = Pick<
   AvailbleRoom,
   "roomId" | "roomNumber" | "roomType" | "roomPhotoUrl" | "price"
@@ -40,36 +39,12 @@ export interface CartItem {
   rooms: CartRoomItem[];
   totalPrice: number;
 }
-
 export interface BookingState {
   userDetails: UserDetailsFormValues;
   cartItem: CartItem;
   status: "idle" | "loading" | "success" | "error";
   error?: string;
   confirmationNumber?: string;
-}
-
-export interface BookingRequest {
-  roomNumber: string;
-  customerName: string;
-  hotelName: string;
-  roomType: string;
-  totalCost: number;
-  paymentMethod: string;
-  bookingDateTime: string;
-  id?: string;
-}
-
-export interface BookingResponse {
-  customerName: string;
-  hotelName: string;
-  roomNumber: string;
-  roomType: string;
-  bookingDateTime: string;
-  totalCost: number;
-  paymentMethod: string;
-  bookingStatus: string;
-  confirmationNumber: string;
 }
 export type NotificationType = "error" | "success" | "warning" | "info";
 

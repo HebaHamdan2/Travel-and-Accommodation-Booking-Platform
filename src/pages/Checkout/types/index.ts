@@ -1,5 +1,7 @@
-import { BookingResponse } from "../../../features/types";
-
+import { BookingResponse, CartItem } from "../../../features/types";
+export interface SelectionsProps {
+  cartItem: CartItem;
+}
 export interface UserDetailsFormValues {
   fullName: string;
   email: string;

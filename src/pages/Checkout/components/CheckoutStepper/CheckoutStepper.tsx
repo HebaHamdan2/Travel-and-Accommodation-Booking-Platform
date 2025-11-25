@@ -16,10 +16,10 @@ import { UserDetailsFormValues } from "../../types";
 import UserDetailsForm from "../UserDetailsForm/UserDetailsForm";
 import BookingConfirmation from "../BookingConfirmation/BookingConfirmation";
 import YourSelections from "../YourSelections";
-import { BookingResponse } from "../../../../features/types";
 import { clearCart } from "../../../../features/cart/cartSlice";
 import { useCreateBookingMutation } from "../../../../services/user/booking";
 import GenericDialog from "@/components/GenericDialog";
+import { BookingResponse } from "@/types";
 
 const CheckoutStepper = () => {
   const [activeStep, setActiveStep] = useState(0);

@@ -1,4 +1,5 @@
-import { BookingResponse, CartItem } from "../../../features/types";
+import { BookingResponse } from "@/types";
+import {  CartItem } from "../../../features/types";
 export interface SelectionsProps {
   cartItem: CartItem;
 }

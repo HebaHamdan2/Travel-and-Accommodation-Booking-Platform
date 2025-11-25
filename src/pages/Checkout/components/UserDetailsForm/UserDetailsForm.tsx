@@ -19,9 +19,13 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
       token?.given_name && token?.family_name
         ? `${token.given_name} ${token.family_name}`
         : "";
-    initialValues = { ...INITIAL_USER_DETAILS, fullName };
+    const mergedValues = {
+      ...INITIAL_USER_DETAILS,
+      ...initialValues,
+      fullName,
+    };
     const formik = useFormik<UserDetailsFormValues>({
-      initialValues,
+      initialValues: mergedValues,
       enableReinitialize: true,
       validationSchema: UserDetailsValidationSchema,
       onSubmit: (values) => {
@@ -51,7 +55,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
             Your Details
           </Typography>
           <GenericTextField
-            id="fullName" 
+            id="fullName"
             label="Full Name"
             {...formik.getFieldProps("fullName")}
             error={formik.touched.fullName && Boolean(formik.errors.fullName)}

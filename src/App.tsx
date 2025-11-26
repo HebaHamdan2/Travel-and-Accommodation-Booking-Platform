@@ -1,12 +1,12 @@
 import "./App.css";
 import { RouterProvider } from "react-router-dom";
 import GlobalNotification from "./components/GlobalNotification";
-import { Router } from "./routes/Router";
+import { router } from "./routes/router";
 function App() {
   return (
     <>
       <GlobalNotification />
-      <RouterProvider router={Router} />
+      <RouterProvider router={router} />
     </>
   );
 }

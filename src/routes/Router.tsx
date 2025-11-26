@@ -26,7 +26,7 @@ const ManageRooms = lazy(
   () => import("@/pages/AdminDashboard/components/ManageRooms")
 );
 
-export const Router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
     element: (

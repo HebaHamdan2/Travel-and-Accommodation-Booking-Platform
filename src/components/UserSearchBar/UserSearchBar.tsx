@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   TextField,
@@ -30,11 +30,18 @@ import { useLazyGetSearchQuery } from "../../services/user/home";
 import { ensureValidCheckOut, formatDate } from "../../utils/dateUtils";
 import { SearchParams } from "../../types";
 import { showNotification } from "@/features/notifications/notificationsSlice";
+import { getInitialSearchFromURL } from "./utils";
 
 const UserSearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const initialFromURL = getInitialSearchFromURL();
+    dispatch(setSearchData(initialFromURL));
+  }, [dispatch]);
+
   const [triggerSearch, { isLoading }] = useLazyGetSearchQuery();
   const {
     city = "",
@@ -67,7 +74,6 @@ const UserSearchBar: React.FC = () => {
       { replace: true }
     ); // updates without refresh the page to make link sync with searchbar results and link can be shared
   };
-
   const handleCheckInChange = (date: Dayjs | null) => {
     if (!date) return;
     const newCheckIn = formatDate(date);
@@ -163,7 +169,7 @@ const UserSearchBar: React.FC = () => {
           />
           <CustomDatePicker
             label="Check out"
-            value={checkOutDate ? dayjs(checkOutDate) : null}
+            value={checkOutDate ? dayjs(checkOutDate) : dayjs().add(1, "day")}
             onChange={handleCheckOutChange}
             minDate={checkInDate ? dayjs(checkInDate).add(1, "day") : undefined}
           />
@@ -224,7 +230,6 @@ const UserSearchBar: React.FC = () => {
             </Select>
           </FormControl>
         </Box>
-
         {/* Search Button */}
         <Button
           variant="contained"

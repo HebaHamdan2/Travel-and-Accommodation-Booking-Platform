@@ -1,82 +1,171 @@
-import AdminRoot from "@/pages/AdminDashboard/components/AdminRoot";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import RootLayout from "./RootLayout";
+import { Suspense, lazy } from "react";
 import { ROUTES } from "@/utils/constans";
-import Login from "@/pages/Login";
-import ProtectedLayout from "./ProtectedLayout";
-import Home from "@/pages/Home";
-import SearchResults from "@/pages/SearchResults";
-import Hotel from "@/pages/Hotel";
-import Checkout from "@/pages/Checkout";
-import AdminDashboard from "@/pages/AdminDashboard";
-import ManageCities from "@/pages/AdminDashboard/components/ManageCities";
-import ManageHotels from "@/pages/AdminDashboard/components/ManageHotels";
-import ManageRooms from "@/pages/AdminDashboard/components/ManageRooms";
-import ErrorPage from "@/errors/ErrorPage";
-import AdminErrorPage from "@/errors/AdminErrorPage";
-import UnauthorizedPage from "@/errors/UnauthorizedPage";
+import LoadingScreen from "@/components/LoadingScreen";
+const RootLayout = lazy(() => import("./RootLayout"));
+const Login = lazy(() => import("@/pages/Login"));
+const Home = lazy(() => import("@/pages/Home"));
+const SearchResults = lazy(() => import("@/pages/SearchResults"));
+const Hotel = lazy(() => import("@/pages/Hotel"));
+const Checkout = lazy(() => import("@/pages/Checkout"));
+const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
+const UnauthorizedPage = lazy(() => import("@/errors/UnauthorizedPage"));
+const ErrorPage = lazy(() => import("@/errors/ErrorPage"));
+const AdminErrorPage = lazy(() => import("@/errors/AdminErrorPage"));
+const ProtectedLayout = lazy(() => import("./ProtectedLayout"));
+const AdminRoot = lazy(
+  () => import("@/pages/AdminDashboard/components/AdminRoot")
+);
+const ManageCities = lazy(
+  () => import("@/pages/AdminDashboard/components/ManageCities")
+);
+const ManageHotels = lazy(
+  () => import("@/pages/AdminDashboard/components/ManageHotels")
+);
+const ManageRooms = lazy(
+  () => import("@/pages/AdminDashboard/components/ManageRooms")
+);
+
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
-    errorElement: <ErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingScreen />}>
+        <RootLayout />
+      </Suspense>
+    ),
+    errorElement: (
+      <Suspense fallback={<LoadingScreen />}>
+        <ErrorPage />
+      </Suspense>
+    ),
     children: [
+      { index: true, element: <Navigate to={ROUTES.HOME} replace /> },
       {
-        index: true,
-        element: <Navigate to={ROUTES.HOME} replace />,
+        path: ROUTES.LOGIN,
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <Login />
+          </Suspense>
+        ),
       },
-      { path: ROUTES.LOGIN, element: <Login /> },
       {
-        element: <ProtectedLayout allowedRoles={["User"]} />,
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <ProtectedLayout allowedRoles={["User"]} />
+          </Suspense>
+        ),
         children: [
           {
             path: ROUTES.HOME,
-            element: <Home />,
+            element: (
+              <Suspense fallback={<LoadingScreen />}>
+                <Home />
+              </Suspense>
+            ),
           },
           {
             path: ROUTES.SEARCH_RESULTS,
-            element: <SearchResults />,
+            element: (
+              <Suspense fallback={<LoadingScreen />}>
+                <SearchResults />
+              </Suspense>
+            ),
           },
           {
             path: "hotels/:hotelId",
-            element: <Hotel />,
+            element: (
+              <Suspense fallback={<LoadingScreen />}>
+                <Hotel />
+              </Suspense>
+            ),
           },
           {
             path: ROUTES.CHECKOUT,
-            element: <Checkout />,
+            element: (
+              <Suspense fallback={<LoadingScreen />}>
+                <Checkout />
+              </Suspense>
+            ),
           },
         ],
       },
       {
-        element: <ProtectedLayout allowedRoles={["Admin"]} />,
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <ProtectedLayout allowedRoles={["Admin"]} />
+          </Suspense>
+        ),
         children: [
           {
             path: ROUTES.ADMIN.ROOT,
-            element: <AdminDashboard />,
+            element: (
+              <Suspense fallback={<LoadingScreen />}>
+                <AdminDashboard />
+              </Suspense>
+            ),
             children: [
               {
                 index: true,
-                element: <AdminRoot />,
+                element: (
+                  <Suspense fallback={<LoadingScreen />}>
+                    <AdminRoot />
+                  </Suspense>
+                ),
               },
               {
                 path: ROUTES.ADMIN.MANAGE_CITIES,
-                element: <ManageCities />,
+                element: (
+                  <Suspense fallback={<LoadingScreen />}>
+                    <ManageCities />
+                  </Suspense>
+                ),
               },
               {
                 path: ROUTES.ADMIN.MANAGE_HOTELS,
-                element: <ManageHotels />,
+                element: (
+                  <Suspense fallback={<LoadingScreen />}>
+                    <ManageHotels />
+                  </Suspense>
+                ),
               },
               {
                 path: ROUTES.ADMIN.MANAGE_ROOMS,
-                element: <ManageRooms />,
+                element: (
+                  <Suspense fallback={<LoadingScreen />}>
+                    <ManageRooms />
+                  </Suspense>
+                ),
               },
-              { path: "*", element: <AdminErrorPage /> },
+              {
+                path: "*",
+                element: (
+                  <Suspense fallback={<LoadingScreen />}>
+                    <AdminErrorPage />
+                  </Suspense>
+                ),
+              },
             ],
           },
         ],
       },
-      { path: ROUTES.UNAUTHORIZED, element: <UnauthorizedPage /> },
-      { path: "*", element: <ErrorPage status={404} message="Not Found" /> },
+
+      {
+        path: ROUTES.UNAUTHORIZED,
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <UnauthorizedPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "*",
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <ErrorPage status={404} message="Not Found" />
+          </Suspense>
+        ),
+      },
     ],
   },
 ]);

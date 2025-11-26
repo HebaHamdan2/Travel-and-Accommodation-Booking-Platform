@@ -1,14 +1,10 @@
-import React, { lazy, Suspense } from "react";
-const HotelsCards = lazy(() => import("../HotelsCards"));
 import Navbar from "../../../../components/Navbar";
-import SearchResultsSkeleton from "../../skeletons/SearchResultsSkeleton";
+import HotelsCards from "../HotelsCards";
 const SearchResultLayout: React.FC = () => {
   return (
     <>
       <Navbar />
-      <Suspense fallback={<SearchResultsSkeleton />}>
-        <HotelsCards />
-      </Suspense>
+      <HotelsCards />
     </>
   );
 };

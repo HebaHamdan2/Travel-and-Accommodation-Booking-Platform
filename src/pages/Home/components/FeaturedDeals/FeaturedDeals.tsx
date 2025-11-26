@@ -2,10 +2,13 @@ import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper/index.ts";
 import { useGetFeaturedDealsQuery } from "../../../../services/user/home.ts";
 import FeaturedDealCard from "@/components/Cards/FeaturedDealCard.tsx";
+import HotelCardsSkeleton from "../../skeletons/FeaturedDealsSkeleton/HotelCardsSkeleton.tsx";
 
 const FeaturedDeals = () => {
-  const { data: deals } = useGetFeaturedDealsQuery();
-
+  const { data: deals, isLoading } = useGetFeaturedDealsQuery();
+  if (isLoading) {
+    <HotelCardsSkeleton />;
+  }
   return (
     <Wrapper id="featured">
       <Box

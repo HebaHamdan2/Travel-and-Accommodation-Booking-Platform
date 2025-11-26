@@ -2,9 +2,13 @@ import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper";
 import { useGetTrendingDestQuery } from "../../../../services/user/home";
 import DestinationCard from "@/components/Cards/DestinationCard ";
+import TrendingDestSkeleton from "../../skeletons/TrendingDestSkeleton";
 
 const TrendingDest = () => {
-  const { data: trends } = useGetTrendingDestQuery();
+  const { data: trends, isLoading } = useGetTrendingDestQuery();
+  if (isLoading) {
+    <TrendingDestSkeleton />;
+  }
   return (
     <Wrapper id="trending">
       <Box

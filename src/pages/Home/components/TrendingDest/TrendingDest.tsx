@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper";
-import InofCard from "../../../../components/InfoCard";
 import { useGetTrendingDestQuery } from "../../../../services/user/home";
+import DestinationCard from "@/components/Cards/DestinationCard ";
 
 const TrendingDest = () => {
   const { data: trends } = useGetTrendingDestQuery();
@@ -35,7 +35,7 @@ const TrendingDest = () => {
           <Grid container spacing={3} justifyContent="center">
             {trends?.slice(0, 4).map((trend) => (
               <Grid key={trend.cityId} size={{ xs: 12, md: 6, lg: 3 }}>
-                <InofCard variant="destination" data={trend} />
+                <DestinationCard data={trend} />
               </Grid>
             ))}
           </Grid>

@@ -1,6 +1,6 @@
 import React from "react";
 import { DeleteRoomProps } from "../../types";
-import GenericDialog from "@/components/GenericDialog";
+import DeleteDialog from "@/components/Dialogs/DeleteDialog";
 const DeleteRoomDialog: React.FC<DeleteRoomProps> = ({
   open,
   onClose,
@@ -15,14 +15,7 @@ const DeleteRoomDialog: React.FC<DeleteRoomProps> = ({
   };
   return (
     <>
-      <GenericDialog
-        open={open}
-        onClose={onClose}
-        variant="delete"
-        title={`Delete Room`}
-        confirmText="Delete"
-        onConfirm={handleConfirm}
-      />
+      <DeleteDialog open={open} onClose={onClose} onConfirm={handleConfirm} />
     </>
   );
 };

@@ -14,7 +14,6 @@ const RootLayout = () => {
     const handleOffline = () => setOnline(false);
 
     setTimeout(() => setOnline(navigator.onLine), 100);
-
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
     return () => {

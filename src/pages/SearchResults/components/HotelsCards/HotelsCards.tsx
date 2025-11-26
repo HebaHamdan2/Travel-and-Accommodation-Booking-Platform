@@ -3,9 +3,9 @@ import { useAppSelector } from "../../../../app/hooks";
 import UserSearchBar from "../../../../components/UserSearchBar";
 import { selectFilteredHotels } from "../../../../features/filters/selectFilteredHotels";
 import FiltersSidebar from "../FiltersSidebar";
-import InfoCard from "../../../../components/InfoCard";
 import HotelCardsSkeleton from "../../skeletons/HotelCardsSkeleton";
 import { useGetSearchQuery } from "../../../../services/user/home";
+import SearchResultCard from "@/components/Cards/SearchResultCard";
 
 const HotelsCards = () => {
   const { city, checkInDate, checkOutDate, adults, children, numberOfRooms } =
@@ -62,7 +62,7 @@ const HotelsCards = () => {
               ) : (
                 filteredHotels?.map((hotel) => (
                   <Grid key={hotel.hotelId} size={{ xs: 12, sm: 10, md: 6 }}>
-                    <InfoCard variant="searchResult" data={hotel} />
+                    <SearchResultCard data={hotel} />
                   </Grid>
                 ))
               )}

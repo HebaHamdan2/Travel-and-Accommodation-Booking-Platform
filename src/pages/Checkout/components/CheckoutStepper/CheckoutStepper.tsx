@@ -18,8 +18,8 @@ import BookingConfirmation from "../BookingConfirmation/BookingConfirmation";
 import YourSelections from "../YourSelections";
 import { clearCart } from "../../../../features/cart/cartSlice";
 import { useCreateBookingMutation } from "../../../../services/user/booking";
-import GenericDialog from "@/components/GenericDialog";
 import { BookingResponse } from "@/types";
+import SuccessDialog from "@/components/Dialogs/SuccessDialog";
 
 const CheckoutStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -196,12 +196,8 @@ const CheckoutStepper = () => {
           )}
         </Box>
       </Paper>
-      <GenericDialog
+      <SuccessDialog
         open={openDialog}
-        variant="success"
-        title="Booking Complete"
-        message="Your booking has been successfully processed!"
-        confirmText="OK"
         onClose={() => {
           setOpenDialog(false);
         }}

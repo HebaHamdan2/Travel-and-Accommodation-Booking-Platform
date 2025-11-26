@@ -2,8 +2,9 @@ import { City } from "@/types";
 import React from "react";
 import { UpdateCityProps } from "../../types";
 import { CitySchema } from "../../validation";
-import GenericDialog from "@/components/GenericDialog";
-import GenericTextField from "@/components/GenericTextField/GenericTextField";
+import FormDialog from "@/components/Dialogs/FormDialog";
+import CommonTextField from "@/components/TextField/CommonTextField";
+import { useFormik } from "formik";
 const UpdateCityDialog: React.FC<UpdateCityProps> = ({
   open,
   onClose,
@@ -17,48 +18,51 @@ const UpdateCityDialog: React.FC<UpdateCityProps> = ({
     });
     if (ok) {
       onClose();
+      formik.resetForm();
     }
     return ok;
   };
+  const initialValues = {
+    name: selectedCity?.name ?? "",
+    description: selectedCity?.description ?? "",
+  };
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: CitySchema,
+    onSubmit: handleSubmit,
+    enableReinitialize: true,
+  });
   return (
-    <GenericDialog<Omit<City, "id">>
+    <FormDialog
       open={open}
       onClose={onClose}
       variant="update"
-      title={`Update City: ${selectedCity?.name}`}
-      initialValues={{
-        name: selectedCity?.name ?? "",
-        description: selectedCity?.description ?? "",
-      }}
-      validationSchema={CitySchema}
-      onSubmit={handleSubmit}
-      renderForm={({ values, errors, touched, handleChange, handleBlur }) => (
-        <>
-          <GenericTextField
-            label="City Name"
-            name="name"
-            value={values.name}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.name && Boolean(errors.name)}
-            helperText={(touched.name && errors.name) || undefined}
-          />
-          <GenericTextField
-            label="Description"
-            name="description"
-            value={values.description}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            multiline
-            minRows={3}
-            error={touched.description && Boolean(errors.description)}
-            helperText={
-              (touched.description && errors.description) || undefined
-            }
-          />
-        </>
-      )}
-    />
+      isSaveDisabled={!(formik.isValid && formik.dirty)}
+      onSubmit={formik.handleSubmit}
+    >
+      <CommonTextField
+        label="City Name"
+        name="name"
+        value={formik.values.name}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        error={formik.touched.name && Boolean(formik.errors.name)}
+        helperText={(formik.touched.name && formik.errors.name) || undefined}
+      />
+      <CommonTextField
+        label="Description"
+        name="description"
+        value={formik.values.description}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        multiline
+        minRows={3}
+        error={formik.touched.description && Boolean(formik.errors.description)}
+        helperText={
+          (formik.touched.description && formik.errors.description) || undefined
+        }
+      />
+    </FormDialog>
   );
 };
 

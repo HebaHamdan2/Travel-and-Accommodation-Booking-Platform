@@ -1,8 +1,8 @@
 import { Typography, Stack, Grid } from "@mui/material";
-import InfoCard from "../../../../components/InfoCard";
 import React from "react";
 import { useAppSelector } from "../../../../app/hooks";
 import { SelectionsProps } from "../../types";
+import CartItemCard from "@/components/Cards/CartItemCard";
 const YourSelections: React.FC<SelectionsProps> = ({ cartItem }) => {
   const totalCost = useAppSelector((state) => state.cart.totalPrice);
   return (
@@ -22,9 +22,7 @@ const YourSelections: React.FC<SelectionsProps> = ({ cartItem }) => {
         <Grid container spacing={3} justifyContent="center">
           {cartItem.rooms?.map((room) => (
             <Grid key={room.roomId}>
-              <InfoCard
-                key={room.roomId}
-                variant="cartItem"
+              <CartItemCard
                 data={{
                   ...room,
                   hotelName: cartItem.hotelName,

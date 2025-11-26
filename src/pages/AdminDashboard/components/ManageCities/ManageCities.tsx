@@ -1,144 +1,96 @@
-import { useState } from "react";
 import { Box } from "@mui/material";
-import { useDebounce } from "../../../../hooks/useDebouns";
 import { useGetCitiesQuery } from "../../../../services/admin/cities";
 import { useDeleteCity } from "./hooks/useDeleteCity";
 import { useAddCity } from "./hooks/useAddCity";
 import { useUpdateCity } from "./hooks/useUpdateCity";
+import { City } from "@/types";
 import AddCityDialog from "./components/AddCityDialog";
 import DeleteCityDialog from "./components/DeleteCityDialog";
-import { City } from "@/types";
 import UpdateCityDialog from "./components/UpdateCityDialog";
-import { AdminTableHeader } from "../AdminTable/AdminTableHeader";
-import AdminTablePagination from "../AdminTable/AdminTablePagination";
-import AdminTableBody from "../AdminTable/AdminTableBody";
+import { useAdminTable } from "../../hooks/useAdminTable";
+import AdminManageTable from "../AdminManageTable";
+
 export default function ManageCities() {
-  const [search, setSearch] = useState("");
-  const [pageSize, setPageSize] = useState(5);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [openUpdate, setOpenUpdate] = useState(false);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [selectedCity, setSelectedCity] = useState<City>({
-    id: 0,
-    name: "",
-    description: "",
-  });
-  const debouncedSearch = useDebounce(search, 400);
-  const { handleUpdate } = useUpdateCity();
+  const table = useAdminTable<City>();
   const { handleAddCity } = useAddCity();
+  const { handleUpdate } = useUpdateCity();
   const { handleConfirmDelete } = useDeleteCity();
-  const handleDeleteClick = (city: {
-    id: number;
-    name: string;
-    description: string;
-  }) => {
-    setSelectedCity(city);
-    setOpenDelete(true);
-  };
-  const confirmDelete = async () => {
-    if (!selectedCity) return;
-    const success = await handleConfirmDelete(
-      selectedCity.id,
-      selectedCity.name
-    );
-    if (success) {
-      setOpenDelete(false);
-    }
-  };
-  const handleRowClick = (city: City) => {
-    setSelectedCity(city);
-    setOpenUpdate(true);
-  };
 
   const { data, isLoading } = useGetCitiesQuery({
-    searchQuery: debouncedSearch,
-    pageSize,
-    pageNumber,
+    searchQuery: table.debouncedSearch,
+    pageSize: table.pageSize,
+    pageNumber: table.pageNumber,
   });
-  const cities = data ?? [];
-  const hasPrev = pageNumber > 1;
-  const hasNext = cities.length === pageSize;
 
-  const handlePrev = () => hasPrev && setPageNumber(pageNumber - 1);
-  const handleNext = () => hasNext && setPageNumber(pageNumber + 1);
+  const cities = data ?? [];
+
+  // Add city
   const handleAddCitySubmit = async (
     name: string,
     description: string,
-    resetForm?: () => void | undefined
+    resetForm?: () => void
   ): Promise<boolean> => {
     const success = await handleAddCity(name, description, resetForm, () =>
-      setPageNumber(1)
+      table.setPageNumber(1)
     );
+    if (success) table.setOpenAdd(false);
     return success ?? false;
   };
-  const handleUpdateCitySubmit = async (
-    city: Omit<City, "id">
-  ): Promise<boolean> => {
+
+  // Update city
+  const handleUpdateCitySubmit = async (city: Omit<City, "id">) => {
+    if (!table.selectedItem) return false;
     const success = await handleUpdate(
-      selectedCity.id,
+      table.selectedItem.id,
       city.name,
       city.description
     );
+    if (success) table.setOpenUpdate(false);
     return success;
   };
+
+  // Delete city
+  const handleDeleteConfirm = async () => {
+    if (!table.selectedItem) return;
+    const success = await handleConfirmDelete(
+      table.selectedItem.id,
+      table.selectedItem.name
+    );
+    if (success) table.setOpenDelete(false);
+  };
+
   return (
     <Box sx={{ p: { xs: 2, sm: 3 }, maxWidth: "80rem", mx: "auto" }}>
-      <AdminTableHeader
-        search={search}
-        onSearch={(value) => {
-          setSearch(value);
-          setPageNumber(1);
-        }}
-        pageSize={pageSize}
-        onPageSizeChange={(size) => {
-          setPageSize(size);
-          setPageNumber(1);
-        }}
+      <AdminManageTable
         title="City"
-        onAddClick={() => setOpenAdd(true)}
+        variant="city"
+        data={cities}
+        loading={isLoading}
+        tableHook={table}
+        onAddClick={() => table.setOpenAdd(true)}
       />
-      <Box sx={{ overflowX: "auto" }}>
-        <AdminTableBody
-          variant="city"
-          data={cities}
-          loading={isLoading}
-          onRowClick={handleRowClick}
-          onDelete={handleDeleteClick}
-        />
-      </Box>
-      {/* Pagination */}
-      <AdminTablePagination
-        page={pageNumber}
-        hasPrev={hasPrev}
-        hasNext={hasNext}
-        onPrev={handlePrev}
-        onNext={handleNext}
-      />
-
-      {/* CRUD City Dialogs -Read  */}
       <AddCityDialog
-        open={openAdd}
-        onClose={() => setOpenAdd(false)}
+        open={table.openAdd}
+        onClose={() => table.setOpenAdd(false)}
         onSubmit={handleAddCitySubmit}
       />
-      <DeleteCityDialog
-        open={openDelete}
-        onClose={() => setOpenDelete(false)}
-        cityId={selectedCity?.id}
-        cityName={selectedCity?.name}
-        onConfirm={confirmDelete}
-      />
       <UpdateCityDialog
-        open={openUpdate}
-        onClose={() => setOpenUpdate(false)}
-        selectedCity={{
-          id: selectedCity.id,
-          name: selectedCity.name,
-          description: selectedCity.description,
-        }}
+        open={table.openUpdate}
+        onClose={() => table.setOpenUpdate(false)}
+        selectedCity={
+          table.selectedItem ?? { id: 0, name: "", description: "" }
+        }
         onSubmit={handleUpdateCitySubmit}
       />
+      {table.selectedItem && (
+        <DeleteCityDialog
+          open={table.openDelete}
+          onClose={() => table.setOpenDelete(false)}
+          cityId={table.selectedItem?.id}
+          cityName={table.selectedItem?.name}
+          onConfirm={handleDeleteConfirm}
+        />
+      )}
     </Box>
   );
 }

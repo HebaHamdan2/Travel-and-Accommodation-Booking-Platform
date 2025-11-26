@@ -1,12 +1,13 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import FormTestWrapper from "../../../tests/utils/FormTestWrapper";
 import {
   invalidCreditCardInfo,
   invalidEmailUser,
   userDetailsInfo,
   validCreditCardInfo,
 } from "../mock";
+import renderWithProviders from "@/tests/utils/renderWithProviders";
+import FormMockProvider from "./FormMockProvider";
 
 const getTextInput = (name: string) =>
   screen.getByRole("textbox", { name: new RegExp(name, "i") });
@@ -17,20 +18,20 @@ const getSelect = (name: string) =>
 const getButton = (name: string) =>
   screen.getByRole("button", { name: new RegExp(name, "i") });
 
+const renderForm = (onValidSubmit: jest.Mock) =>
+  renderWithProviders(<FormMockProvider onValidSubmit={onValidSubmit} />);
+
 describe("UserDetailsForm Component", () => {
-  const renderForm = (onValidSubmit: any) =>
-    render(<FormTestWrapper onValidSubmit={onValidSubmit} />);
 
   it("renders form fields", () => {
-    renderForm(jest.fn());
-
+    renderWithProviders(<FormMockProvider onValidSubmit={jest.fn()} />);
     expect(getTextInput("Full Name")).toBeInTheDocument();
     expect(getTextInput("Email")).toBeInTheDocument();
     expect(getSelect("Payment Method")).toBeInTheDocument();
   });
 
   it("updates fields on user input", async () => {
-    renderForm(jest.fn());
+    renderWithProviders(<FormMockProvider onValidSubmit={jest.fn()} />);
     const user = userEvent.setup();
 
     await user.type(getTextInput("Full Name"), userDetailsInfo.fullName);
@@ -40,8 +41,8 @@ describe("UserDetailsForm Component", () => {
     expect(getTextInput("Email")).toHaveValue(userDetailsInfo.email);
   });
 
-  it("conditionally shows credit card fields when Credit Card selected", async () => {
-    renderForm(jest.fn());
+  it("shows credit card fields when Credit Card selected", async () => {
+    renderWithProviders(<FormMockProvider onValidSubmit={jest.fn()} />);
     const user = userEvent.setup();
 
     await user.click(getSelect("Payment Method"));
@@ -52,14 +53,14 @@ describe("UserDetailsForm Component", () => {
     expect(getTextInput("CVV")).toBeInTheDocument();
   });
 
-  it("does NOT show credit card fields when PayPal selected", async () => {
-    renderForm(jest.fn());
+  it("does NOT show credit card fields for PayPal", async () => {
+    renderWithProviders(<FormMockProvider onValidSubmit={jest.fn()} />);
     const user = userEvent.setup();
 
     await user.click(getSelect("Payment Method"));
     await user.click(screen.getByRole("option", { name: /paypal/i }));
 
-    expect(screen.queryByRole("textbox", { name: /Card Number/i })).toBeNull();
+    expect(screen.queryByRole("textbox", { name: /card number/i })).toBeNull();
   });
 
   it("validates required fields", async () => {
@@ -70,16 +71,12 @@ describe("UserDetailsForm Component", () => {
     await user.click(getButton("TriggerSubmit"));
 
     expect(mockSubmit).not.toHaveBeenCalled();
-    expect(
-      await screen.findByText(/full name is required/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/full name is required/i)).toBeInTheDocument();
     expect(await screen.findByText(/email is required/i)).toBeInTheDocument();
-    expect(
-      await screen.findByText(/payment method is required/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/payment method is required/i)).toBeInTheDocument();
   });
 
-  it("shows error for invalid email format", async () => {
+  it("rejects invalid email format", async () => {
     const mockSubmit = jest.fn();
     renderForm(mockSubmit);
     const user = userEvent.setup();
@@ -96,7 +93,7 @@ describe("UserDetailsForm Component", () => {
     expect(await screen.findByText(/enter a valid email/i)).toBeInTheDocument();
   });
 
-  it("shows errors for invalid credit card details", async () => {
+  it("rejects invalid credit card info", async () => {
     const mockSubmit = jest.fn();
     renderForm(mockSubmit);
     const user = userEvent.setup();
@@ -107,31 +104,19 @@ describe("UserDetailsForm Component", () => {
     await user.click(getSelect("Payment Method"));
     await user.click(screen.getByRole("option", { name: /credit card/i }));
 
-    await user.type(
-      getTextInput("Card Number"),
-      invalidCreditCardInfo.cardNumber
-    );
-    await user.type(
-      getTextInput("Expiry Date"),
-      invalidCreditCardInfo.cardExpiry
-    );
+    await user.type(getTextInput("Card Number"), invalidCreditCardInfo.cardNumber);
+    await user.type(getTextInput("Expiry Date"), invalidCreditCardInfo.cardExpiry);
     await user.type(getTextInput("CVV"), invalidCreditCardInfo.cardCvv);
 
     await user.click(getButton("TriggerSubmit"));
 
     expect(mockSubmit).not.toHaveBeenCalled();
-    expect(
-      await screen.findByText(/card number must be 16 digits/i)
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByText(/enter expiry as mm\/yy/i)
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByText(/enter 3 or 4 digit cvv/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/card number must be 16 digits/i)).toBeInTheDocument();
+    expect(await screen.findByText(/enter expiry as mm\/yy/i)).toBeInTheDocument();
+    expect(await screen.findByText(/enter 3 or 4 digit cvv/i)).toBeInTheDocument();
   });
 
-  it("calls onValidSubmit with correct values for PayPal", async () => {
+  it("calls onValidSubmit for PayPal successfully", async () => {
     const mockSubmit = jest.fn();
     renderForm(mockSubmit);
     const user = userEvent.setup();
@@ -147,7 +132,7 @@ describe("UserDetailsForm Component", () => {
     expect(mockSubmit).toHaveBeenCalledWith(userDetailsInfo);
   });
 
-  it("submits successfully with valid credit card details", async () => {
+  it("calls onValidSubmit with valid credit card details", async () => {
     const mockSubmit = jest.fn();
     renderForm(mockSubmit);
     const user = userEvent.setup();
@@ -158,14 +143,8 @@ describe("UserDetailsForm Component", () => {
     await user.click(getSelect("Payment Method"));
     await user.click(screen.getByRole("option", { name: /credit card/i }));
 
-    await user.type(
-      getTextInput("Card Number"),
-      validCreditCardInfo.cardNumber
-    );
-    await user.type(
-      getTextInput("Expiry Date"),
-      validCreditCardInfo.cardExpiry
-    );
+    await user.type(getTextInput("Card Number"), validCreditCardInfo.cardNumber);
+    await user.type(getTextInput("Expiry Date"), validCreditCardInfo.cardExpiry);
     await user.type(getTextInput("CVV"), validCreditCardInfo.cardCvv);
 
     await user.click(getButton("TriggerSubmit"));
@@ -173,3 +152,4 @@ describe("UserDetailsForm Component", () => {
     expect(mockSubmit).toHaveBeenCalledWith(validCreditCardInfo);
   });
 });
+

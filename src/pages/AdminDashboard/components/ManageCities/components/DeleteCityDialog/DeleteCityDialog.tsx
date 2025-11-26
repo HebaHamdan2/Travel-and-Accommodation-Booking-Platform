@@ -1,6 +1,6 @@
 import React from "react";
 import { DeleteCityProps } from "../../types";
-import GenericDialog from "@/components/GenericDialog";
+import DeleteDialog from "@/components/Dialogs/DeleteDialog";
 const DeleteCityDialog: React.FC<DeleteCityProps> = ({
   open,
   onClose,
@@ -15,14 +15,7 @@ const DeleteCityDialog: React.FC<DeleteCityProps> = ({
   };
 
   return (
-    <GenericDialog
-      open={open}
-      onClose={onClose}
-      variant="delete"
-      title={`Delete City: ${cityName}`}
-      confirmText="Delete"
-      onConfirm={handleConfirm}
-    />
+    <DeleteDialog open={open} onClose={onClose} onConfirm={handleConfirm} />
   );
 };
 

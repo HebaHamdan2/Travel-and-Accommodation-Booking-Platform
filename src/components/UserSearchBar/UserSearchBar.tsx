@@ -37,7 +37,7 @@ const UserSearchBar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [triggerSearch, { isLoading }] = useLazyGetSearchQuery();
-
+ 
   const {
     city = "",
     checkInDate,
@@ -46,7 +46,7 @@ const UserSearchBar: React.FC = () => {
     children,
     numberOfRooms,
   } = useAppSelector((state) => state.search);
-
+ 
   const updateSearch = (field: keyof SearchParams, value: any) => {
     dispatch(setSearchData({ [field]: value }));
   };

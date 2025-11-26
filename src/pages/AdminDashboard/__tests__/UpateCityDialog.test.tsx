@@ -4,8 +4,9 @@ import { AppProviders } from "@/providers/AppProviders";
 import userEvent from "@testing-library/user-event";
 import { mockOnSubmitUpdate, selectedCity, validCity } from "../mocks/indext";
 
-describe("UpdateCityDialog Component (fireEvent.submit)", () => {
+describe("Update City Dialog Component", () => {
   const mockOnClose = jest.fn();
+
   const renderDialog = (open = true) =>
     render(
       <AppProviders>
@@ -34,12 +35,8 @@ describe("UpdateCityDialog Component (fireEvent.submit)", () => {
   it("updates fields on user input", () => {
     renderDialog();
 
-    fireEvent.change(getTextInput("City Name"), {
-      target: { value: validCity.name },
-    });
-    fireEvent.change(getTextInput("Description"), {
-      target: { value: validCity.description },
-    });
+    fireEvent.change(getTextInput("City Name"), { target: { value: validCity.name } });
+    fireEvent.change(getTextInput("Description"), { target: { value: validCity.description } });
 
     expect(getTextInput("City Name")).toHaveValue(validCity.name);
     expect(getTextInput("Description")).toHaveValue(validCity.description);
@@ -53,28 +50,34 @@ describe("UpdateCityDialog Component (fireEvent.submit)", () => {
     const form = screen.getByTestId("form");
     fireEvent.submit(form);
 
-    expect(await screen.findByText(/name is required/i)).toBeInTheDocument();
+    // Wait for the validation error to appear
+    expect(await screen.findByText(/city name is required/i)).toBeInTheDocument();
     expect(mockOnSubmitUpdate).not.toHaveBeenCalled();
   });
 
-  test("submits successfully with valid input", async () => {
+  it("submits successfully with valid input", async () => {
     renderDialog();
     const user = userEvent.setup();
+
     await user.clear(getTextInput("City Name"));
     await user.type(getTextInput("City Name"), validCity.name);
+
     await user.clear(getTextInput("Description"));
     await user.type(getTextInput("Description"), validCity.description);
-    await user.click(screen.getByRole("button", { name: /update/i }));
+
+    await user.click(screen.getByRole("button", { name: /save/i }));
 
     expect(mockOnSubmitUpdate).toHaveBeenCalledWith({
       name: validCity.name,
       description: validCity.description,
     });
+
     expect(mockOnClose).toHaveBeenCalled();
   });
 
   it("does not render when dialog is closed", () => {
     renderDialog(false);
+
     expect(screen.queryByRole("textbox", { name: /City Name/i })).toBeNull();
     expect(screen.queryByRole("textbox", { name: /Description/i })).toBeNull();
   });

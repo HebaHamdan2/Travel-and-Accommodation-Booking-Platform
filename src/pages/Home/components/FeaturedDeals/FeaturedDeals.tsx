@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper/index.ts";
-import InofCard from "../../../../components/InfoCard/InfoCard.tsx";
 import { useGetFeaturedDealsQuery } from "../../../../services/user/home.ts";
+import FeaturedDealCard from "@/components/Cards/FeaturedDealCard.tsx";
 
 const FeaturedDeals = () => {
   const { data: deals } = useGetFeaturedDealsQuery();
@@ -41,7 +41,7 @@ const FeaturedDeals = () => {
                 display="flex"
                 justifyContent="center"
               >
-                <InofCard variant="featuredDeals" data={deal} />
+                <FeaturedDealCard data={deal} />
               </Grid>
             ))}
           </Grid>

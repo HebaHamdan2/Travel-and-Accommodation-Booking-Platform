@@ -6,8 +6,7 @@ interface CityDialogs {
 export interface AddCityProps extends CityDialogs {
   onSubmit: (
     name: string,
-    description: string,
-    resetFields?: () => void
+    description: string
   ) => Promise<boolean>;
 }
 export interface UpdateCityProps extends CityDialogs {

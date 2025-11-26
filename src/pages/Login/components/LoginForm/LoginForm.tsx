@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { login } from "../../../../features/auth/authSlice";
 import { LoginValues } from "../../../../types";
 import { showNotification } from "../../../../features/notifications/notificationsSlice";
-import GenericTextField from "@/components/GenericTextField/GenericTextField";
+import CommonTextField from "@/components/TextField/CommonTextField";
 const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state) => state.auth);
@@ -82,7 +82,7 @@ const LoginForm: React.FC = () => {
         Login with username
       </Typography>
       <Stack spacing={{ xs: 2.5, sm: 3 }}>
-        <GenericTextField
+        <CommonTextField
           name="userName"
           label="Username"
           icon={<AccountCircle />}
@@ -94,7 +94,7 @@ const LoginForm: React.FC = () => {
             (formik.touched.userName && formik.errors.userName) || undefined
           }
         />
-        <GenericTextField
+        <CommonTextField
           name="password"
           label="Password"
           type="password"

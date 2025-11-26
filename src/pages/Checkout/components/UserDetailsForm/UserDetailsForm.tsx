@@ -8,9 +8,9 @@ import {
 } from "../../types";
 import { INITIAL_USER_DETAILS, PAYMENT_METHODS } from "../../constans";
 import { UserDetailsValidationSchema } from "./validation";
-import GenericTextField from "@/components/GenericTextField/GenericTextField";
 import { useAppSelector } from "@/app/hooks";
 import { getDecodedToken } from "@/utils/getDecodedToken";
+import CommonTextField from "@/components/TextField/CommonTextField";
 const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
   ({ onValidSubmit, initialValues }, ref) => {
     const { authentication } = useAppSelector((state) => state.auth);
@@ -54,7 +54,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
           >
             Your Details
           </Typography>
-          <GenericTextField
+          <CommonTextField
             id="fullName"
             label="Full Name"
             {...formik.getFieldProps("fullName")}
@@ -65,7 +65,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
           />
 
           {/* Email */}
-          <GenericTextField
+          <CommonTextField
             id="email"
             label="Email"
             {...formik.getFieldProps("email")}
@@ -96,7 +96,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
           </TextField>
           {formik.values.paymentMethod === "Credit Card" && (
             <>
-              <GenericTextField
+              <CommonTextField
                 id="cardNumber"
                 label="Card Number"
                 {...formik.getFieldProps("cardNumber")}
@@ -108,7 +108,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
                   undefined
                 }
               />
-              <GenericTextField
+              <CommonTextField
                 id="cardExpiry"
                 label="Expiry Date (MM/YY)"
                 {...formik.getFieldProps("cardExpiry")}
@@ -120,7 +120,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
                   undefined
                 }
               />
-              <GenericTextField
+              <CommonTextField
                 id="cardCvv"
                 label="CVV"
                 {...formik.getFieldProps("cardCvv")}
@@ -133,7 +133,7 @@ const UserDetailsForm = forwardRef<UserDetailsFormHandle, UserDetailsFormProps>(
           )}
 
           {/* Special Requests */}
-          <GenericTextField
+          <CommonTextField
             id="specialRequests"
             label="Special Requests or Remarks"
             {...formik.getFieldProps("specialRequests")}

@@ -53,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ isHome = false }) => {
 
   return (
     <AppBar
-      position={isHome ? "sticky" : "static"}
+      position= "sticky"
       sx={{
         backgroundColor: "background.default",
         color: "text.primary",

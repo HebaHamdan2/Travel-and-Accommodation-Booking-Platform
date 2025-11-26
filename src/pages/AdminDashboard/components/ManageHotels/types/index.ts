@@ -7,8 +7,7 @@ export interface AddHotelDialogProps extends Dialog {
   cities: { id: number; name: string }[];
   onSubmit: (
     values: Omit<AdminHotel, "id">,
-    cityId: number | "",
-    resetFields?: () => void
+    cityId: number | ""
   ) => Promise<boolean>;
 }
 export interface UpdateHotelDialogProps extends Dialog {

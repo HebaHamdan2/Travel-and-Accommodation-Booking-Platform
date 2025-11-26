@@ -1,6 +1,6 @@
 import React from "react";
 import { DeleteHotelDialogProps } from "../../types";
-import GenericDialog from "@/components/GenericDialog";
+import DeleteDialog from "@/components/Dialogs/DeleteDialog";
 const DeleteHotelDialog: React.FC<DeleteHotelDialogProps> = ({
   open,
   onClose,
@@ -16,14 +16,7 @@ const DeleteHotelDialog: React.FC<DeleteHotelDialogProps> = ({
 
   return (
     <>
-      <GenericDialog
-        open={open}
-        onClose={onClose}
-        variant="delete"
-        title={`Delete Hotel`}
-        confirmText="Delete"
-        onConfirm={handleConfirm}
-      />
+      <DeleteDialog open={open} onClose={onClose} onConfirm={handleConfirm} />
     </>
   );
 };

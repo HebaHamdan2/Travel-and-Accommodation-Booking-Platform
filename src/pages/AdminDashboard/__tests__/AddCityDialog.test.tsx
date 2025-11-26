@@ -7,9 +7,6 @@ import { mockOnSubmit, validCity } from "../mocks/indext";
 const getTextInput = (name: string) =>
   screen.getByRole("textbox", { name: new RegExp(name, "i") });
 
-const getButton = (name: string) =>
-  screen.getByRole("button", { name: new RegExp(name, "i") });
-
 describe("AddCityDialog Component", () => {
   const mockOnClose = jest.fn();
 
@@ -23,6 +20,8 @@ describe("AddCityDialog Component", () => {
         />
       </AppProviders>
     );
+
+  beforeEach(() => jest.clearAllMocks());
 
   it("renders form fields when open", () => {
     renderDialog();
@@ -44,34 +43,38 @@ describe("AddCityDialog Component", () => {
 
   it("validates required fields", async () => {
     renderDialog();
-    const form = screen.getByTestId("form");
-    fireEvent.submit(form);
-
+    fireEvent.submit(screen.getByTestId("form"));
     expect(mockOnSubmit).not.toHaveBeenCalled();
     expect(await screen.findByText(/name is required/i)).toBeInTheDocument();
   });
-
-  it("submits successfully with valid input", async () => {
-    renderDialog();
-    const user = userEvent.setup();
-
-    await user.type(getTextInput("City Name"), validCity.name);
-    await user.type(getTextInput("Description"), validCity.description);
-    await user.click(getButton("Add"));
-
-    expect(mockOnSubmit).toHaveBeenCalledWith(
-      validCity.name,
-      validCity.description,
-      expect.any(Function) // resetForm
-    );
-  });
-
   it("does not render when dialog is closed", () => {
     renderDialog(false);
 
     expect(screen.queryByRole("textbox", { name: /City Name/i })).toBeNull();
     expect(screen.queryByRole("textbox", { name: /Description/i })).toBeNull();
-    expect(screen.queryByRole("button", { name: /Add/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Save/i })).toBeNull();
     expect(screen.queryByRole("button", { name: /Cancel/i })).toBeNull();
+  });
+  test("submits successfully with valid input", async () => {
+     mockOnSubmit.mockResolvedValueOnce(true);
+    renderDialog();
+    const user = userEvent.setup();
+    await user.clear(getTextInput("City Name"));
+    await user.type(getTextInput("City Name"), validCity.name);
+    await user.clear(getTextInput("Description"));
+    await user.type(getTextInput("Description"), validCity.description);
+    await user.click(screen.getByRole("button", { name: /save/i }));
+
+    expect(mockOnSubmit).toHaveBeenCalledWith(
+      validCity.name,
+      validCity.description
+    );
+    expect(mockOnClose).toHaveBeenCalled();
+  });
+
+  it("does not render when dialog is closed", () => {
+    renderDialog(false);
+    expect(screen.queryByRole("textbox", { name: /City Name/i })).toBeNull();
+    expect(screen.queryByRole("textbox", { name: /Description/i })).toBeNull();
   });
 });

@@ -2,8 +2,9 @@ import React from "react";
 import { AddRoomSchema } from "../../validation";
 import { RoomBodyRequest } from "../../../../../../types";
 import { UpdateRoomProps } from "../../types";
-import GenericDialog from "@/components/GenericDialog";
-import GenericTextField from "@/components/GenericTextField/GenericTextField";
+import FormDialog from "@/components/Dialogs/FormDialog";
+import CommonTextField from "@/components/TextField/CommonTextField";
+import { useFormik } from "formik";
 const UpdateRoomDialog: React.FC<UpdateRoomProps> = ({
   open,
   onClose,
@@ -21,48 +22,45 @@ const UpdateRoomDialog: React.FC<UpdateRoomProps> = ({
     });
     if (ok) {
       onClose();
+      formik.resetForm();
     }
     return ok;
   };
-
+  const formik = useFormik({
+    initialValues,
+    validationSchema: AddRoomSchema,
+    onSubmit: handleSubmit,
+  });
   return (
-    <GenericDialog<typeof initialValues>
+    <FormDialog
       open={open}
       onClose={onClose}
       variant="update"
-      title="Update Room"
-      initialValues={initialValues}
-      validationSchema={AddRoomSchema}
-      onSubmit={handleSubmit}
-      renderForm={(formik) => (
-        <>
-          <GenericTextField
-            name="roomNumber"
-            label="Room Number"
-            value={formik.values.roomNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.roomNumber && !!formik.errors.roomNumber}
-            helperText={
-              (formik.touched.roomNumber && formik.errors.roomNumber) ||
-              undefined
-            }
-          />
-          <GenericTextField
-            name="cost"
-            label="Cost"
-            type="number"
-            value={formik.values.cost}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.cost && !!formik.errors.cost}
-            helperText={
-              (formik.touched.cost && formik.errors.cost) || undefined
-            }
-          />
-        </>
-      )}
-    />
+      isSaveDisabled={!(formik.isValid && formik.dirty)}
+      onSubmit={formik.handleSubmit}
+    >
+      <CommonTextField
+        name="roomNumber"
+        label="Room Number"
+        value={formik.values.roomNumber}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        error={formik.touched.roomNumber && !!formik.errors.roomNumber}
+        helperText={
+          (formik.touched.roomNumber && formik.errors.roomNumber) || undefined
+        }
+      />
+      <CommonTextField
+        name="cost"
+        label="Cost"
+        type="number"
+        value={formik.values.cost}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        error={formik.touched.cost && !!formik.errors.cost}
+        helperText={(formik.touched.cost && formik.errors.cost) || undefined}
+      />
+    </FormDialog>
   );
 };
 

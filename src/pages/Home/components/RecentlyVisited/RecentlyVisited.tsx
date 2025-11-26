@@ -2,8 +2,8 @@ import { Box, Grid, Typography } from "@mui/material";
 import Wrapper from "../../../../components/Wrapper/index.ts";
 import { getDecodedToken } from "../../../../utils/getDecodedToken.ts";
 import { useAppSelector } from "../../../../app/hooks.ts";
-import InofCard from "../../../../components/InfoCard/index.ts";
 import { useGetRecentlyVisitedQuery } from "../../../../services/user/home.ts";
+import RecentVisitedCard from "@/components/Cards/RecentVisitedCard.tsx";
 
 const RecentlyVisited = () => {
   const { authentication } = useAppSelector((state) => state.auth);
@@ -46,7 +46,7 @@ const RecentlyVisited = () => {
                 display="flex"
                 justifyContent="center"
               >
-                <InofCard variant="recentVisited" data={hotel} />
+                <RecentVisitedCard data={hotel} />
               </Grid>
             ))}
           </Grid>

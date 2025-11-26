@@ -9,9 +9,7 @@ export const PickerTextField = forwardRef<HTMLDivElement, TextFieldProps>(
       size="small"
       variant="outlined"
       sx={{
-        minWidth: 140,
-        flex: 1,
-        borderRadius: 1,
+        flex: "1 1 48%",
       }}
     />
   )

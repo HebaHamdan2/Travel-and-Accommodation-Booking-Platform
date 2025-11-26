@@ -22,7 +22,7 @@ const HotelsCards = () => {
 
   return (
     <>
-      <Container maxWidth="xl" sx={{ mt: "4rem" }}>
+      <Container maxWidth="xl" sx={{ mt: "1rem" }}>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, md: 5, lg: 4 }}>
             <FiltersSidebar />

@@ -26,7 +26,7 @@ const FiltersSidebar = () => {
           sx={{
             display: { xs: "flex", md: "none" },
             position: "fixed",
-            top: "20%",
+            top: "15%",
             left: "1%",
             zIndex: 1300,
             backgroundColor: "background.paper",

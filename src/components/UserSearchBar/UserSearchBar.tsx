@@ -2,9 +2,10 @@ import { useEffect, useCallback } from "react";
 import { Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { ROUTES } from "../../utils/constans";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { useNavigate, useLocation } from "react-router-dom";
 import {
   fetchSearchSuccess,
   setSearchData,
@@ -14,58 +15,78 @@ import { showNotification } from "@/features/notifications/notificationsSlice";
 import { getInitialSearchFromURL } from "./utils";
 import { useSearchURLSync } from "./hooks/useSearchURLSync";
 import { SearchParams } from "@/types";
+
 import SearchCityField from "./components/SearchCityField";
 import DateRangePickers from "./components/DateRangePickers";
 import GuestSelectors from "./components/GuestSelectors";
 import SearchButton from "./components/SearchButton";
+import { useDebounce } from "@/hooks/useDebouns";
+import { initialSearch } from "@/features/constants";
 
 const UserSearchBar = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { updateURL } = useSearchURLSync();
+  const [triggerSearch, { isLoading }] = useLazyGetSearchQuery();
+  const search = useAppSelector((state) => state.search);
+  const debouncedSearch = useDebounce(search, 500);
+
   // Sync URL on first mount
   useEffect(() => {
     if (location.pathname === ROUTES.SEARCH_RESULTS) {
-      dispatch(setSearchData(getInitialSearchFromURL()));
+      const urlSearch = getInitialSearchFromURL();
+      dispatch(setSearchData(urlSearch));
+
+      // Trigger search if URL has any parameters
+      const hasParams =
+        urlSearch.city ||
+        urlSearch.children ||
+        urlSearch.adults !== initialSearch.adults ||
+        urlSearch.checkInDate !== initialSearch.checkInDate ||
+        urlSearch.numberOfRooms !== initialSearch.numberOfRooms ||
+        urlSearch.checkOutDate !== initialSearch.checkOutDate;
+      if (hasParams) handleSearch(initialSearch);
     }
   }, [dispatch, location.pathname]);
-  useEffect(() => {
-    if (location.pathname === ROUTES.SEARCH_RESULTS) {
-      handleSearch();
-    }
-  }, [location.pathname]);
-  const { updateURL } = useSearchURLSync();
-  const [triggerSearch, { isLoading }] = useLazyGetSearchQuery();
-
-  const search = useAppSelector((state) => state.search);
 
   const updateSearch = useCallback(
     <K extends keyof SearchParams>(key: K, value: SearchParams[K]) => {
-      dispatch(setSearchData({ [key]: value })); //cache the slice
+      const updated = { ...search, [key]: value };
+      dispatch(setSearchData(updated));
       if (location.pathname !== ROUTES.HOME) {
-        //to sharable link
         updateURL({ [key]: value });
       }
     },
-    [dispatch, updateURL, location.pathname]
+    [dispatch, updateURL, location.pathname, search]
   );
 
-  const handleSearch = useCallback(async () => {
-    try {
-      const result = await triggerSearch(search).unwrap();
-      dispatch(fetchSearchSuccess(result));
+  const handleSearch = useCallback(
+    async (params: Partial<SearchParams> = search) => {
+      try {
+        const result = await triggerSearch(params).unwrap();
+        dispatch(fetchSearchSuccess(result));
 
-      navigate({
-        pathname: ROUTES.SEARCH_RESULTS,
-        search: `?${new URLSearchParams(search as any).toString()}`,
-      });
-    } catch {
-      dispatch(
-        showNotification({ message: "Error While Searching", type: "error" })
-      );
+        navigate({
+          pathname: ROUTES.SEARCH_RESULTS,
+          search: `?${new URLSearchParams(params as any).toString()}`,
+        });
+      } catch {
+        dispatch(
+          showNotification({ message: "Error while searching", type: "error" })
+        );
+      }
+    },
+    [triggerSearch, dispatch, navigate, search]
+  );
+
+  // Trigger search automatically whenever debounced search state changes
+  useEffect(() => {
+    if (location.pathname === ROUTES.SEARCH_RESULTS) {
+      handleSearch(debouncedSearch);
     }
-  }, [search, triggerSearch, navigate, dispatch]);
+  }, [debouncedSearch, handleSearch, location.pathname]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -94,7 +115,7 @@ const UserSearchBar = () => {
           rooms={search.numberOfRooms}
           update={updateSearch}
         />
-        <SearchButton loading={isLoading} onSearch={handleSearch} />
+        <SearchButton loading={isLoading} onSearch={() => handleSearch()} />
       </Box>
     </LocalizationProvider>
   );

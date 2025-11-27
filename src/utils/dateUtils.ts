@@ -16,9 +16,10 @@ export const ensureValidCheckOut = (
   const checkInDay = dayjs(checkIn);
   const checkOutDay = checkOut ? dayjs(checkOut) : null;
 
-  if (!checkOutDay || checkOutDay.isBefore(checkInDay)) {
+ if (!checkOutDay || !checkOutDay.isAfter(checkInDay)) {
     return addDays(checkInDay, 1);
   }
+
 
   return formatDate(checkOutDay);
 };

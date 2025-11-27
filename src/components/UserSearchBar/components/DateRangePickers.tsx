@@ -12,11 +12,8 @@ const DateRangePickers: React.FC<DateRangePickersProps> = ({
   const onCheckIn = (date: Dayjs | null) => {
     if (!date) return;
     const formattedIn = formatDate(date);
-    const validOut = ensureValidCheckOut(date, checkOut);
     update("checkInDate", formattedIn);
-    update("checkOutDate", validOut);
   };
-
   const onCheckOut = (date: Dayjs | null) => {
     if (!date) return;
     update("checkOutDate", ensureValidCheckOut(checkIn, date));

@@ -50,18 +50,17 @@ const UserSearchBar = () => {
       if (hasParams) handleSearch(initialSearch);
     }
   }, [dispatch, location.pathname]);
+  function updateSearch<K extends keyof SearchParams>(
+    key: K,
+    value: SearchParams[K]
+  ) {
+    const updatedSearch = { ...search, [key]: value };
+    dispatch(setSearchData(updatedSearch));
 
-  const updateSearch = useCallback(
-    <K extends keyof SearchParams>(key: K, value: SearchParams[K]) => {
-      const updated = { ...search, [key]: value };
-      dispatch(setSearchData(updated));
-      if (location.pathname !== ROUTES.HOME) {
-        updateURL({ [key]: value });
-      }
-    },
-    [dispatch, updateURL, location.pathname, search]
-  );
-
+    if (location.pathname !== ROUTES.HOME) {
+      updateURL({ [key]: value });
+    }
+  }
   const handleSearch = useCallback(
     async (params: Partial<SearchParams> = search) => {
       try {
